@@ -1,15 +1,43 @@
 // import Image from "next/image";
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
 export default function Home() {
+  const [notionData, setNotionData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   if (!apiKey) {
     throw new Error('API key is not defined. Please set the NEXT_PUBLIC_API_KEY environment variable.');
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/notion');
+        const data = await response.json();
+        setNotionData(data);
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching data from Notion:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!notionData) {
+    return <div>Error fetching Notion data</div>;
+  }
+
   const position = { lat: 53.54992, lng: 10.00678 };
 
 
@@ -20,6 +48,7 @@ export default function Home() {
 
   return (
     <APIProvider apiKey={apiKey}>
+      <div>{notionData.toString()}</div>
       <div className="w-1/2 h-dvh">
         <Map defaultCenter={position} defaultZoom={10} mapId="DEMO_MAP_ID">
           <AdvancedMarker position={position}>

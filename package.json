@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@notionhq/client": "^2.2.15",
     "@vis.gl/react-google-maps": "^1.4.0",
     "next": "15.0.2",
     "react": "19.0.0-rc-02c0e824-20241028",
