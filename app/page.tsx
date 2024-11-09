@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image'
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
-import { RAY, NAMRATA, HIKING, BIKING } from './constants';
+import { RAY, NAMRATA, HIKING, BIKING, TRAVEL } from '../lib/constants';
 
 export default function Home() {
   const [notionData, setNotionData] = useState(null);
@@ -47,10 +47,13 @@ export default function Home() {
   }
 
   const getActivityImgSrc = activityData => {
+    if (activityData.type == TRAVEL) return '/airplane.png';
+
     if (activityData.doneBy.includes(RAY)) {
       if (activityData.type == HIKING) return '/malewalk.png';
       return '/malebicycle.png';
     }
+
     else if (activityData.type == HIKING) return '/femalewalk.png';
     return '/femalebicycle.png';
   }
@@ -83,16 +86,27 @@ export default function Home() {
         <APIProvider apiKey={apiKey}>
 
           <Map defaultCenter={{ lat: 42.633, lng: -115.736 }} defaultZoom={6} mapId="DEMO_MAP_ID" mapTypeControl={false} streetViewControl={false}>
-            {notionData.map((activityData, index) => {
-              console.log('moo', activityData)
+            {notionData.outdoorsData.map((activityData, index) => {
               return (<AdvancedMarker key={index} position={{ lat: activityData.coordinates.lat, lng: activityData.coordinates.lng }}>
                 <Image
                   src={getActivityImgSrc(activityData)}
-                  width={44}
-                  height={44}
+                  width={36}
+                  height={36}
                   alt={activityData.type}
                 />
               </AdvancedMarker>)
+            })}
+            {notionData.travelData.map((activityData) => {
+              return activityData.coordinatesArray.map((coordinatesObj, index) => {
+                return (<AdvancedMarker key={index} position={{ lat: coordinatesObj.lat, lng: coordinatesObj.lng }}>
+                  <Image
+                    src={getActivityImgSrc(activityData)}
+                    width={36}
+                    height={36}
+                    alt={activityData.type}
+                  />
+                </AdvancedMarker>)
+              })
             })}
           </Map>
 

@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
-import { fetchOutdoorsDBData } from "@/lib/notion";
+import { fetchOutdoorsDBData, fetchTravelDBData } from "@/lib/notion";
 
 export async function GET() {
   try {
-    const data = await fetchOutdoorsDBData();
-    return NextResponse.json(data);
+    const outdoorsData = await fetchOutdoorsDBData();
+    const travelData = await fetchTravelDBData();
+
+    return NextResponse.json({ outdoorsData, travelData });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
