@@ -76,7 +76,6 @@ export const fetchTravelDBData = async () => {
     dbData.results.forEach((page) => {
       const { properties } = page;
       //   console.log(properties);
-      const name = properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text;
       const startDate = properties[TRAVEL_PROPERTIES.DATE].date?.start;
       const endDate = properties[TRAVEL_PROPERTIES.DATE].date?.end;
       const people =
@@ -88,9 +87,11 @@ export const fetchTravelDBData = async () => {
       const coordinatesArray = getTravelCoordinates(
         properties[TRAVEL_PROPERTIES.COORDINATES].rich_text[0]
       );
-      // const coordinates =
-      //   properties[TRAVEL_PROPERTIES.COORDINATES].rich_text[0]?.plain_text;
       const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
+      const name = getDescriptiveTravelName(
+        properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
+        startDate
+      );
       const type = TRAVEL;
 
       travelData.push({
@@ -152,4 +153,14 @@ const getPeople = (peopleObjArray) => {
   peopleObjArray.forEach((peopleObj) => people.push(peopleObj.name));
 
   return people;
+};
+
+const getDescriptiveTravelName = (name, startDateString) => {
+  if (!startDateString) return name;
+
+  const dateOfTravel = new Date(startDateString);
+  const travelMonth = dateOfTravel.toLocaleString("default", { month: "long" });
+  const traveYear = dateOfTravel.getFullYear();
+
+  return `${name} ${travelMonth} ${traveYear}`;
 };
