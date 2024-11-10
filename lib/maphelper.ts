@@ -33,5 +33,6 @@ export const applyFiltersToMap = (
     return applyFiltersToMap(true, notionData, { year: filterYear - 1 });
   }
 
-  return { outdoorsData, travelData };
+  //   return { outdoorsData, travelData };
+  return notionData;
 };

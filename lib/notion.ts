@@ -155,7 +155,10 @@ const getPeople = (peopleObjArray) => {
   return people;
 };
 
-const getDescriptiveTravelName = (name, startDateString) => {
+const getDescriptiveTravelName = (
+  name: string,
+  startDateString: string
+): string => {
   if (!startDateString) return name;
 
   const dateOfTravel = new Date(startDateString);
