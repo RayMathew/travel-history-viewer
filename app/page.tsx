@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import { PrimeReactProvider } from "primereact/api";
+import Tailwind from 'primereact/passthrough/tailwind';
 import Image from "next/image";
 import {
   AdvancedMarker,
@@ -153,6 +154,7 @@ export default function Home() {
   };
 
   return (
+    <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
     <div className="flex">
       <div className="md:w-1/3 2xl:w-128">
         {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
@@ -176,5 +178,6 @@ export default function Home() {
         </APIProvider>
       </div>
     </div>
+    </PrimeReactProvider>
   );
 }
