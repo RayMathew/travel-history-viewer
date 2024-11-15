@@ -127,112 +127,11 @@ export default function Home() {
     return <div>Error fetching Notion data</div>;
   }
 
-  const MarkerWithInfoWindow = ({ activityData, position }) => {
-    const [markerRef, marker] = useAdvancedMarkerRef();
 
-    const [infoWindowShown, setInfoWindowShown] = useState(false);
 
-    const handleMarkerClick = useCallback(
-      () => setInfoWindowShown(isShown => !isShown),
-      []
-    );
 
-    // if the maps api closes the infowindow, we have to synchronize our state
-    const handleClose = useCallback(() => setInfoWindowShown(false), []);
 
-    return (
-      <>
-        <AdvancedMarker
-          ref={markerRef}
-          onClick={handleMarkerClick}
-          position={position}
-          title={activityData.name}
-        // collisionBehavior={CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY}
-        >
-          <Image
-            src={getActivityImgSrc(activityData)}
-            width={36}
-            height={36}
-            alt={activityData.type}
-          />
-        </AdvancedMarker>
-        {infoWindowShown && (
-          <InfoWindow anchor={marker} onClose={handleClose}>
-            <h2>InfoWindow content!</h2>
-            <p>{activityData.name}</p>
-          </InfoWindow>
 
-        )}
-      </>
-    );
-  };
-
-  const CustomMap = () => {
-    const map = useMap();
-
-    useEffect(() => {
-      if (!map || !notionData || !displayData) return;
-      const bounds = new window.google.maps.LatLngBounds();
-      const { outdoorsData, travelData } = displayData;
-      console.log(displayData);
-
-      for (var i = 0; i < outdoorsData.length; i++) {
-        bounds.extend(
-          new window.google.maps.LatLng(
-            outdoorsData[i].coordinates.lat,
-            outdoorsData[i].coordinates.lng
-          )
-        );
-      }
-      for (var i = 0; i < travelData.length; i++) {
-        for (var k = 0; k < travelData[i].coordinatesArray.length; k++) {
-          bounds.extend(
-            new window.google.maps.LatLng(
-              travelData[i].coordinatesArray[k].lat,
-              travelData[i].coordinatesArray[k].lng
-            )
-          );
-        }
-      }
-
-      map.fitBounds(bounds);
-    }, [map]);
-
-    return (
-      <Map
-        mapId="DEMO"
-        defaultZoom={2}
-        defaultCenter={{ lat: 23.468, lng: 10.872 }}
-        mapTypeControl={false}
-        streetViewControl={false}
-      >
-        {displayData.outdoorsData.map((activityData, index) => {
-
-          return (
-            <MarkerWithInfoWindow
-              key={index}
-              activityData={activityData}
-              position={{
-                lat: activityData.coordinates.lat,
-                lng: activityData.coordinates.lng,
-              }}
-            />
-          );
-        })}
-        {displayData.travelData.map((activityData) => {
-          return activityData.coordinatesArray.map((coordinatesObj, index) => {
-            return (
-              <MarkerWithInfoWindow
-                key={index}
-                activityData={activityData}
-                position={{ lat: coordinatesObj.lat, lng: coordinatesObj.lng }}
-              />
-            );
-          });
-        })}
-      </Map>
-    );
-  };
 
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
@@ -255,37 +154,14 @@ export default function Home() {
           <div>
             <Accordion activeIndex={0}>
               <AccordionTab header="Filters">
-                {/* <div className="flex flex-wrap gap-3">
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="participant1" name="ray" value="Ray" onChange={(e) => setParticipant(e.value)} checked={participant === 'Ray'} >
-                      <Image
-                        src="/airplane.png"
-                        width={36}
-                        height={36}
-                        alt='asda'
-                      />
-                    </RadioButton>
-                    <label htmlFor="participant1" className="ml-2">Ray</label>
-                  </div>
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="participant2" name="namrata" value="Namrata" onChange={(e) => setParticipant(e.value)} checked={participant === 'Namrata'} />
-                    <label htmlFor="participant2" className="ml-2">Namrata</label>
-                  </div>
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="bothparticipants" name="both" value="Both" onChange={(e) => setParticipant(e.value)} checked={participant === 'Both'} />
-                    <label htmlFor="bothparticipants" className="ml-2">Both</label>
-                  </div>
-                </div> */}
                 <ImageRadioButtons onChange={setParticipant} />
                 <div className="flex flex-row mt-4">
                   <div>
                     Years:
                   </div>
                   <div>
-                    <MultiSelect value={selectedYears} onChange={(e) => {
-                      console.log('asfas', e.value)
-                      setSelectedYears(e.value)
-                    }} options={yearOptions} optionLabel="name" display="chip"
+                    <MultiSelect value={selectedYears} onChange={(e) => onYearSelectChange(e.value)}
+                      options={yearOptions} optionLabel="name" display="chip"
                       placeholder="Select Years" className="w-full md:w-20rem" />
                   </div>
                 </div>
@@ -374,8 +250,8 @@ export default function Home() {
                         min={0}
                         useGrouping={false}
                         maxFractionDigits={1}
-                        placeholder="km"
-                        suffix=" km"
+                        placeholder="ft"
+                        suffix=" ft"
                         showButtons
                         // buttonLayout="vertical"
                         // decrementButtonClassName="p-button-secondary"
@@ -387,7 +263,6 @@ export default function Home() {
                             root: {
                               className: 'max-w-24',
                             },
-
                           },
                         }}
                       />
