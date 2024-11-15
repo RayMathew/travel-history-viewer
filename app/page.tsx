@@ -51,9 +51,10 @@ export default function Home() {
         const response = await fetch("/api/notion");
         const data = await response.json();
         setNotionData(data);
+        setupData(data);
 
-        const filteredData = applyFiltersToMap(true, data);
-        setDisplayData(filteredData);
+        const initialfilteredData = applyFiltersToMap(true, data);
+        setDisplayData(initialfilteredData);
       } catch (error) {
         console.error("Error fetching data from Notion:", error);
       } finally {
@@ -61,12 +62,8 @@ export default function Home() {
       }
     };
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (!displayData) return;
-    const { outdoorsData, travelData } = displayData;
+    const setupData = (initialData) => {
+      const { outdoorsData, travelData } = initialData;
     const yearsForFilter = new Set();
 
     for (var i = 0; i < outdoorsData.length; i++) {
@@ -88,7 +85,27 @@ export default function Home() {
     })
     setYearOptions(temp);
     setSelectedYears([filterYearsArray[filterYearsArray.length - 1]]);
-  }, [displayData]);
+      setParticipant('both');
+      setSelectedActivities([BIKING, HIKING, TRAVEL]);
+    };
+
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   if (!displayData) return;
+
+  // }, [displayData]);
+
+  const onYearSelectChange = (yearArray) => {
+    setSelectedYears(yearArray);
+    const filteredData = applyFiltersToMap(false, notionData, {
+      years: yearArray,
+      participant,
+      activityTypes: selectedActivities
+    });
+    setDisplayData(filteredData);
+  };
 
   const onActivitySelectChange = (e) => {
     let _selectedActivities = [...selectedActivities];
