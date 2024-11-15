@@ -21,6 +21,7 @@ export const TRAVEL_PROPERTIES = {
   NAME: "Name",
   DATE: "Date",
   PEOPLE: "People",
+  DONE_BY: "Done by",
   TRAVEL_STATUS: "Travel Status",
   JOURNAL_STATUS: "Journal Status",
   PHOTOS: "Google Photos Album",

@@ -80,6 +80,7 @@ export const fetchTravelDBData = async () => {
       const endDate = properties[TRAVEL_PROPERTIES.DATE].date?.end;
       const people =
         properties[TRAVEL_PROPERTIES.PEOPLE].rich_text[0]?.plain_text;
+      const doneBy = getPeople(properties[TRAVEL_PROPERTIES.DONE_BY].people);
       const travelStatus =
         properties[TRAVEL_PROPERTIES.TRAVEL_STATUS].status.name;
       const journalStatus =
@@ -99,6 +100,7 @@ export const fetchTravelDBData = async () => {
         startDate,
         endDate,
         people,
+        doneBy,
         travelStatus,
         journalStatus,
         coordinatesArray,
