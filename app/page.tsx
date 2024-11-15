@@ -13,6 +13,8 @@ import {
   InfoWindow,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
+import { applyFiltersToMap } from "@/lib/maphelper";
+import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
 
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -392,7 +394,7 @@ export default function Home() {
       </div>
       <div className="md:w-2/3 2xl:flex-1 h-dvh">
         <APIProvider apiKey={apiKey}>
-          <CustomMap />
+            <CustomMap displayData={displayData} />
         </APIProvider>
       </div>
     </div>
