@@ -61,8 +61,7 @@ export default function CustomMap({ displayData }) {
         const { outdoorsData, travelData } = displayData;
         console.log(displayData);
 
-        const yearsForFilter = new Set();
-
+        
         for (var i = 0; i < outdoorsData.length; i++) {
             bounds.extend(
                 new window.google.maps.LatLng(
@@ -70,8 +69,7 @@ export default function CustomMap({ displayData }) {
                     outdoorsData[i].coordinates.lng
                 )
             );
-            yearsForFilter.add(new Date(outdoorsData[i].date).getFullYear());
-        }
+                    }
         for (var i = 0; i < travelData.length; i++) {
             for (var k = 0; k < travelData[i].coordinatesArray.length; k++) {
                 bounds.extend(
@@ -81,10 +79,7 @@ export default function CustomMap({ displayData }) {
                     )
                 );
             }
-            if (travelData[i].startDate) {
-                yearsForFilter.add(new Date(travelData[i].startDate).getFullYear());
-            }
-        }
+                    }
 
         map.fitBounds(bounds);
 
@@ -94,7 +89,7 @@ export default function CustomMap({ displayData }) {
         <Map
             mapId="DEMO"
             defaultZoom={2}
-            defaultCenter={{ lat: 23.468, lng: 10.872 }}
+            defaultCenter={{ lat: 5.145259, lng: -27.8719489 }}
             mapTypeControl={false}
             streetViewControl={false}
         >

@@ -98,6 +98,16 @@ export default function Home() {
 
   // }, [displayData]);
 
+  const onParticipantChange = (value) => {
+    setParticipant(value);
+    const filteredData = applyFiltersToMap(false, notionData, {
+      years: selectedYears,
+      participant: value,
+      activityTypes: selectedActivities
+    });
+    setDisplayData(filteredData);
+  };
+
   const onYearSelectChange = (yearArray) => {
     setSelectedYears(yearArray);
     const filteredData = applyFiltersToMap(false, notionData, {
@@ -162,7 +172,7 @@ export default function Home() {
           <div>
             <Accordion activeIndex={0}>
               <AccordionTab header="Filters">
-                <ImageRadioButtons onChange={setParticipant} />
+                <ImageRadioButtons onChange={onParticipantChange} />
                 <div className="flex flex-row mt-4">
                   <div>
                     Years:
@@ -185,6 +195,7 @@ export default function Home() {
                         width={36}
                         height={36}
                         alt="Hike"
+title="Hike"
                       />
                       <label htmlFor="activity1" className="ml-2">Hike</label>
                     </div>
@@ -195,6 +206,7 @@ export default function Home() {
                         width={36}
                         height={36}
                         alt="Bike"
+title="Bike"
                       />
                       <label htmlFor="activity2" className="ml-2">Bike</label>
                     </div>
@@ -204,7 +216,8 @@ export default function Home() {
                         src="/airplane.png"
                         width={36}
                         height={36}
-                        alt="travel"
+                        alt="Travel"
+                        title="Travel"
                       />
                       <label htmlFor="activity3" className="ml-2">Travel</label>
                     </div>
