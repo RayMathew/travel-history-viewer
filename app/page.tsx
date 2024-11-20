@@ -22,6 +22,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
+import { BIKING, HIKING, TRAVEL } from "@/lib/constants";
 
 export default function Home() {
   const [notionData, setNotionData] = useState(null);
@@ -116,6 +117,13 @@ export default function Home() {
       _selectedActivities.splice(_selectedActivities.indexOf(e.value), 1);
 
     setSelectedActivities(_selectedActivities);
+
+    const filteredData = applyFiltersToMap(false, notionData, {
+      years: selectedYears,
+      participant,
+      activityTypes: _selectedActivities
+    });
+    setDisplayData(filteredData);
   }
 
 
@@ -171,7 +179,7 @@ export default function Home() {
                   </div>
                   <div className="card flex flex-wrap justify-content-center gap-3">
                     <div className="flex align-items-center">
-                      <Checkbox inputId="activity1" name="hike" value="Hike" onChange={onActivitySelectChange} checked={selectedActivities.includes('Hike')} />
+                      <Checkbox inputId="activity1" name="hike" value={HIKING} onChange={onActivitySelectChange} checked={selectedActivities.includes(HIKING)} />
                       <Image
                         src="/malewalk.png"
                         width={36}
@@ -181,7 +189,7 @@ export default function Home() {
                       <label htmlFor="activity1" className="ml-2">Hike</label>
                     </div>
                     <div className="flex align-items-center">
-                      <Checkbox inputId="activity2" name="bike" value="Bike" onChange={onActivitySelectChange} checked={selectedActivities.includes('Bike')} />
+                      <Checkbox inputId="activity2" name="bike" value={BIKING} onChange={onActivitySelectChange} checked={selectedActivities.includes(BIKING)} />
                       <Image
                         src="/femalebicycle.png"
                         width={36}
@@ -191,7 +199,7 @@ export default function Home() {
                       <label htmlFor="activity2" className="ml-2">Bike</label>
                     </div>
                     <div className="flex align-items-center">
-                      <Checkbox inputId="activity3" name="travel" value="Travel" onChange={onActivitySelectChange} checked={selectedActivities.includes('Travel')} />
+                      <Checkbox inputId="activity3" name="travel" value={TRAVEL} onChange={onActivitySelectChange} checked={selectedActivities.includes(TRAVEL)} />
                       <Image
                         src="/airplane.png"
                         width={36}
