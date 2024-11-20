@@ -5,6 +5,19 @@ const defaultFilters = {
   participant: "both",
   years: [currentYear],
   activityTypes: [HIKING, BIKING, TRAVEL],
+  distance: {
+    operator: ">",
+    value: 0,
+  },
+  elevation: {
+    operator: ">",
+    value: 0,
+  },
+};
+
+const operatorTranslation = {
+  ">": (x: number, y: number) => x > y,
+  "<": (x: number, y: number) => x < y,
 };
 
 export const getActivityImgSrc = (activityData) => {
@@ -76,18 +89,37 @@ export const applyFiltersToMap = (
   };
 
   const distanceFilter = (allData) => {
-    const filterYear = filter.year;
+    if (filter.distance.operator === ">" && filter.distance.value === 0)
+      return allData;
+    if (filter.distance.operator === "<" && filter.distance.value === 0)
+      return { outdoorsData: {}, travelData: allData.travelData };
+
+    const distanceThreshold = filter.distance.value;
     const outdoorsData = allData.outdoorsData.filter((activityData) => {
-      return new Date(activityData.date).getFullYear() === filterYear;
+      return operatorTranslation[filter.distance.operator](
+        activityData.distance,
+        distanceThreshold
+      );
     });
 
-    const travelData = allData.travelData.filter((activityData) => {
-      if (!activityData.startDate) return false;
+    return { outdoorsData, travelData: allData.travelData };
+  };
 
-      return new Date(activityData.startDate).getFullYear() === filterYear;
+  const elevationFilter = (allData) => {
+    if (filter.elevation.operator === ">" && filter.elevation.value === 0)
+      return allData;
+    if (filter.elevation.operator === "<" && filter.elevation.value === 0)
+      return { outdoorsData: {}, travelData: {} };
+
+    const elevationThreshold = filter.elevation.value;
+    const outdoorsData = allData.outdoorsData.filter((activityData) => {
+      return operatorTranslation[filter.elevation.operator](
+        activityData.elevation,
+        elevationThreshold
+      );
     });
 
-    return { outdoorsData, travelData };
+    return { outdoorsData, travelData: allData.travelData };
   };
 
   filteredData = yearFilter(notionData);
@@ -106,7 +138,11 @@ export const applyFiltersToMap = (
     filteredData = participantFilter(filteredData);
     console.log("asds", filteredData);
     filteredData = activityFilter(filteredData);
-    console.log("asds", filteredData);
+    console.log("activityFilter", filteredData);
+    filteredData = distanceFilter(filteredData);
+    console.log("distanceFilter", filteredData);
+    filteredData = elevationFilter(filteredData);
+    console.log("elevationFilter", filteredData);
   }
 
   console.log("asds", filteredData);

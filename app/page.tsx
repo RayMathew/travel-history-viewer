@@ -29,17 +29,17 @@ export default function Home() {
   const [displayData, setDisplayData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [participant, setParticipant] = useState(null);
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
 
   const [selectedYears, setSelectedYears] = useState([]);
   const [yearOptions, setYearOptions] = useState([]);
   const [selectedActivities, setSelectedActivities] = useState([]);
-  const [distanceThreshold, setDistanceThreshold] = useState(null);
-  const [elevationThreshold, setElevationThreshold] = useState(null);
+  const [distanceThreshold, setDistanceThreshold] = useState(0);
+  const [elevationThreshold, setElevationThreshold] = useState(0);
 
   const operatorOptions = [' < ', ' > '];
-  const [distanceOperator, setDistanceOperator] = useState(operatorOptions[0]);
-  const [elevationOperator, setElevationOperator] = useState(operatorOptions[0]);
+  const [distanceOperator, setDistanceOperator] = useState(operatorOptions[1]);
+  const [elevationOperator, setElevationOperator] = useState(operatorOptions[1]);
 
   const [viewMilestonesBool, setViewMilestonesBool] = useState(null);
 
@@ -86,7 +86,7 @@ export default function Home() {
     })
     setYearOptions(temp);
     setSelectedYears([filterYearsArray[filterYearsArray.length - 1]]);
-      setParticipant('both');
+      setSelectedParticipant('both');
       setSelectedActivities([BIKING, HIKING, TRAVEL]);
     };
 
@@ -98,23 +98,27 @@ export default function Home() {
 
   // }, [displayData]);
 
+  const updateFilterConfig = (filter) => {
+    return {
+      participant: filter.participant || selectedParticipant,
+      years: filter.year || selectedYears,
+      activityTypes: filter.activityTypes || selectedActivities,
+      distance: filter.distance || { operator: distanceOperator.trim(), value: distanceThreshold },
+      elevation: filter.elevation || { operator: elevationOperator.trim(), value: elevationThreshold }
+    };
+  };
+
   const onParticipantChange = (value) => {
-    setParticipant(value);
-    const filteredData = applyFiltersToMap(false, notionData, {
-      years: selectedYears,
-      participant: value,
-      activityTypes: selectedActivities
-    });
+    setSelectedParticipant(value);
+
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ participant: value }));
     setDisplayData(filteredData);
   };
 
   const onYearSelectChange = (yearArray) => {
     setSelectedYears(yearArray);
-    const filteredData = applyFiltersToMap(false, notionData, {
-      years: yearArray,
-      participant,
-      activityTypes: selectedActivities
-    });
+
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({       years: yearArray }));
     setDisplayData(filteredData);
   };
 
@@ -128,13 +132,37 @@ export default function Home() {
 
     setSelectedActivities(_selectedActivities);
 
-    const filteredData = applyFiltersToMap(false, notionData, {
-      years: selectedYears,
-      participant,
-      activityTypes: _selectedActivities
-    });
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ activityTypes: _selectedActivities }));
     setDisplayData(filteredData);
-  }
+  };
+
+  const onDistanceOperatorChange = (operator) => {
+    setDistanceOperator(operator);
+
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ distance: { operator: operator.trim(), value: distanceOperator } }));
+    setDisplayData(filteredData);
+  };
+
+  const onDistanceThresholdChange = (value) => {
+    setDistanceThreshold(value);
+
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ distance: { operator: distanceOperator.trim(), value } }));
+    setDisplayData(filteredData);
+  };
+
+  const onElevationOperatorChange = (operator) => {
+    setElevationOperator(operator);
+
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ elevation: { operator: operator.trim(), value: elevationOperator } }));
+    setDisplayData(filteredData);
+  };
+
+  const onElevationThresholdChange = (value) => {
+    setElevationThreshold(value);
+
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ elevation: { operator: elevationOperator.trim(), value } }));
+    setDisplayData(filteredData);
+  };
 
 
   if (loading) {
