@@ -2,18 +2,16 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { NAMRATA, RAY } from "@/lib/constants";
 
-export default function ImageRadioButtons({ onChange }) {
+export default function ImageRadioButtons({ onChange, disabled }) {
     const [selected, setSelected] = useState('both');
 
     const selectRadioOption = (value) => {
-        // console.log(value)
         setSelected(value);
         onChange(value);
     };
 
     return (
         <div style={{ display: 'flex', gap: '20px' }}>
-            {/* Radio button 1: Your image */}
             <label
                 style={{
                     display: 'inline-block',
@@ -28,6 +26,7 @@ export default function ImageRadioButtons({ onChange }) {
                     name="profile"
                     value={RAY}
                     style={{ display: 'none' }}
+                    disabled={disabled}
                     onChange={(e) => selectRadioOption(e.target.value)}
                 />
                 <Image
@@ -52,6 +51,7 @@ export default function ImageRadioButtons({ onChange }) {
                     name="profile"
                     value={NAMRATA}
                     style={{ display: 'none' }}
+                    disabled={disabled}
                     onChange={(e) => selectRadioOption(e.target.value)}
                 />
                 <Image
@@ -76,6 +76,7 @@ export default function ImageRadioButtons({ onChange }) {
                     name="profile"
                     value="both"
                     style={{ display: 'none' }}
+                    disabled={disabled}
                     onChange={(e) => selectRadioOption(e.target.value)}
                 />
                 <Image

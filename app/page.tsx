@@ -41,7 +41,7 @@ export default function Home() {
   const [distanceOperator, setDistanceOperator] = useState(operatorOptions[1]);
   const [elevationOperator, setElevationOperator] = useState(operatorOptions[1]);
 
-  const [viewMilestonesBool, setViewMilestonesBool] = useState(null);
+  const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
@@ -118,7 +118,7 @@ export default function Home() {
   const onYearSelectChange = (yearArray) => {
     setSelectedYears(yearArray);
 
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({       years: yearArray }));
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ years: yearArray }));
     setDisplayData(filteredData);
   };
 
@@ -164,6 +164,19 @@ export default function Home() {
     setDisplayData(filteredData);
   };
 
+const onToggleMilestonesMode = (value: true | null) => {
+    setViewMilestonesBool(!!value); // set to true if true, set to false if null;
+
+    if (value) {
+      const filteredData = applyMilestoneFilters(notionData);
+      setDisplayData(filteredData);
+    } else {
+      const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({}));
+      setDisplayData(filteredData);
+    }
+  };
+
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -200,15 +213,21 @@ export default function Home() {
           <div>
             <Accordion activeIndex={0}>
               <AccordionTab header="Filters">
-                <ImageRadioButtons onChange={onParticipantChange} />
+                <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
                 <div className="flex flex-row mt-4">
                   <div>
                     Years:
                   </div>
                   <div>
-                    <MultiSelect value={selectedYears} onChange={(e) => onYearSelectChange(e.value)}
-                      options={yearOptions} optionLabel="name" display="chip"
-                      placeholder="Select Years" className="w-full md:w-20rem" />
+                    <MultiSelect
+value={selectedYears}
+onChange={(e) => onYearSelectChange(e.value)}
+                      options={yearOptions}
+                      disabled={viewMilestonesBool}
+optionLabel="name"
+display="chip"
+                      placeholder="Select Years"
+className="w-full md:w-20rem" />
                   </div>
                 </div>
                 <div className="flex flex-row mt-4">
@@ -217,7 +236,14 @@ export default function Home() {
                   </div>
                   <div className="card flex flex-wrap justify-content-center gap-3">
                     <div className="flex align-items-center">
-                      <Checkbox inputId="activity1" name="hike" value={HIKING} onChange={onActivitySelectChange} checked={selectedActivities.includes(HIKING)} />
+                      <Checkbox
+inputId="activity1"
+name="hike"
+value={HIKING}
+onChange={onActivitySelectChange}
+checked={selectedActivities.includes(HIKING)}
+                        disabled={viewMilestonesBool}
+/>
                       <Image
                         src="/malewalk.png"
                         width={36}
@@ -228,7 +254,14 @@ title="Hike"
                       <label htmlFor="activity1" className="ml-2">Hike</label>
                     </div>
                     <div className="flex align-items-center">
-                      <Checkbox inputId="activity2" name="bike" value={BIKING} onChange={onActivitySelectChange} checked={selectedActivities.includes(BIKING)} />
+                      <Checkbox
+inputId="activity2"
+name="bike"
+value={BIKING}
+onChange={onActivitySelectChange}
+checked={selectedActivities.includes(BIKING)}
+                        disabled={viewMilestonesBool}
+/>
                       <Image
                         src="/femalebicycle.png"
                         width={36}
@@ -239,7 +272,14 @@ title="Bike"
                       <label htmlFor="activity2" className="ml-2">Bike</label>
                     </div>
                     <div className="flex align-items-center">
-                      <Checkbox inputId="activity3" name="travel" value={TRAVEL} onChange={onActivitySelectChange} checked={selectedActivities.includes(TRAVEL)} />
+                      <Checkbox
+inputId="activity3"
+name="travel"
+value={TRAVEL}
+onChange={onActivitySelectChange}
+checked={selectedActivities.includes(TRAVEL)}
+                        disabled={viewMilestonesBool}
+/>
                       <Image
                         src="/airplane.png"
                         width={36}
@@ -255,12 +295,19 @@ title="Bike"
                   Distance:
                   <div className="flex flex-row">
                     <span>
-                      <SelectButton value={distanceOperator} tooltip="Distance less than or greater than" tooltipOptions={{ showDelay: 500, hideDelay: 300 }} onChange={(e) => setDistanceOperator(e.value)} options={operatorOptions} />
+                      <SelectButton
+value={distanceOperator}
+tooltip="Distance less than or greater than"
+tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
+onChange={(e) => onDistanceOperatorChange(e.value)}
+options={operatorOptions}
+                        disabled={viewMilestonesBool}
+/>
                     </span>
                     <span>
                       <InputNumber
                         value={distanceThreshold}
-                        onValueChange={(e) => setDistanceThreshold(e.value)}
+                        onValueChange={(e) => onDistanceThresholdChange(e.value)}
                         mode="decimal"
                         min={0}
                         useGrouping={false}
@@ -268,6 +315,7 @@ title="Bike"
                         placeholder="km"
                         suffix=" km"
                         showButtons
+disabled={viewMilestonesBool}
                         // buttonLayout="vertical"
                         // decrementButtonClassName="p-button-secondary"
                         // incrementButtonClassName="p-button-secondary"
@@ -286,15 +334,22 @@ title="Bike"
                   </div>
                 </div>
                 <div className="mt-4">
-                  Elevation:
+                  Elevation Gain:
                   <div className="flex flex-row">
                     <span>
-                      <SelectButton value={elevationOperator} tooltip="Elevation less than or greater than" tooltipOptions={{ showDelay: 500, hideDelay: 300 }} onChange={(e) => setElevationOperator(e.value)} options={operatorOptions} />
+                      <SelectButton
+value={elevationOperator}
+tooltip="Elevation less than or greater than"
+tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
+onChange={(e) => onElevationOperatorChange(e.value)}
+options={operatorOptions}
+                        disabled={viewMilestonesBool}
+/>
                     </span>
                     <span>
                       <InputNumber
                         value={elevationThreshold}
-                        onValueChange={(e) => setElevationThreshold(e.value)}
+                        onValueChange={(e) => onElevationThresholdChange(e.value)}
                         mode="decimal"
                         min={0}
                         useGrouping={false}
@@ -302,6 +357,7 @@ title="Bike"
                         placeholder="ft"
                         suffix=" ft"
                         showButtons
+disabled={viewMilestonesBool}
                         // buttonLayout="vertical"
                         // decrementButtonClassName="p-button-secondary"
                         // incrementButtonClassName="p-button-secondary"
@@ -319,7 +375,11 @@ title="Bike"
                   </div>
                 </div>
                 <div className="mt-4">
-                  <SelectButton value={viewMilestonesBool} onChange={(e) => setViewMilestonesBool(e.value)} options={['🏆 Milestones Only']} />
+                  <SelectButton
+value={viewMilestonesBool}
+onChange={(e) => onToggleMilestonesMode(e.value)}
+options={[{ label: '🏆 Milestones Only', value: true }]}
+/>
                 </div>
               </AccordionTab>
               <AccordionTab header="Details">
