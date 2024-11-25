@@ -10,22 +10,19 @@ function getNotionClient(): Client {
   return notionClient;
 }
 
-export const fetchNotionData = async () => {
-  const listUsersResponse = await getNotionClient().users.list({});
-
-  return listUsersResponse;
-};
-
 export const fetchOutdoorsDBData = async () => {
-  const outdoorsData = [];
+  //   const outdoorsData = [];
+  const groupedData = new Map();
   //   console.time("outdoors data");
-  const dbData = await getNotionClient().databases.query({
-    database_id: process.env.NOTION_OUTDOORSDB_KEY!,
-  });
 
-  //   console.log(dbData);
   try {
-    dbData.results.forEach((page) => {
+    let dbData = await getNotionClient().databases.query({
+      database_id: process.env.NOTION_OUTDOORSDB_KEY!,
+    });
+
+    //   console.log(dbData);
+
+    dbData.results.forEach((page, index) => {
       const { properties } = page;
       const type = getActivityType(
         properties[OUTDOOR_PROPERTIES.TAGS].multi_select
@@ -42,9 +39,10 @@ export const fetchOutdoorsDBData = async () => {
       const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
 
-      outdoorsData.push({
+      const coordinateKey = `${lat},${lng}`;
+
+      const activity = {
         type,
-        coordinates: { lat, lng },
         date,
         distance,
         doneBy,
@@ -53,7 +51,18 @@ export const fetchOutdoorsDBData = async () => {
         allTrailsLink,
         googlePhotosLink,
         instagramLink,
-      });
+      };
+
+      // group data if they are in same location
+      if (groupedData.has(coordinateKey)) {
+        groupedData.get(coordinateKey).activities.push(activity);
+      } else {
+        groupedData.set(coordinateKey, {
+          coordinates: { lat, lng },
+          name,
+          activities: [activity],
+        });
+      }
     });
 
     // console.timeEnd("outdoors data");
@@ -61,18 +70,23 @@ export const fetchOutdoorsDBData = async () => {
   } catch (error) {
     console.log("error", error);
   }
-  return outdoorsData;
+
+  // convert map to array
+  return [...groupedData.values()];
 };
 
 export const fetchTravelDBData = async () => {
-  const travelData = [];
+  //   const travelData = [];
+  const groupedData = new Map();
   //   console.time("outdoors data");
-  const dbData = await getNotionClient().databases.query({
-    database_id: process.env.NOTION_TRAVELDB_KEY!,
-  });
 
-  //   console.log(dbData);
   try {
+    const dbData = await getNotionClient().databases.query({
+      database_id: process.env.NOTION_TRAVELDB_KEY!,
+    });
+
+    //   console.log(dbData);
+
     dbData.results.forEach((page) => {
       const { properties } = page;
       //   console.log(properties);
@@ -95,7 +109,7 @@ export const fetchTravelDBData = async () => {
       );
       const type = TRAVEL;
 
-      travelData.push({
+      const activity = {
         name,
         startDate,
         endDate,
@@ -103,10 +117,37 @@ export const fetchTravelDBData = async () => {
         doneBy,
         travelStatus,
         journalStatus,
-        coordinatesArray,
         googlePhotosLink,
         type,
+      };
+
+      // Add this trip to the list for the current coordinate
+      coordinatesArray.forEach(({ lat, lng }) => {
+        const coordinateKey = `${lat},${lng}`;
+
+        if (groupedData.has(coordinateKey)) {
+          groupedData.get(coordinateKey).activities.push(activity);
+        } else {
+          groupedData.set(coordinateKey, {
+            coordinates: { lat, lng },
+            name,
+            activities: [activity],
+          });
+        }
       });
+
+      //If a trip doesn't have a coordinate, it is still a plan. Add it separately.
+      if (coordinatesArray.length === 0) {
+        const coordinateKey = `(no coordinates)`;
+        if (groupedData.has(coordinateKey)) {
+          groupedData.get(coordinateKey).activities.push(activity);
+        } else {
+          groupedData.set(coordinateKey, {
+            name: "Future Trips",
+            activities: [activity],
+          });
+        }
+      }
     });
 
     // console.timeEnd("outdoors data");
@@ -114,7 +155,7 @@ export const fetchTravelDBData = async () => {
   } catch (error) {
     console.log("error", error);
   }
-  return travelData;
+  return [...groupedData.values()];
 };
 
 const getActivityType = (tagArray): string => {

@@ -8,7 +8,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { getActivityImgSrc } from "@/lib/maphelper";
 
-const MarkerWithInfoWindow = ({ activityData, position }) => {
+const MarkerWithInfoWindow = ({ activityData, name, position }) => {
     // const [markerRef, marker] = useAdvancedMarkerRef();
     // const infoWindowRef = useRef(null);
 
@@ -31,14 +31,14 @@ const MarkerWithInfoWindow = ({ activityData, position }) => {
                 // ref={markerRef}
                 // onClick={(event) => handleMarkerClick(event, activityData)}
                 position={position}
-                title={activityData.name}
+                title={name}
             // collisionBehavior={CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY}
             >
                 <Image
-                    src={getActivityImgSrc(activityData)}
+                    src={getActivityImgSrc(activityData[0])}
                     width={36}
                     height={36}
-                    alt={activityData.type}
+                    alt={activityData[0].type}
                 />
             </AdvancedMarker>
             {/* {infoWindowShown && (
@@ -54,36 +54,54 @@ const MarkerWithInfoWindow = ({ activityData, position }) => {
 
 export default function CustomMap({ displayData }) {
     const map = useMap();
+    console.log('rerender map', displayData)
 
     useEffect(() => {
         if (!map || !displayData) return;
+
         const bounds = new window.google.maps.LatLngBounds();
         const { outdoorsData, travelData } = displayData;
         console.log(displayData);
 
-        
-        for (var i = 0; i < outdoorsData.length; i++) {
-            bounds.extend(
-                new window.google.maps.LatLng(
-                    outdoorsData[i].coordinates.lat,
-                    outdoorsData[i].coordinates.lng
-                )
-            );
-                    }
-        for (var i = 0; i < travelData.length; i++) {
-            for (var k = 0; k < travelData[i].coordinatesArray.length; k++) {
+        const extendBounds = (data) => {
+            for (var i = 0; i < data.length; i++) {
                 bounds.extend(
                     new window.google.maps.LatLng(
-                        travelData[i].coordinatesArray[k].lat,
-                        travelData[i].coordinatesArray[k].lng
+                        data[i].coordinates.lat,
+                        data[i].coordinates.lng
                     )
                 );
             }
-                    }
+        };
+
+        if (outdoorsData.length || travelData.length) {
+            extendBounds(outdoorsData);
+            extendBounds(travelData);
+        }
+        else {
+            bounds.extend(new window.google.maps.LatLng(0, 0))
+        }
 
         map.fitBounds(bounds);
 
     }, [map, displayData]);
+
+    const renderMarkers = (markerData) => {
+        return markerData.map((location, index) => {
+            if (!location.coordinates) return null;
+            return (
+                <MarkerWithInfoWindow
+                    key={index}
+                    activityData={location.activities}
+                    name={location.name}
+                    position={{
+                        lat: location.coordinates.lat,
+                        lng: location.coordinates.lng,
+                    }}
+                />
+            );
+        })
+    };
 
     return (
         <Map
@@ -92,31 +110,10 @@ export default function CustomMap({ displayData }) {
             defaultCenter={{ lat: 5.145259, lng: -27.8719489 }}
             mapTypeControl={false}
             streetViewControl={false}
+        // key={JSON.stringify(displayData)}
         >
-            {displayData.outdoorsData.map((activityData, index) => {
-
-                return (
-                    <MarkerWithInfoWindow
-                        key={index}
-                        activityData={activityData}
-                        position={{
-                            lat: activityData.coordinates.lat,
-                            lng: activityData.coordinates.lng,
-                        }}
-                    />
-                );
-            })}
-            {displayData.travelData.map((activityData) => {
-                return activityData.coordinatesArray.map((coordinatesObj, index) => {
-                    return (
-                        <MarkerWithInfoWindow
-                            key={index}
-                            activityData={activityData}
-                            position={{ lat: coordinatesObj.lat, lng: coordinatesObj.lng }}
-                        />
-                    );
-                });
-            })}
+            {renderMarkers(displayData.outdoorsData)}
+            {renderMarkers(displayData.travelData)}
         </Map>
     );
 };

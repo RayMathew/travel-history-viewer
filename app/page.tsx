@@ -67,14 +67,20 @@ export default function Home() {
       const { outdoorsData, travelData } = initialData;
     const yearsForFilter = new Set();
 
-    for (var i = 0; i < outdoorsData.length; i++) {
-      yearsForFilter.add(new Date(outdoorsData[i].date).getFullYear());
-    }
-    for (var i = 0; i < travelData.length; i++) {
-      if (travelData[i].startDate) {
-        yearsForFilter.add(new Date(travelData[i].startDate).getFullYear());
+    outdoorsData.forEach(outdoorDatum => {
+outdoorDatum.activities.forEach(activity => {
+      yearsForFilter.add(new Date(activity.date).getFullYear());
+    });
+      });
+
+      travelData.forEach(travelDatum => {
+        travelDatum.activities.forEach(activity => {
+      if (activity.startDate) {
+        yearsForFilter.add(new Date(activity.startDate).getFullYear());
       }
-    }
+    });
+      });
+
     const filterYearsArray = Array.from(yearsForFilter);
     filterYearsArray.sort();
 
@@ -84,6 +90,7 @@ export default function Home() {
         value: year,
       }
     })
+
     setYearOptions(temp);
     setSelectedYears([filterYearsArray[filterYearsArray.length - 1]]);
       setSelectedParticipant('both');
@@ -93,15 +100,11 @@ export default function Home() {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   if (!displayData) return;
-
-  // }, [displayData]);
-
+  
   const updateFilterConfig = (filter) => {
     return {
       participant: filter.participant || selectedParticipant,
-      years: filter.year || selectedYears,
+      years: filter.years || selectedYears,
       activityTypes: filter.activityTypes || selectedActivities,
       distance: filter.distance || { operator: distanceOperator.trim(), value: distanceThreshold },
       elevation: filter.elevation || { operator: elevationOperator.trim(), value: elevationThreshold }
