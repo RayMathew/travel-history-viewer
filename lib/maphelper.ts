@@ -63,6 +63,17 @@ export const getActivityImgSrc = (activityData) => {
   return "/femalebicycle.png";
 };
 
+export const countActivities = (filteredData) => {
+  let count = 0;
+  filteredData.outdoorsData.forEach(
+    (locationData) => (count += locationData.activities.length)
+  );
+  filteredData.travelData.forEach(
+    (locationData) => (count += locationData.activities.length)
+  );
+  return count;
+};
+
 export const applyFiltersToMap = (
   initialLoad,
   notionData,

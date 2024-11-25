@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { PrimeReactProvider } from "primereact/api";
 import Tailwind from 'primereact/passthrough/tailwind';
 import 'primeicons/primeicons.css';
@@ -13,7 +13,7 @@ import {
   InfoWindow,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { applyFiltersToMap } from "@/lib/maphelper";
+import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
 import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
 
@@ -22,6 +22,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
+import { Toast } from 'primereact/toast';
 import { BIKING, HIKING, TRAVEL } from "@/lib/constants";
 
 export default function Home() {
@@ -43,8 +44,14 @@ export default function Home() {
 
   const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
+  const toast = useRef(null);
+
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
+
+  const displayInfo = (info) => {
+    toast.current.show({ severity: 'info', summary: 'Info', detail: `Found ${info} activities` });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,6 +122,8 @@ outdoorDatum.activities.forEach(activity => {
     setSelectedParticipant(value);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ participant: value }));
+    const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -122,6 +131,8 @@ outdoorDatum.activities.forEach(activity => {
     setSelectedYears(yearArray);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ years: yearArray }));
+    const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -136,6 +147,8 @@ outdoorDatum.activities.forEach(activity => {
     setSelectedActivities(_selectedActivities);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ activityTypes: _selectedActivities }));
+const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -143,6 +156,8 @@ outdoorDatum.activities.forEach(activity => {
     setDistanceOperator(operator);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ distance: { operator: operator.trim(), value: distanceOperator } }));
+const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -150,6 +165,8 @@ outdoorDatum.activities.forEach(activity => {
     setDistanceThreshold(value);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ distance: { operator: distanceOperator.trim(), value } }));
+const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -157,6 +174,8 @@ outdoorDatum.activities.forEach(activity => {
     setElevationOperator(operator);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ elevation: { operator: operator.trim(), value: elevationOperator } }));
+const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -164,6 +183,8 @@ outdoorDatum.activities.forEach(activity => {
     setElevationThreshold(value);
 
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ elevation: { operator: elevationOperator.trim(), value } }));
+const count = countActivities(filteredData);
+    displayInfo(count);
     setDisplayData(filteredData);
   };
 
@@ -191,12 +212,9 @@ const onToggleMilestonesMode = (value: true | null) => {
 
 
 
-
-
-
-
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+      <Toast ref={toast} />
     <div className="flex">
       <div className="md:w-1/3 2xl:w-128">
         {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
