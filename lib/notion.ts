@@ -34,7 +34,8 @@ export const fetchOutdoorsDBData = async () => {
       const distance = properties[OUTDOOR_PROPERTIES.DISTANCE].number;
       const doneBy = getPeople(properties[OUTDOOR_PROPERTIES.DONE_BY].people);
       const elevation = properties[OUTDOOR_PROPERTIES.ELEVATION].number;
-      const name = properties[OUTDOOR_PROPERTIES.NAME].title[0].plain_text;
+      const locationName =
+        properties[OUTDOOR_PROPERTIES.NAME].title[0].plain_text;
       const allTrailsLink = properties[OUTDOOR_PROPERTIES.ALL_TRAILS].url;
       const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
@@ -47,7 +48,7 @@ export const fetchOutdoorsDBData = async () => {
         distance,
         doneBy,
         elevation,
-        name,
+        locationName,
         allTrailsLink,
         googlePhotosLink,
         instagramLink,
@@ -59,7 +60,7 @@ export const fetchOutdoorsDBData = async () => {
       } else {
         groupedData.set(coordinateKey, {
           coordinates: { lat, lng },
-          name,
+          locationName,
           activities: [activity],
         });
       }
@@ -99,18 +100,20 @@ export const fetchTravelDBData = async () => {
         properties[TRAVEL_PROPERTIES.TRAVEL_STATUS].status.name;
       const journalStatus =
         properties[TRAVEL_PROPERTIES.JOURNAL_STATUS].status.name;
+      const places = getAllPlaces(
+        properties[TRAVEL_PROPERTIES.PLACES].rich_text[0]
+      );
       const coordinatesArray = getTravelCoordinates(
         properties[TRAVEL_PROPERTIES.COORDINATES].rich_text[0]
       );
       const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
-      const name = getDescriptiveTravelName(
+      const activityName = getDescriptiveTravelName(
         properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
         startDate
       );
       const type = TRAVEL;
 
       const activity = {
-        name,
         startDate,
         endDate,
         people,
@@ -118,11 +121,13 @@ export const fetchTravelDBData = async () => {
         travelStatus,
         journalStatus,
         googlePhotosLink,
+        activityName,
+        places,
         type,
       };
 
       // Add this trip to the list for the current coordinate
-      coordinatesArray.forEach(({ lat, lng }) => {
+      coordinatesArray.forEach(({ lat, lng }, index) => {
         const coordinateKey = `${lat},${lng}`;
 
         if (groupedData.has(coordinateKey)) {
@@ -130,7 +135,7 @@ export const fetchTravelDBData = async () => {
         } else {
           groupedData.set(coordinateKey, {
             coordinates: { lat, lng },
-            name,
+            locationName: places[index], // Notion data was set to match the location name and the places array index
             activities: [activity],
           });
         }
@@ -143,7 +148,7 @@ export const fetchTravelDBData = async () => {
           groupedData.get(coordinateKey).activities.push(activity);
         } else {
           groupedData.set(coordinateKey, {
-            name: "Future Trips",
+            locationName: "Future Trips",
             activities: [activity],
           });
         }
@@ -174,6 +179,12 @@ const getOutdoorCoordinates = (coordinatesObj) => {
   return { lat, lng };
 };
 
+const getAllPlaces = (placesObj) => {
+  if (!placesObj) return [];
+
+  return placesObj.plain_text.split(", ");
+};
+
 const getTravelCoordinates = (coordinatesObj) => {
   const coordinatesArray = [];
 
@@ -199,14 +210,14 @@ const getPeople = (peopleObjArray) => {
 };
 
 const getDescriptiveTravelName = (
-  name: string,
+  locationName: string,
   startDateString: string
 ): string => {
-  if (!startDateString) return name;
+  if (!startDateString) return locationName;
 
   const dateOfTravel = new Date(startDateString);
   const travelMonth = dateOfTravel.toLocaleString("default", { month: "long" });
   const traveYear = dateOfTravel.getFullYear();
 
-  return `${name} ${travelMonth} ${traveYear}`;
+  return `${locationName} ${travelMonth} ${traveYear}`;
 };

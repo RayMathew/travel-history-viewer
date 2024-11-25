@@ -312,7 +312,7 @@ export const applyMilestoneFilters = (notionData) => {
   notionData.outdoorsData.forEach((outdoorLocation) => {
     const outdoorLocationClone = {
       coordinates: outdoorLocation.coordinates,
-      name: outdoorLocation.name,
+      locationName: outdoorLocation.locationName,
       activities: [],
     };
     outdoorLocation.activities.forEach((activityData) => {
@@ -392,7 +392,7 @@ export const applyMilestoneFilters = (notionData) => {
           labels.length === 1 ? labels[0] : labels.join(" AND ");
 
         const data = structuredClone(activityData);
-        data.name = `${namePrefix} - ${data.name} ${new Date(
+        data.locationName = `${namePrefix} - ${data.locationName} ${new Date(
           activityData.date
         ).getFullYear()}`;
 

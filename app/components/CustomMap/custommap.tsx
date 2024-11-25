@@ -8,7 +8,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { getActivityImgSrc } from "@/lib/maphelper";
 
-const MarkerWithInfoWindow = ({ activityData, name, position }) => {
+const MarkerWithInfoWindow = ({ activityData, locationName, position }) => {
     // const [markerRef, marker] = useAdvancedMarkerRef();
     // const infoWindowRef = useRef(null);
 
@@ -31,7 +31,7 @@ const MarkerWithInfoWindow = ({ activityData, name, position }) => {
                 // ref={markerRef}
                 // onClick={(event) => handleMarkerClick(event, activityData)}
                 position={position}
-                title={name}
+                title={locationName}
             // collisionBehavior={CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY}
             >
                 <Image
@@ -44,7 +44,7 @@ const MarkerWithInfoWindow = ({ activityData, name, position }) => {
             {/* {infoWindowShown && (
           <InfoWindow anchor={marker} ref={infoWindowRef} onClose={handleClose} className="property">
             <h2>InfoWindow content!</h2>
-            <p>{activityData.name}</p>
+            <p>{activityData.locationName}</p>
           </InfoWindow>
 
         )} */}
@@ -93,7 +93,7 @@ export default function CustomMap({ displayData }) {
                 <MarkerWithInfoWindow
                     key={index}
                     activityData={location.activities}
-                    name={location.name}
+                    locationName={location.locationName}
                     position={{
                         lat: location.coordinates.lat,
                         lng: location.coordinates.lng,

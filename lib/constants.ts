@@ -25,5 +25,6 @@ export const TRAVEL_PROPERTIES = {
   TRAVEL_STATUS: "Travel Status",
   JOURNAL_STATUS: "Journal Status",
   PHOTOS: "Google Photos Album",
+  PLACES: "Places",
   COORDINATES: "Coordinates",
 };
