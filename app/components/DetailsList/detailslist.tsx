@@ -8,55 +8,30 @@ import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 
 export default function DetailsList({ activities }) {
 
-    const header = (activity) => (
-        <>
-            <div className='flex p-5 gap-4'>
-                <img className='w-1/3 aspect-square rounded-lg' alt="Card" src="/image.png" />
-                <div className='w-2/3 grid content-center'>
-                    <div className='text-2xl font-bold mb-2 self-center'>{activity.activityName}</div>
-                </div>
-            </div>
-        </>
-    );
+
 
     // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
-    const footer = (activity) => (
-        <div className='flex'>
-            <Button rounded text raised aria-label='Google Photos' onClick={e => {
-                window.open(activity.googlePhotosLink, "_blank")
-            }} className='aspect-square'>
-                <img className='w-6' src="/photoalbum.png" />
-            </Button>
-            <Button rounded text raised aria-label='Instagram' onClick={e => {
-                window.open(activity.instagramLink, "_blank")
-            }} className='aspect-square'>
-                <img className='w-6' src="/instagram.png" />
-            </Button>
-            <Button rounded text raised aria-label='Journal' className='aspect-square'>
-                <img className='w-6' src="/journal.png" />
-            </Button>
-        </div>
-    );
-
-
 
     if (!activities) return null;
-    {/* <div
-                        className="w-1/3 bg-cover"
-                        style={{
-                            backgroundImage: `url(${imageUrl})`,
-                        }}
-                    ></div> */}
+
+    activities = activities.sort((a, b) => {
+
+        if (new Date(a.startDate || a.date) < new Date(b.startDate || b.date)) return 1;
+        else if (new Date(a.startDate || a.date) > new Date(b.startDate || b.date)) return - 1;
+        else return 0;
+    });
+
+
     return (
-        <>
+        <div>
             {activities.map((activity, index) => (
 
                 // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
-                <div key={index} className=''>
+                <div key={index}>
                     <div className='bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
                         <>
                             <div className='flex p-5 gap-4'>
-                                <img className='w-1/3 aspect-square rounded-lg' alt="Card" src="/image.png" />
+                                <img className='w-1/3 aspect-square rounded-lg h-full' alt="Card" src="/image.png" />
                                 <div className='w-2/3 grid content-center'>
                                     <div className='text-2xl font-bold mb-2 self-center'>
                                         {activity.type === TRAVEL && (
@@ -116,7 +91,7 @@ export default function DetailsList({ activities }) {
                     </div>
                 </div>
             ))}
-        </>
+        </div>
     );
 
 }

@@ -29,3 +29,8 @@ export const TRAVEL_PROPERTIES = {
   COORDINATES: "Coordinates",
   INSTAGRAM: "Instagram",
 };
+
+export const SECTIONS = {
+  FILTER_SECTION: 0,
+  DETAILS_SECTION: 1,
+};

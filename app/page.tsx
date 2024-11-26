@@ -1,30 +1,29 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { PrimeReactProvider } from "primereact/api";
-import Tailwind from 'primereact/passthrough/tailwind';
-import 'primeicons/primeicons.css';
-import Image from "next/image";
 import {
-  AdvancedMarker,
   APIProvider,
-  Map,
-  useMap,
-  InfoWindow,
-  useAdvancedMarkerRef,
+  // useMap,
+  // InfoWindow,
+  // useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
-import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
+import debounce from 'lodash.debounce';
+import Image from "next/image";
 import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
-import DetailsList from "./components/DetailsList/detailslist";
-
+const DetailsList = React.lazy(() => import("./components/DetailsList/detailslist"));
+import { PrimeReactProvider } from "primereact/api";
+import 'primeicons/primeicons.css';
+import Tailwind from 'primereact/passthrough/tailwind';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { MultiSelect } from 'primereact/multiselect';
 import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
 import { Toast } from 'primereact/toast';
-import { BIKING, HIKING, TRAVEL } from "@/lib/constants";
+
+import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
+import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
 
 export default function Home() {
   const [notionData, setNotionData] = useState(null);
@@ -46,7 +45,7 @@ export default function Home() {
   const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
   const [detailsTitle, setDetailsTitle] = useState('Details');
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(SECTIONS.FILTER_SECTION);
   const [detailsContent, setDetailsContent] = useState(null);
 
   const toast = useRef(null);
@@ -112,6 +111,13 @@ outdoorDatum.activities.forEach(activity => {
     fetchData();
   }, []);
 
+  const updateUIAndFilter = (filterUpdates) => {
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig(filterUpdates));
+    const count = countActivities(filteredData);
+    displayInfo(count);
+    setDisplayData(filteredData);
+  };
+
   
   const updateFilterConfig = (filter) => {
     return {
@@ -126,19 +132,13 @@ outdoorDatum.activities.forEach(activity => {
   const onParticipantChange = (value) => {
     setSelectedParticipant(value);
 
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ participant: value }));
-    const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
+    updateUIAndFilter({ participant: value })
   };
 
   const onYearSelectChange = (yearArray) => {
     setSelectedYears(yearArray);
 
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ years: yearArray }));
-    const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
+    updateUIAndFilter({ years: yearArray })
   };
 
   const onActivitySelectChange = (e) => {
@@ -151,46 +151,32 @@ outdoorDatum.activities.forEach(activity => {
 
     setSelectedActivities(_selectedActivities);
 
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ activityTypes: _selectedActivities }));
-const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
+    updateUIAndFilter({ activityTypes: _selectedActivities });
   };
 
   const onDistanceOperatorChange = (operator) => {
     setDistanceOperator(operator);
 
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ distance: { operator: operator.trim(), value: distanceOperator } }));
-const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
-  };
-
-  const onDistanceThresholdChange = (value) => {
-    setDistanceThreshold(value);
-
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ distance: { operator: distanceOperator.trim(), value } }));
-const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
+    updateUIAndFilter({ distance: { operator: operator.trim(), value: distanceOperator } });
   };
 
   const onElevationOperatorChange = (operator) => {
     setElevationOperator(operator);
 
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ elevation: { operator: operator.trim(), value: elevationOperator } }));
-const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
+    updateUIAndFilter({ elevation: { operator: operator.trim(), value: elevationOperator } });
+  };
+
+  const debouncedUpdateMetricFilter = debounce((key, value, operator, updateState, updateFn) => {
+    updateState(value);
+    updateFn({ [key]: { operator: operator.trim(), value } });
+  }, 400);
+
+  const onDistanceThresholdChange = (value) => {
+    debouncedUpdateMetricFilter(value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
   };
 
   const onElevationThresholdChange = (value) => {
-    setElevationThreshold(value);
-
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({ elevation: { operator: elevationOperator.trim(), value } }));
-const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
+    debouncedUpdateMetricFilter(value, elevationOperator, setElevationThreshold, updateUIAndFilter);
   };
 
 const onToggleMilestonesMode = (value: true | null) => {
@@ -206,8 +192,8 @@ const onToggleMilestonesMode = (value: true | null) => {
   };
 
   const onMarkerClick = (event, activities, locationName) => {
-    setDetailsTitle(`Details - ${locationName}`);
-    setActiveTab(1);
+    setDetailsTitle(`${locationName}`);
+    setActiveTab(SECTIONS.DETAILS_SECTION);
     setDetailsContent(activities);
   };
 
@@ -226,10 +212,8 @@ const onToggleMilestonesMode = (value: true | null) => {
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
       <Toast ref={toast} />
-    <div className="flex">
-      <div className="md:w-1/3 2xl:w-128">
-        {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
-        <div className="w-full flex h-20">
+      <div className="w-full h-screen">
+        <div className="w-full flex h-16">
           <div className="flex-1 flex">
             <Image
               className="mx-3 self-center"
@@ -242,8 +226,22 @@ const onToggleMilestonesMode = (value: true | null) => {
           </div>
           <div className="flex-1"></div>
         </div>
-          <div>
-            <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+        <div className="flex h-[calc(100vh-4rem)]">
+          <div className="md:w-1/4 2xl:w-128 ">
+            {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
+
+            <div className="">
+              <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
+                pt={{
+                  accordiontab: {
+                    headerAction: {
+                      className: 'border-0'
+                    },
+                    content: {
+                      className: 'border-0'
+                    }
+                  }
+                }}>
               <AccordionTab header="Filters">
                 <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
                 <div className="flex flex-row mt-4">
@@ -389,6 +387,7 @@ options={operatorOptions}
                         placeholder="ft"
                         suffix=" ft"
                         showButtons
+                          step={100}
 disabled={viewMilestonesBool}
                         // buttonLayout="vertical"
                         // decrementButtonClassName="p-button-secondary"
@@ -414,16 +413,24 @@ options={[{ label: '🏆 Milestones Only', value: true }]}
 />
                 </div>
               </AccordionTab>
-              <AccordionTab header={detailsTitle}>
+                <AccordionTab className="" header={detailsTitle}
+                  pt={{
+                    content: {
+                      className: 'p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll'
+                    }
+                  }}>
+                  {/* <div className="overflow-y-scroll"> */}
                 <DetailsList activities={detailsContent} />
+                  {/* </div> */}
               </AccordionTab>
             </Accordion>
           </div>
       </div>
-      <div className="md:w-2/3 2xl:flex-1 h-dvh">
+          <div className="md:w-3/4 2xl:flex-1">
         <APIProvider apiKey={apiKey}>
             <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
         </APIProvider>
+          </div>
       </div>
     </div>
     </PrimeReactProvider>
