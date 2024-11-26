@@ -107,10 +107,13 @@ export const fetchTravelDBData = async () => {
         properties[TRAVEL_PROPERTIES.COORDINATES].rich_text[0]
       );
       const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
-      const activityName = getDescriptiveTravelName(
-        properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
-        startDate
-      );
+      const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
+      // const activityName = getDescriptiveTravelName(
+      //   properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
+      //   startDate
+      // );
+      const activityName =
+        properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text;
       const type = TRAVEL;
 
       const activity = {
@@ -121,6 +124,7 @@ export const fetchTravelDBData = async () => {
         travelStatus,
         journalStatus,
         googlePhotosLink,
+        instagramLink,
         activityName,
         places,
         type,

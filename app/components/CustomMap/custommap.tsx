@@ -8,7 +8,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { getActivityImgSrc } from "@/lib/maphelper";
 
-const MarkerWithInfoWindow = ({ activityData, locationName, position }) => {
+const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClick }) => {
     // const [markerRef, marker] = useAdvancedMarkerRef();
     // const infoWindowRef = useRef(null);
 
@@ -29,16 +29,16 @@ const MarkerWithInfoWindow = ({ activityData, locationName, position }) => {
         <>
             <AdvancedMarker
                 // ref={markerRef}
-                // onClick={(event) => handleMarkerClick(event, activityData)}
+                onClick={(event) => onMarkerClick(event, activities, locationName)}
                 position={position}
                 title={locationName}
             // collisionBehavior={CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY}
             >
                 <Image
-                    src={getActivityImgSrc(activityData[0])}
+                    src={getActivityImgSrc(activities[0])}
                     width={36}
                     height={36}
-                    alt={activityData[0].type}
+                    alt={activities[0].type}
                 />
             </AdvancedMarker>
             {/* {infoWindowShown && (
@@ -52,7 +52,7 @@ const MarkerWithInfoWindow = ({ activityData, locationName, position }) => {
     );
 };
 
-export default function CustomMap({ displayData }) {
+export default function CustomMap({ displayData, onMarkerClick }) {
     const map = useMap();
     console.log('rerender map', displayData)
 
@@ -92,7 +92,8 @@ export default function CustomMap({ displayData }) {
             return (
                 <MarkerWithInfoWindow
                     key={index}
-                    activityData={location.activities}
+                    onMarkerClick={onMarkerClick}
+                    activities={location.activities}
                     locationName={location.locationName}
                     position={{
                         lat: location.coordinates.lat,

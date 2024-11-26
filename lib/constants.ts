@@ -27,4 +27,5 @@ export const TRAVEL_PROPERTIES = {
   PHOTOS: "Google Photos Album",
   PLACES: "Places",
   COORDINATES: "Coordinates",
+  INSTAGRAM: "Instagram",
 };

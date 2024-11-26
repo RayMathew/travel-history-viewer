@@ -1,7 +1,7 @@
 import { RAY, NAMRATA, HIKING, BIKING, TRAVEL } from "@/lib/constants";
 
 const currentYear = new Date().getFullYear();
-const distanceUnit = "km";
+export const distanceUnit = "km";
 const defaultFilters = {
   participant: "both",
   years: [currentYear],
@@ -61,6 +61,31 @@ export const getActivityImgSrc = (activityData) => {
     return "/malebicycle.png";
   } else if (activityData.type == HIKING) return "/femalewalk.png";
   return "/femalebicycle.png";
+};
+
+export const humanReadableDate = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  // Get the day, month, and year
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "long" });
+  const year = date.getFullYear();
+
+  // Add ordinal suffix to the day
+  const ordinalSuffix = (n: number) => {
+    const lastDigit = n % 10;
+    const lastTwoDigits = n % 100;
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 13) return `${n}th`;
+    if (lastDigit === 1) return `${n}st`;
+    if (lastDigit === 2) return `${n}nd`;
+    if (lastDigit === 3) return `${n}rd`;
+    return `${n}th`;
+  };
+
+  const dayWithSuffix = ordinalSuffix(day);
+
+  // Return formatted date
+  return `${dayWithSuffix} ${month}, ${year}`;
 };
 
 export const countActivities = (filteredData) => {

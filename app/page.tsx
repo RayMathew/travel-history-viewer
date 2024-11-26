@@ -16,6 +16,7 @@ import {
 import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
 import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
+import DetailsList from "./components/DetailsList/detailslist";
 
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { MultiSelect } from 'primereact/multiselect';
@@ -43,6 +44,10 @@ export default function Home() {
   const [elevationOperator, setElevationOperator] = useState(operatorOptions[1]);
 
   const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
+
+  const [detailsTitle, setDetailsTitle] = useState('Details');
+  const [activeTab, setActiveTab] = useState(0);
+  const [detailsContent, setDetailsContent] = useState(null);
 
   const toast = useRef(null);
 
@@ -200,6 +205,12 @@ const onToggleMilestonesMode = (value: true | null) => {
     }
   };
 
+  const onMarkerClick = (event, activities, locationName) => {
+    setDetailsTitle(`Details - ${locationName}`);
+    setActiveTab(1);
+    setDetailsContent(activities);
+  };
+
 
 
   if (loading) {
@@ -232,7 +243,7 @@ const onToggleMilestonesMode = (value: true | null) => {
           <div className="flex-1"></div>
         </div>
           <div>
-            <Accordion activeIndex={0}>
+            <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
               <AccordionTab header="Filters">
                 <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
                 <div className="flex flex-row mt-4">
@@ -403,20 +414,15 @@ options={[{ label: '🏆 Milestones Only', value: true }]}
 />
                 </div>
               </AccordionTab>
-              <AccordionTab header="Details">
-                <p className="m-0">
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                  quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-                  sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-                  Consectetur, adipisci velit, sed quia non numquam eius modi.
-                </p>
+              <AccordionTab header={detailsTitle}>
+                <DetailsList activities={detailsContent} />
               </AccordionTab>
             </Accordion>
           </div>
       </div>
       <div className="md:w-2/3 2xl:flex-1 h-dvh">
         <APIProvider apiKey={apiKey}>
-            <CustomMap displayData={displayData} />
+            <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
         </APIProvider>
       </div>
     </div>
