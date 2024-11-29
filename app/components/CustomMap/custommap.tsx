@@ -4,6 +4,7 @@ import {
     AdvancedMarker,
     Map,
     useMap,
+    ColorScheme,
     // CollisionBehavior,
 } from "@vis.gl/react-google-maps";
 import { getActivityImgSrc } from "@/lib/maphelper";
@@ -36,8 +37,8 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
             >
                 <Image
                     src={getActivityImgSrc(activities[0])}
-                    width={36}
-                    height={36}
+                    width={50}
+                    height={50}
                     alt={activities[0].type}
                 />
             </AdvancedMarker>
@@ -111,6 +112,7 @@ export default function CustomMap({ displayData, onMarkerClick }) {
             defaultCenter={{ lat: 5.145259, lng: -27.8719489 }}
             mapTypeControl={false}
             streetViewControl={false}
+            colorScheme={ColorScheme.DARK}
         // key={JSON.stringify(displayData)}
         >
             {renderMarkers(displayData.outdoorsData)}

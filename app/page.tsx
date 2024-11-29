@@ -235,10 +235,10 @@ const onToggleMilestonesMode = (value: true | null) => {
                 pt={{
                   accordiontab: {
                     headerAction: {
-                      className: 'border-0'
+                      className: 'border-0 dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
                     },
                     content: {
-                      className: 'border-0'
+                      className: 'border-0 dark:bg-gray-950'
                     }
                   }
                 }}>
@@ -294,8 +294,8 @@ checked={selectedActivities.includes(BIKING)}
 />
                       <Image
                         src="/femalebicycle.png"
-                        width={36}
-                        height={36}
+                          width={44}
+                          height={44}
                         alt="Bike"
 title="Bike"
                       />
@@ -356,7 +356,6 @@ disabled={viewMilestonesBool}
                             root: {
                               className: 'max-w-24',
                             },
-
                           },
                         }}
                       />
