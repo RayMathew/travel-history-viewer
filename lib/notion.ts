@@ -1,5 +1,6 @@
 import { Client } from "@notionhq/client";
 import { OUTDOOR_PROPERTIES, TRAVEL, TRAVEL_PROPERTIES } from "./constants";
+import { removeNullValues } from "./datahelper";
 
 let notionClient: Client | null = null;
 
@@ -43,7 +44,7 @@ export const fetchOutdoorsDBData = async () => {
 
       const coordinateKey = `${lat},${lng}`;
 
-      const activity = {
+      const activity = removeNullValues({
         type,
         date,
         distance,
@@ -53,7 +54,8 @@ export const fetchOutdoorsDBData = async () => {
         allTrailsLink,
         googlePhotosLink,
         instagramLink,
-      };
+        activityName,
+      });
 
       // group data if they are in same location
       if (groupedData.has(coordinateKey)) {
@@ -116,7 +118,7 @@ export const fetchTravelDBData = async () => {
       //   properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text;
       const type = TRAVEL;
 
-      const activity = {
+      const activity = removeNullValues({
         startDate,
         endDate,
         people,
@@ -129,7 +131,7 @@ export const fetchTravelDBData = async () => {
         activityName,
         places,
         type,
-      };
+      });
 
       // Add this trip to the list for the current coordinate
       coordinatesArray.forEach(({ lat, lng }, index) => {
