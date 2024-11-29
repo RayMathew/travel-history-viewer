@@ -8,6 +8,7 @@ import { humanReadableDate, distanceUnit } from '@/lib/maphelper';
 import { getThumbnailFromCache, saveThumbnailToCache } from '@/lib/browsercachehelper';
 
 import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
+import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
 
 export default function DetailsList({ activities, milestoneMode = false }) {
 
@@ -15,7 +16,7 @@ export default function DetailsList({ activities, milestoneMode = false }) {
 
     // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
 
-    if (!activities) return null;
+    if (!activities) return (<EmptyDetailsPanel />);
 
     activities = activities.sort((a, b) => {
 
@@ -99,9 +100,9 @@ export default function DetailsList({ activities, milestoneMode = false }) {
                 const thumbnailSrc = thumbnails[googlePhotosLink] || getDefaultThumbnail(activity);
                 return (
 
-                // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
+                    // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
                     <div key={`${thumbnailSrc}-${activity.date}`}>
-                    <div className='bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
+                        <div className='bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
 
                             <div className='flex p-5 gap-4'>
                                 <div className='w-1/3  aspect-square relative h-full'>
@@ -131,16 +132,15 @@ export default function DetailsList({ activities, milestoneMode = false }) {
                                     </div>
                                 </div>
                             </div>
-                        </>
 
-                        <div className="">
-                            {activity.type === TRAVEL && (
-                                <>
-                                    <div>{humanReadableDate(activity.startDate)}</div>
-                                    <div>{`People: ${activity.people}`}</div>
+                            <div className="">
+                                {activity.type === TRAVEL && (
+                                    <>
+                                        <div>{humanReadableDate(activity.startDate)}</div>
+                                        <div>{`People: ${activity.people}`}</div>
 
-                                </>
-                            )}
+                                    </>
+                                )}
                                 {(activity.type === HIKING) && (
                                     <>
                                         <div>{humanReadableDate(activity.date)}</div>
@@ -152,87 +152,87 @@ export default function DetailsList({ activities, milestoneMode = false }) {
                                     </>
                                 )}
                                 {(activity.type === BIKING) && (
-                                <>
-                                    <div>{humanReadableDate(activity.date)}</div>
-                                    <div className=''>
-                                        <div>{`Distance: ${activity.distance} ${distanceUnit}`}</div>
-                                        <div>{`Elevation: ${activity.elevation} ft`}</div>
-                                    </div>
+                                    <>
+                                        <div>{humanReadableDate(activity.date)}</div>
+                                        <div className=''>
+                                            <div>{`Distance: ${activity.distance} ${distanceUnit}`}</div>
+                                            <div>{`Elevation: ${activity.elevation} ft`}</div>
+                                        </div>
 
-                                </>
-                            )}
-                        </div>
+                                    </>
+                                )}
+                            </div>
 
 
-                        <div className='flex'>
-                            <Button
-rounded
-text
-raised
-aria-label='Google Photos'
-onClick={e => {
-                                window.open(activity.googlePhotosLink, "_blank")
-                            }}
+                            <div className='flex'>
+                                <Button
+                                    rounded
+                                    text
+                                    raised
+                                    aria-label='Google Photos'
+                                    onClick={e => {
+                                        window.open(activity.googlePhotosLink, "_blank")
+                                    }}
                                     disabled={!activity.googlePhotosLink}
                                     tooltip="No album available"
                                     tooltipOptions={{ showOnDisabled: true, showDelay: 400 }}
-className='aspect-square'
->
-                                <img className='w-6' src="/photoalbum.png" />
-                            </Button>
-                            <Button
-rounded
-text
-raised
-aria-label='Instagram'
-onClick={e => {
-                                window.open(activity.instagramLink, "_blank")
-                            }}
-className='aspect-square'
+                                    className='aspect-square'
+                                >
+                                    <img className='w-6' src="/photoalbum.png" />
+                                </Button>
+                                <Button
+                                    rounded
+                                    text
+                                    raised
+                                    aria-label='Instagram'
+                                    onClick={e => {
+                                        window.open(activity.instagramLink, "_blank")
+                                    }}
+                                    className='aspect-square'
                                     tooltip="No post available"
                                     tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                     disabled={!activity.instagramLink}
                                 >
-                                <img className='w-6' src="/instagram.png" />
-                            </Button>
-                            {activity.type === TRAVEL && (
-                                <Button
-rounded
-text
-raised
-aria-label='Journal'
+                                    <img className='w-6' src="/instagram.png" />
+                                </Button>
+                                {activity.type === TRAVEL && (
+                                    <Button
+                                        rounded
+                                        text
+                                        raised
+                                        aria-label='Journal'
                                         onClick={e => {
                                             window.open(activity.journalLink, "_blank")
                                         }}
-className='aspect-square'
+                                        className='aspect-square'
                                         tooltip="No journal entry available"
                                         tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                         disabled={!activity.journalLink}
                                     >
-                                    <img className='w-6' src="/journal.png" />
-                                </Button>
-                            )}
-                            {(activity.type === HIKING || activity.type === BIKING) && (
-                                <Button
-rounded
-text
-raised
-aria-label='AllTrails'
+                                        <img className='w-6' src="/journal.png" />
+                                    </Button>
+                                )}
+                                {(activity.type === HIKING || activity.type === BIKING) && (
+                                    <Button
+                                        rounded
+                                        text
+                                        raised
+                                        aria-label='AllTrails'
                                         onClick={e => {
                                             window.open(activity.allTrailsLink, "_blank")
                                         }}
-className='aspect-square'
+                                        className='aspect-square'
                                         tooltip="No AllTrails link available"
                                         tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                         disabled={!activity.allTrailsLink}
                                     >
-                                    <img className='w-6' src="/alltrails.png" />
-                                </Button>
-                            )}
+                                        <img className='w-6' src="/alltrails.png" />
+                                    </Button>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )
+                )
             })}
         </div>
     );
