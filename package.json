@@ -11,7 +11,9 @@
   "dependencies": {
     "@notionhq/client": "^2.2.15",
     "@vis.gl/react-google-maps": "^1.4.0",
+    "lodash.debounce": "^4.0.8",
     "next": "15.0.2",
+    "open-graph-scraper": "^6.8.2",
     "primeicons": "^7.0.0",
     "primereact": "^10.8.4",
     "react": "19.0.0-rc-02c0e824-20241028",

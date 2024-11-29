@@ -419,7 +419,7 @@ options={[{ label: '🏆 Milestones Only', value: true }]}
                     }
                   }}>
                   {/* <div className="overflow-y-scroll"> */}
-                <DetailsList activities={detailsContent} />
+                  <DetailsList activities={detailsContent} milestoneMode={viewMilestonesBool} />
                   {/* </div> */}
               </AccordionTab>
             </Accordion>

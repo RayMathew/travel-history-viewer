@@ -417,9 +417,11 @@ export const applyMilestoneFilters = (notionData) => {
           labels.length === 1 ? labels[0] : labels.join(" AND ");
 
         const data = structuredClone(activityData);
-        data.locationName = `${namePrefix} - ${data.locationName} ${new Date(
-          activityData.date
-        ).getFullYear()}`;
+        // data.locationName = `${namePrefix} - ${data.locationName} ${new Date(
+        //   activityData.date
+        // ).getFullYear()}`;
+
+        data.locationName = namePrefix;
 
         outdoorLocationClone.activities.push(data);
       }

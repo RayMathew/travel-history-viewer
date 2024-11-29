@@ -39,6 +39,7 @@ export const fetchOutdoorsDBData = async () => {
       const allTrailsLink = properties[OUTDOOR_PROPERTIES.ALL_TRAILS].url;
       const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
+      const activityName = getDescriptiveActivityName(type, date);
 
       const coordinateKey = `${lat},${lng}`;
 
@@ -89,8 +90,7 @@ export const fetchTravelDBData = async () => {
     //   console.log(dbData);
 
     dbData.results.forEach((page) => {
-      const { properties } = page;
-      //   console.log(properties);
+      const { properties, url: journalLink } = page;
       const startDate = properties[TRAVEL_PROPERTIES.DATE].date?.start;
       const endDate = properties[TRAVEL_PROPERTIES.DATE].date?.end;
       const people =
@@ -108,12 +108,12 @@ export const fetchTravelDBData = async () => {
       );
       const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
-      // const activityName = getDescriptiveTravelName(
-      //   properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
-      //   startDate
-      // );
-      const activityName =
-        properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text;
+      const activityName = getDescriptiveActivityName(
+        properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
+        startDate
+      );
+      // const activityName =
+      //   properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text;
       const type = TRAVEL;
 
       const activity = {
@@ -125,6 +125,7 @@ export const fetchTravelDBData = async () => {
         journalStatus,
         googlePhotosLink,
         instagramLink,
+        journalLink,
         activityName,
         places,
         type,
@@ -213,7 +214,7 @@ const getPeople = (peopleObjArray) => {
   return people;
 };
 
-const getDescriptiveTravelName = (
+const getDescriptiveActivityName = (
   locationName: string,
   startDateString: string
 ): string => {
@@ -223,5 +224,5 @@ const getDescriptiveTravelName = (
   const travelMonth = dateOfTravel.toLocaleString("default", { month: "long" });
   const traveYear = dateOfTravel.getFullYear();
 
-  return `${locationName} ${travelMonth} ${traveYear}`;
+  return `${locationName} (${travelMonth.slice(0, 3)} ${traveYear})`;
 };
