@@ -228,6 +228,7 @@ const onToggleMilestonesMode = (value: true | null) => {
           <div className="flex-1">
             <form
               action={async () => {
+                localStorage.clear();
                 await logout();
               }}
             >
