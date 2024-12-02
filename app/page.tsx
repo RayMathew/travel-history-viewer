@@ -8,6 +8,7 @@ import {
   // useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import debounce from 'lodash.debounce';
+import { logout } from "@/lib/actions";
 import Image from "next/image";
 import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
@@ -224,7 +225,18 @@ const onToggleMilestonesMode = (value: true | null) => {
               priority={false}
             />
           </div>
-          <div className="flex-1"></div>
+          <div className="flex-1">
+            <form
+              action={async () => {
+                await logout();
+              }}
+            >
+              <button className="group relative w-full flex justify-center py-3 px-4 cursor-pointer text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 transition duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-1">
+                {/* <PowerIcon className="w-6" /> */}
+                <div className="hidden md:block">Sign Out</div>
+              </button>
+            </form>
+          </div>
         </div>
         <div className="flex h-[calc(100vh-4rem)]">
           <div className="md:w-1/4 2xl:w-128 ">

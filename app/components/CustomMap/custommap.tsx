@@ -111,6 +111,7 @@ export default function CustomMap({ displayData, onMarkerClick }) {
             defaultZoom={2}
             defaultCenter={{ lat: 5.145259, lng: -27.8719489 }}
             mapTypeControl={false}
+            mapTypeId={'terrain'}
             streetViewControl={false}
             colorScheme={ColorScheme.DARK}
         // key={JSON.stringify(displayData)}
