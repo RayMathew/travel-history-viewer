@@ -15,6 +15,10 @@ function getUser(username: string): User | undefined {
     username: process.env.USERNAME2 ?? "",
     password: process.env.PASSWORD2 ?? "",
   };
+  const guestUser = {
+    username: "Guest",
+    password: "",
+  };
 
   const [validUser1, errors1] = isOfTypeWithErrors(user1, UserSchema);
   const [validUser2, errors2] = isOfTypeWithErrors(user2, UserSchema);
@@ -28,7 +32,7 @@ function getUser(username: string): User | undefined {
     throw new ValidationError(errors1);
   }
 
-  const allowedUsers = [user1, user2];
+  const allowedUsers = [user1, user2, guestUser];
 
   const user = allowedUsers.filter((user) => user.username === username);
   return user[0];
@@ -50,6 +54,8 @@ export const { auth, signIn, signOut } = NextAuth({
           const { username, password } = parsedCredentials.data;
           const user = getUser(username);
           if (!user) return null;
+          if (user.username === "Guest") return user;
+
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (passwordsMatch) return user;

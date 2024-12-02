@@ -59,11 +59,31 @@ export default function LoginForm() {
                             </Button>
                         </div>
                     </form>
+                    <div className="flex items-center justify-between uppercase gap-4 mt-6">
+                        <span className="block w-full h-px bg-gray-300"></span>
+                        <span>OR</span>
+                        <span className="block w-full h-px bg-gray-300"></span>
+                    </div>
                 </div>
+
                 <div className="px-8 py-4 bg-gray-700 text-center">
-                    <span className="text-gray-400">Don&apos;t have an account?</span>
-                    <a className="font-medium text-indigo-500 hover:text-indigo-400" href="#"
-                    >Sign up</a>
+                    <form action={formAction}>
+                        <input
+                            placeholder="Username"
+                            className="hidden"
+                            readOnly
+                            type="username"
+                            value="Guest"
+                            name="username"
+                        />
+                        <Button
+                            className="font-medium text-indigo-500 hover:text-indigo-400"
+                            type="submit"
+                            aria-disabled={isPending}
+                        >
+                            Login as Guest
+                        </Button>
+                    </form>
                 </div>
                 {errorMessage && (
                     <>
