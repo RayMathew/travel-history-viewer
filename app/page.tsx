@@ -177,11 +177,11 @@ outdoorDatum.activities.forEach(activity => {
   }, 400);
 
   const onDistanceThresholdChange = (value) => {
-    debouncedUpdateMetricFilter(value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
+    debouncedUpdateMetricFilter('distance', value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
   };
 
   const onElevationThresholdChange = (value) => {
-    debouncedUpdateMetricFilter(value, elevationOperator, setElevationThreshold, updateUIAndFilter);
+    debouncedUpdateMetricFilter('elevation', value, elevationOperator, setElevationThreshold, updateUIAndFilter);
   };
 
 const onToggleMilestonesMode = (value: true | null) => {
