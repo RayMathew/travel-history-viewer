@@ -29,6 +29,7 @@ import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
 export default function Home() {
   const [notionData, setNotionData] = useState(null);
   const [displayData, setDisplayData] = useState(null);
+  const [unitOfDistance, setUnitOfDistance] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -76,7 +77,10 @@ export default function Home() {
     };
 
     const setupData = (initialData) => {
-      const { outdoorsData, travelData } = initialData;
+      const { outdoorsData, travelData, distanceUnit } = initialData;
+
+      setUnitOfDistance(distanceUnit);
+
     const yearsForFilter = new Set();
 
     outdoorsData.forEach(outdoorDatum => {
@@ -184,7 +188,7 @@ const onToggleMilestonesMode = (value: true | null) => {
     setViewMilestonesBool(!!value); // set to true if true, set to false if null;
 
     if (value) {
-      const filteredData = applyMilestoneFilters(notionData);
+      const filteredData = applyMilestoneFilters(notionData, unitOfDistance);
       setDisplayData(filteredData);
     } else {
       const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({}));
@@ -355,8 +359,8 @@ options={operatorOptions}
                         min={0}
                         useGrouping={false}
                         maxFractionDigits={1}
-                        placeholder="km"
-                        suffix=" km"
+                          placeholder={unitOfDistance}
+                          suffix={` ${unitOfDistance}`}
                         showButtons
 disabled={viewMilestonesBool}
                         // buttonLayout="vertical"
@@ -432,7 +436,7 @@ options={[{ label: '🏆 Milestones Only', value: true }]}
                     }
                   }}>
                   {/* <div className="overflow-y-scroll"> */}
-                  <DetailsList activities={detailsContent} milestoneMode={viewMilestonesBool} />
+                  <DetailsList activities={detailsContent} milestoneMode={viewMilestonesBool} distanceUnit={unitOfDistance} />
                   {/* </div> */}
               </AccordionTab>
             </Accordion>

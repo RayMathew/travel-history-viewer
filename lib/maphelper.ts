@@ -1,7 +1,6 @@
 import { RAY, NAMRATA, HIKING, BIKING, TRAVEL } from "@/lib/constants";
 
 const currentYear = new Date().getFullYear();
-export const distanceUnit = "km";
 const defaultFilters = {
   participant: "both",
   years: [currentYear],
@@ -28,21 +27,6 @@ const milestones = {
     longestInCurrentYear: 0,
     mostElevationGained: 0,
     mostElevationGainedPerUnitDistance: 0,
-  },
-};
-
-const milestoneLabels = {
-  [HIKING]: {
-    longest: "Longest Hike",
-    longestInCurrentYear: "Longest Hike This Year",
-    mostElevationGained: "Most Elevation Gained Hike",
-    mostElevationGainedPerUnitDistance: `Most Elevation Gained Hike Per ${distanceUnit}`,
-  },
-  [BIKING]: {
-    longest: "Longest Bike Ride",
-    longestInCurrentYear: "Longest Bike Ride This Year",
-    mostElevationGained: "Most Elevation Gained Bike Ride",
-    mostElevationGainedPerUnitDistance: `Most Elevation Gained Bike Ride Per ${distanceUnit}`,
   },
 };
 
@@ -268,39 +252,42 @@ export const applyFiltersToMap = (
   };
 
   filteredData = yearFilter(notionData);
-  console.log("asds", filteredData);
   // recursive function that runs the initial load filter again with the previous year if current year data is empty
   if (
     filteredData.outdoorsData.length === 0 &&
     filteredData.travelData.length === 0 &&
     initialLoad
   ) {
-    return applyFiltersToMap(true, allData, {
+    return applyFiltersToMap(true, notionData, {
       ...filter,
-      year: filterYear - 1,
+      years: [filter.years[0] - 1],
     });
   } else {
     filteredData = participantFilter(filteredData);
-    console.log("asds", filteredData);
+    // console.log("asds", filteredData);
     filteredData = activityFilter(filteredData);
-    console.log("activityFilter", filteredData);
+    // console.log("activityFilter", filteredData);
     filteredData = distanceFilter(filteredData);
-    console.log("distanceFilter", filteredData);
+    // console.log("distanceFilter", filteredData);
     filteredData = elevationFilter(filteredData);
-    console.log("elevationFilter", filteredData);
+    // console.log("elevationFilter", filteredData);
   }
 
-  console.log("asds", filteredData);
+  // console.log("asds", filteredData);
   return filteredData;
   //   return notionData;
 };
 
-export const applyMilestoneFilters = (notionData) => {
+export const applyMilestoneFilters = (notionData, distanceUnit: string) => {
   // we do not need to recompute the milestones every time the user asks for it.
+  // the milestones also remain the same no matter who the user is.
+
   if (milestoneData) {
     console.log("no recompute");
     return { outdoorsData: milestoneData, travelData: [] };
   }
+
+  if (distanceUnit === "miles") distanceUnit = "Mile";
 
   const outdoorsData = [];
 
@@ -333,6 +320,21 @@ export const applyMilestoneFilters = (notionData) => {
     });
   });
 
+  const milestoneLabels = {
+    [HIKING]: {
+      longest: "Longest Hike",
+      longestInCurrentYear: "Longest Hike This Year",
+      mostElevationGained: "Most Elevation Gained Hike",
+      mostElevationGainedPerUnitDistance: `Most Elevation Gained Hike Per ${distanceUnit}`,
+    },
+    [BIKING]: {
+      longest: "Longest Bike Ride",
+      longestInCurrentYear: "Longest Bike Ride This Year",
+      mostElevationGained: "Most Elevation Gained Bike Ride",
+      mostElevationGainedPerUnitDistance: `Most Elevation Gained Bike Ride Per ${distanceUnit}`,
+    },
+  };
+
   // get all activities that match milestone numbers
   notionData.outdoorsData.forEach((outdoorLocation) => {
     const outdoorLocationClone = {
@@ -347,21 +349,21 @@ export const applyMilestoneFilters = (notionData) => {
           labels.push(
             `${milestoneLabels[HIKING].longest} (${milestones[
               HIKING
-            ].longest.toFixed(1)}${distanceUnit})`
+            ].longest.toFixed(1)}${distanceUnit === "Mile" ? " miles" : " km"})`
           );
 
         if (activityData.distance === milestones[HIKING].longestInCurrentYear)
           labels.push(
             `${milestoneLabels[HIKING].longestInCurrentYear} (${milestones[
               HIKING
-            ].longestInCurrentYear.toFixed(1)}${distanceUnit})`
+            ].longestInCurrentYear.toFixed(1)}${
+              distanceUnit === "Mile" ? " miles" : " km"
+            })`
           );
 
         if (activityData.elevation === milestones[HIKING].mostElevationGained)
           labels.push(
-            `${milestoneLabels[HIKING].mostElevationGained} (${milestones[
-              HIKING
-            ].mostElevationGained.toFixed(1)}ft)`
+            `${milestoneLabels[HIKING].mostElevationGained} (${milestones[HIKING].mostElevationGained} ft)`
           );
 
         if (
@@ -373,28 +375,28 @@ export const applyMilestoneFilters = (notionData) => {
               milestoneLabels[HIKING].mostElevationGainedPerUnitDistance
             } (${milestones[HIKING].mostElevationGainedPerUnitDistance.toFixed(
               1
-            )}ft/${distanceUnit})`
+            )} ft /${distanceUnit === "Mile" ? " mile" : " km"})`
           );
       } else if (activityData.type === BIKING) {
         if (activityData.distance === milestones[BIKING].longest)
           labels.push(
             `${milestoneLabels[BIKING].longest} (${milestones[
               BIKING
-            ].longest.toFixed(1)}${distanceUnit})`
+            ].longest.toFixed(1)}${distanceUnit === "Mile" ? " miles" : " km"})`
           );
 
         if (activityData.distance === milestones[BIKING].longestInCurrentYear)
           labels.push(
             `${milestoneLabels[BIKING].longestInCurrentYear} (${milestones[
               BIKING
-            ].longestInCurrentYear.toFixed(1)}${distanceUnit})`
+            ].longestInCurrentYear.toFixed(1)}${
+              distanceUnit === "Mile" ? " miles" : " km"
+            })`
           );
 
         if (activityData.elevation === milestones[BIKING].mostElevationGained)
           labels.push(
-            `${milestoneLabels[BIKING].mostElevationGained} (${milestones[
-              BIKING
-            ].mostElevationGained.toFixed(1)}ft)`
+            `${milestoneLabels[BIKING].mostElevationGained} (${milestones[BIKING].mostElevationGained} ft)`
           );
 
         if (
@@ -406,7 +408,7 @@ export const applyMilestoneFilters = (notionData) => {
               milestoneLabels[BIKING].mostElevationGainedPerUnitDistance
             } (${milestones[BIKING].mostElevationGainedPerUnitDistance.toFixed(
               1
-            )}ft/${distanceUnit})`
+            )} ft /${distanceUnit === "Mile" ? " mile" : " km"})`
           );
       }
 
@@ -433,7 +435,6 @@ export const applyMilestoneFilters = (notionData) => {
 
   milestoneData = outdoorsData;
 
-  console.log("milestoneData", milestoneData);
   // milestones are applicable for hikes and bikes only
   return { outdoorsData, travelData: [] };
 };

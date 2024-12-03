@@ -34,3 +34,9 @@ export const SECTIONS = {
   FILTER_SECTION: 0,
   DETAILS_SECTION: 1,
 };
+
+export const DISTANCEUNIT = {
+  1: "km",
+  2: "miles",
+  3: "km",
+};

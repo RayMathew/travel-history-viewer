@@ -1,5 +1,10 @@
 import { Client } from "@notionhq/client";
-import { OUTDOOR_PROPERTIES, TRAVEL, TRAVEL_PROPERTIES } from "./constants";
+import {
+  DISTANCEUNIT,
+  OUTDOOR_PROPERTIES,
+  TRAVEL,
+  TRAVEL_PROPERTIES,
+} from "./constants";
 import { removeNullValues } from "./datahelper";
 
 let notionClient: Client | null = null;
@@ -11,7 +16,7 @@ function getNotionClient(): Client {
   return notionClient;
 }
 
-export const fetchOutdoorsDBData = async () => {
+export const fetchOutdoorsDBData = async (distanceUnit: string) => {
   //   const outdoorsData = [];
   const groupedData = new Map();
   //   console.time("outdoors data");
@@ -32,7 +37,10 @@ export const fetchOutdoorsDBData = async () => {
         properties[OUTDOOR_PROPERTIES.COORDINATES]
       );
       const date = properties[OUTDOOR_PROPERTIES.DATE].date.start;
-      const distance = properties[OUTDOOR_PROPERTIES.DISTANCE].number;
+      const distance = getDistance(
+        properties[OUTDOOR_PROPERTIES.DISTANCE].number,
+        distanceUnit
+      );
       const doneBy = getPeople(properties[OUTDOOR_PROPERTIES.DONE_BY].people);
       const elevation = properties[OUTDOOR_PROPERTIES.ELEVATION].number;
       const locationName =
@@ -68,9 +76,6 @@ export const fetchOutdoorsDBData = async () => {
         });
       }
     });
-
-    // console.timeEnd("outdoors data");
-    // console.log(outdoorsData.toString());
   } catch (error) {
     console.log("error", error);
   }
@@ -82,14 +87,11 @@ export const fetchOutdoorsDBData = async () => {
 export const fetchTravelDBData = async () => {
   //   const travelData = [];
   const groupedData = new Map();
-  //   console.time("outdoors data");
 
   try {
     const dbData = await getNotionClient().databases.query({
       database_id: process.env.NOTION_TRAVELDB_KEY!,
     });
-
-    //   console.log(dbData);
 
     dbData.results.forEach((page) => {
       const { properties, url: journalLink } = page;
@@ -161,13 +163,16 @@ export const fetchTravelDBData = async () => {
         }
       }
     });
-
-    // console.timeEnd("outdoors data");
-    // console.log(outdoorsData.toString());
   } catch (error) {
     console.log("error", error);
   }
   return [...groupedData.values()];
+};
+
+const getDistance = (value, distanceUnit) => {
+  if (distanceUnit === DISTANCEUNIT[2]) return value;
+
+  return parseFloat((value * 1.6).toFixed(1)); // convert default miles value to km
 };
 
 const getActivityType = (tagArray): string => {
@@ -210,7 +215,6 @@ const getTravelCoordinates = (coordinatesObj) => {
 
 const getPeople = (peopleObjArray) => {
   const people: string[] = [];
-  //   console.log("peopleObjArray", peopleObjArray);
   peopleObjArray.forEach((peopleObj) => people.push(peopleObj.name));
 
   return people;

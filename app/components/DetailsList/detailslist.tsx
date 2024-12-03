@@ -4,13 +4,13 @@ import Image from 'next/image';
 
 import { Button } from 'primereact/button';
 
-import { humanReadableDate, distanceUnit } from '@/lib/maphelper';
+import { humanReadableDate } from '@/lib/maphelper';
 import { getThumbnailFromCache, saveThumbnailToCache } from '@/lib/browsercachehelper';
 
 import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
 
-export default function DetailsList({ activities, milestoneMode = false }) {
+export default function DetailsList({ activities, milestoneMode = false, distanceUnit }) {
 
 
 
