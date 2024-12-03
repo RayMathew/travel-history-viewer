@@ -10,14 +10,17 @@ function getUser(username: string): User | undefined {
   const user1 = {
     username: process.env.USERNAME1 ?? "",
     password: process.env.PASSWORD1 ?? "",
+    userid: process.env.USERID1 ? parseInt(process.env.USERID1) : 0,
   };
   const user2 = {
     username: process.env.USERNAME2 ?? "",
     password: process.env.PASSWORD2 ?? "",
+    userid: process.env.USERID2 ? parseInt(process.env.USERID2) : 0,
   };
   const guestUser = {
     username: "Guest",
     password: "",
+    userid: 3,
   };
 
   const [validUser1, errors1] = isOfTypeWithErrors(user1, UserSchema);

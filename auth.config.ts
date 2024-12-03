@@ -16,9 +16,19 @@ export const authConfig = {
 
       return isLoggedIn || isOnLoginPage;
     },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.name = token.name;
+        session.user.userid = token.userid;
+      }
+
+      return session;
+    },
     async jwt({ token, user, trigger }) {
       if (user && trigger == "signIn") {
         token.name = user.username;
+        token.userid = user.userid;
       }
       return token;
     },
