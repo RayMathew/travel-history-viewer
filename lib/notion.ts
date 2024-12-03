@@ -16,7 +16,10 @@ function getNotionClient(): Client {
   return notionClient;
 }
 
-export const fetchOutdoorsDBData = async (distanceUnit: string) => {
+export const fetchOutdoorsDBData = async (
+  distanceUnit: string,
+  isAdminUser: boolean
+) => {
   //   const outdoorsData = [];
   const groupedData = new Map();
   //   console.time("outdoors data");
@@ -46,9 +49,14 @@ export const fetchOutdoorsDBData = async (distanceUnit: string) => {
       const locationName =
         properties[OUTDOOR_PROPERTIES.NAME].title[0].plain_text;
       const allTrailsLink = properties[OUTDOOR_PROPERTIES.ALL_TRAILS].url;
-      const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
       const activityName = getDescriptiveActivityName(type, date);
+
+      let googlePhotosLink = null;
+      if (isAdminUser) {
+        googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
+      }
+      // const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
 
       const coordinateKey = `${lat},${lng}`;
 
@@ -84,7 +92,7 @@ export const fetchOutdoorsDBData = async (distanceUnit: string) => {
   return [...groupedData.values()];
 };
 
-export const fetchTravelDBData = async () => {
+export const fetchTravelDBData = async (isAdminUser: boolean) => {
   //   const travelData = [];
   const groupedData = new Map();
 
@@ -94,7 +102,7 @@ export const fetchTravelDBData = async () => {
     });
 
     dbData.results.forEach((page) => {
-      const { properties, url: journalLink } = page;
+      const { properties, url } = page;
       const startDate = properties[TRAVEL_PROPERTIES.DATE].date?.start;
       const endDate = properties[TRAVEL_PROPERTIES.DATE].date?.end;
       const people =
@@ -110,14 +118,20 @@ export const fetchTravelDBData = async () => {
       const coordinatesArray = getTravelCoordinates(
         properties[TRAVEL_PROPERTIES.COORDINATES].rich_text[0]
       );
-      const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
       const activityName = getDescriptiveActivityName(
         properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text,
         startDate
       );
-      // const activityName =
-      //   properties[TRAVEL_PROPERTIES.NAME].title[0].plain_text;
+
+      let googlePhotosLink = null;
+      let journalLink = null;
+      if (isAdminUser) {
+        googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
+        journalLink = url;
+      }
+      // const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
+
       const type = TRAVEL;
 
       const activity = removeNullValues({

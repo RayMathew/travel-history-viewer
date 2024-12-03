@@ -61,15 +61,11 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
     }, [activities]);
 
     const getActivityThumbnail = async (googlePhotosLink, activity) => {
-        // console.log('what', activity, googlePhotosLink)
-        // if (!googlePhotosLink) return getDefaultThumbnail(activity);
-        // console.log('did it come here')
 
         // if (googlePhotosLink) {
         try {
             const response = await fetch(`/api/thumbnail?glink=${googlePhotosLink}`);
             const data = await response.json();
-            // console.log('final link', data.thumbnailLink)
             return data.thumbnailLink;
         } catch (err) {
             console.error('Error fetching thumbnail:', err);

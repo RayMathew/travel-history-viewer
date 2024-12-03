@@ -18,7 +18,6 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
     // const handleMarkerClick = useCallback(
     //   (moo, activityData, mark) => {
     //     setInfoWindowShown(isShown => !isShown);
-    //     console.log("moo", moo, "activityData", infoWindowRef)
     //   },
     //   []
     // );
@@ -62,7 +61,6 @@ export default function CustomMap({ displayData, onMarkerClick }) {
 
         const bounds = new window.google.maps.LatLngBounds();
         const { outdoorsData, travelData } = displayData;
-        console.log(displayData);
 
         const extendBounds = (data) => {
             for (var i = 0; i < data.length; i++) {

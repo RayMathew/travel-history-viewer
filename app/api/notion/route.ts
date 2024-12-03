@@ -12,8 +12,11 @@ export const GET = auth(async function GET(req: NextRequest) {
   const distanceUnit = DISTANCEUNIT[session.user.userid];
 
   try {
-    const outdoorsData = await fetchOutdoorsDBData(distanceUnit);
-    const travelData = await fetchTravelDBData();
+    const isAdminUser: boolean =
+      session.user.userid === 1 || session.user.userid === 2;
+
+    const outdoorsData = await fetchOutdoorsDBData(distanceUnit, isAdminUser);
+    const travelData = await fetchTravelDBData(isAdminUser);
 
     return NextResponse.json(
       { outdoorsData, travelData, distanceUnit },
