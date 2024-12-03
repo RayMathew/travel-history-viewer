@@ -16,6 +16,12 @@ export const authConfig = {
 
       return isLoggedIn || isOnLoginPage;
     },
+    async jwt({ token, user, trigger }) {
+      if (user && trigger == "signIn") {
+        token.name = user.username;
+      }
+      return token;
+    },
   },
   providers: [],
 } satisfies typeof NextAuthConfig;
