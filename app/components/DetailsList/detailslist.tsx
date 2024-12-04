@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 import { Button } from 'primereact/button';
 
@@ -11,12 +12,11 @@ import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
 
 export default function DetailsList({ activities, milestoneMode = false, distanceUnit }) {
-
-
+    const { data } = useSession();
+    const isAdmin: boolean = data?.user?.name !== 'Guest';
 
     // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
 
-    if (!activities) return (<EmptyDetailsPanel />);
 
     activities = activities.sort((a, b) => {
 
@@ -26,6 +26,19 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
     });
 
     const [thumbnails, setThumbnails] = useState({});
+
+    const getActivityThumbnail = useCallback(async (googlePhotosLink, activity) => {
+
+        // if (googlePhotosLink) {
+        try {
+            const response = await fetch(`/api/thumbnail?glink=${googlePhotosLink}`);
+            const data = await response.json();
+            return data.thumbnailLink;
+        } catch (err) {
+            console.error('Error fetching thumbnail:', err);
+            return getDefaultThumbnail(activity);
+        }
+    }, []);;
 
     useEffect(() => {
         const fetchThumbnails = async () => {
@@ -58,20 +71,8 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
         // if (activities.length > 0) {
         fetchThumbnails();
         // }
-    }, [activities]);
+    }, [activities, getActivityThumbnail]);
 
-    const getActivityThumbnail = async (googlePhotosLink, activity) => {
-
-        // if (googlePhotosLink) {
-        try {
-            const response = await fetch(`/api/thumbnail?glink=${googlePhotosLink}`);
-            const data = await response.json();
-            return data.thumbnailLink;
-        } catch (err) {
-            console.error('Error fetching thumbnail:', err);
-            return getDefaultThumbnail(activity);
-        }
-    };
 
     const getDefaultThumbnail = (activity) => {
         switch (activity.type) {
@@ -86,7 +87,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
         }
     };
 
-
+    if (!activities) return (<EmptyDetailsPanel />);
 
 
     return (
@@ -161,21 +162,23 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
 
 
                             <div className='flex'>
-                                <Button
-                                    rounded
-                                    text
-                                    raised
-                                    aria-label='Google Photos'
-                                    onClick={e => {
-                                        window.open(activity.googlePhotosLink, "_blank")
-                                    }}
-                                    disabled={!activity.googlePhotosLink}
-                                    tooltip="No album available"
-                                    tooltipOptions={{ showOnDisabled: true, showDelay: 400 }}
-                                    className='aspect-square'
-                                >
-                                    <img className='w-6' src="/photoalbum.png" />
-                                </Button>
+                                {isAdmin && (
+                                    <Button
+                                        rounded
+                                        text
+                                        raised
+                                        aria-label='Google Photos'
+                                        onClick={e => {
+                                            window.open(activity.googlePhotosLink, "_blank")
+                                        }}
+                                        disabled={!activity.googlePhotosLink}
+                                        tooltip="No album available"
+                                        tooltipOptions={{ showOnDisabled: true, showDelay: 400 }}
+                                        className='aspect-square'
+                                    >
+                                        <img className='w-6' src="/photoalbum.png" />
+                                    </Button>
+                                )}
                                 <Button
                                     rounded
                                     text
@@ -191,7 +194,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                 >
                                     <img className='w-6' src="/instagram.png" />
                                 </Button>
-                                {activity.type === TRAVEL && (
+                                {isAdmin && activity.type === TRAVEL && (
                                     <Button
                                         rounded
                                         text

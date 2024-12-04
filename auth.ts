@@ -41,7 +41,7 @@ function getUser(username: string): User | undefined {
   return user[0];
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({

@@ -8,6 +8,7 @@ import {
   // useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import debounce from 'lodash.debounce';
+import AuthProvider from "./components/AuthProvider/authprovider";
 import { logout } from "@/lib/actions";
 import Image from "next/image";
 import CustomMap from "./components/CustomMap/custommap";
@@ -81,34 +82,34 @@ export default function Home() {
 
       setUnitOfDistance(distanceUnit);
 
-    const yearsForFilter = new Set();
+      const yearsForFilter = new Set();
 
-    outdoorsData.forEach(outdoorDatum => {
-outdoorDatum.activities.forEach(activity => {
-      yearsForFilter.add(new Date(activity.date).getFullYear());
-    });
+      outdoorsData.forEach(outdoorDatum => {
+        outdoorDatum.activities.forEach(activity => {
+          yearsForFilter.add(new Date(activity.date).getFullYear());
+        });
       });
 
       travelData.forEach(travelDatum => {
         travelDatum.activities.forEach(activity => {
-      if (activity.startDate) {
-        yearsForFilter.add(new Date(activity.startDate).getFullYear());
-      }
-    });
+          if (activity.startDate) {
+            yearsForFilter.add(new Date(activity.startDate).getFullYear());
+          }
+        });
       });
 
-    const filterYearsArray = Array.from(yearsForFilter);
-    filterYearsArray.sort();
+      const filterYearsArray = Array.from(yearsForFilter);
+      filterYearsArray.sort();
 
-    const temp = filterYearsArray.map(year => {
-      return {
-        name: year,
-        value: year,
-      }
-    })
+      const temp = filterYearsArray.map(year => {
+        return {
+          name: year,
+          value: year,
+        }
+      })
 
-    setYearOptions(temp);
-    setSelectedYears([filterYearsArray[filterYearsArray.length - 1]]);
+      setYearOptions(temp);
+      setSelectedYears([filterYearsArray[filterYearsArray.length - 1]]);
       setSelectedParticipant('both');
       setSelectedActivities([BIKING, HIKING, TRAVEL]);
     };
@@ -123,7 +124,7 @@ outdoorDatum.activities.forEach(activity => {
     setDisplayData(filteredData);
   };
 
-  
+
   const updateFilterConfig = (filter) => {
     return {
       participant: filter.participant || selectedParticipant,
@@ -184,7 +185,7 @@ outdoorDatum.activities.forEach(activity => {
     debouncedUpdateMetricFilter('elevation', value, elevationOperator, setElevationThreshold, updateUIAndFilter);
   };
 
-const onToggleMilestonesMode = (value: true | null) => {
+  const onToggleMilestonesMode = (value: true | null) => {
     setViewMilestonesBool(!!value); // set to true if true, set to false if null;
 
     if (value) {
@@ -215,240 +216,241 @@ const onToggleMilestonesMode = (value: true | null) => {
 
 
   return (
-    <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
-      <Toast ref={toast} />
-      <div className="w-full h-screen">
-        <div className="w-full flex h-16">
-          <div className="flex-1 flex">
-            <Image
-              className="mx-3 self-center"
-              src="/stats.png"
-              width={44}
-              height={44}
-              alt="Go to stats page"
-              priority={false}
-            />
+    <AuthProvider>
+      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+        <Toast ref={toast} />
+        <div className="w-full h-screen">
+          <div className="w-full flex h-16">
+            <div className="flex-1 flex">
+              <Image
+                className="mx-3 self-center"
+                src="/stats.png"
+                width={44}
+                height={44}
+                alt="Go to stats page"
+                priority={false}
+              />
+            </div>
+            <div className="flex-1">
+              <form
+                action={async () => {
+                  localStorage.clear();
+                  await logout();
+                }}
+              >
+                <button className="group relative w-full flex justify-center py-3 px-4 cursor-pointer text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 transition duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-1">
+                  {/* <PowerIcon className="w-6" /> */}
+                  <div className="hidden md:block">Sign Out</div>
+                </button>
+              </form>
+            </div>
           </div>
-          <div className="flex-1">
-            <form
-              action={async () => {
-                localStorage.clear();
-                await logout();
-              }}
-            >
-              <button className="group relative w-full flex justify-center py-3 px-4 cursor-pointer text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 transition duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-1">
-                {/* <PowerIcon className="w-6" /> */}
-                <div className="hidden md:block">Sign Out</div>
-              </button>
-            </form>
-          </div>
-        </div>
-        <div className="flex h-[calc(100vh-4rem)]">
-          <div className="md:w-1/4 2xl:w-128 ">
-            {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
+          <div className="flex h-[calc(100vh-4rem)]">
+            <div className="md:w-1/4 2xl:w-128 ">
+              {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
 
-            <div className="">
-              <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
-                pt={{
-                  accordiontab: {
-                    headerAction: {
-                      className: 'border-0 dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
-                    },
-                    content: {
-                      className: 'border-0 dark:bg-gray-950'
-                    }
-                  }
-                }}>
-              <AccordionTab header="Filters">
-                <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
-                <div className="flex flex-row mt-4">
-                  <div>
-                    Years:
-                  </div>
-                  <div>
-                    <MultiSelect
-value={selectedYears}
-onChange={(e) => onYearSelectChange(e.value)}
-                      options={yearOptions}
-                      disabled={viewMilestonesBool}
-optionLabel="name"
-display="chip"
-                      placeholder="Select Years"
-className="w-full md:w-20rem" />
-                  </div>
-                </div>
-                <div className="flex flex-row mt-4">
-                  <div>
-                    Activity Type:
-                  </div>
-                  <div className="card flex flex-wrap justify-content-center gap-3">
-                    <div className="flex align-items-center">
-                      <Checkbox
-inputId="activity1"
-name="hike"
-value={HIKING}
-onChange={onActivitySelectChange}
-checked={selectedActivities.includes(HIKING)}
-                        disabled={viewMilestonesBool}
-/>
-                      <Image
-                        src="/malewalk.png"
-                        width={36}
-                        height={36}
-                        alt="Hike"
-title="Hike"
-                      />
-                      <label htmlFor="activity1" className="ml-2">Hike</label>
-                    </div>
-                    <div className="flex align-items-center">
-                      <Checkbox
-inputId="activity2"
-name="bike"
-value={BIKING}
-onChange={onActivitySelectChange}
-checked={selectedActivities.includes(BIKING)}
-                        disabled={viewMilestonesBool}
-/>
-                      <Image
-                        src="/femalebicycle.png"
-                          width={44}
-                          height={44}
-                        alt="Bike"
-title="Bike"
-                      />
-                      <label htmlFor="activity2" className="ml-2">Bike</label>
-                    </div>
-                    <div className="flex align-items-center">
-                      <Checkbox
-inputId="activity3"
-name="travel"
-value={TRAVEL}
-onChange={onActivitySelectChange}
-checked={selectedActivities.includes(TRAVEL)}
-                        disabled={viewMilestonesBool}
-/>
-                      <Image
-                        src="/airplane.png"
-                        width={36}
-                        height={36}
-                        alt="Travel"
-                        title="Travel"
-                      />
-                      <label htmlFor="activity3" className="ml-2">Travel</label>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  Distance:
-                  <div className="flex flex-row">
-                    <span>
-                      <SelectButton
-value={distanceOperator}
-tooltip="Distance less than or greater than"
-tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
-onChange={(e) => onDistanceOperatorChange(e.value)}
-options={operatorOptions}
-                        disabled={viewMilestonesBool}
-/>
-                    </span>
-                    <span>
-                      <InputNumber
-                        value={distanceThreshold}
-                        onValueChange={(e) => onDistanceThresholdChange(e.value)}
-                        mode="decimal"
-                        min={0}
-                        useGrouping={false}
-                        maxFractionDigits={1}
-                          placeholder={unitOfDistance}
-                          suffix={` ${unitOfDistance}`}
-                        showButtons
-disabled={viewMilestonesBool}
-                        // buttonLayout="vertical"
-                        // decrementButtonClassName="p-button-secondary"
-                        // incrementButtonClassName="p-button-secondary"
-                        // incrementButtonIcon="pi pi-plus"
-                        // decrementButtonIcon="pi pi-minus"
-                        pt={{
-                          input: {
-                            root: {
-                              className: 'max-w-24',
-                            },
-                          },
-                        }}
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  Elevation Gain:
-                  <div className="flex flex-row">
-                    <span>
-                      <SelectButton
-value={elevationOperator}
-tooltip="Elevation less than or greater than"
-tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
-onChange={(e) => onElevationOperatorChange(e.value)}
-options={operatorOptions}
-                        disabled={viewMilestonesBool}
-/>
-                    </span>
-                    <span>
-                      <InputNumber
-                        value={elevationThreshold}
-                        onValueChange={(e) => onElevationThresholdChange(e.value)}
-                        mode="decimal"
-                        min={0}
-                        useGrouping={false}
-                        maxFractionDigits={1}
-                        placeholder="ft"
-                        suffix=" ft"
-                        showButtons
-                          step={100}
-disabled={viewMilestonesBool}
-                        // buttonLayout="vertical"
-                        // decrementButtonClassName="p-button-secondary"
-                        // incrementButtonClassName="p-button-secondary"
-                        // incrementButtonIcon="pi pi-plus"
-                        // decrementButtonIcon="pi pi-minus"
-                        pt={{
-                          input: {
-                            root: {
-                              className: 'max-w-24',
-                            },
-                          },
-                        }}
-                      />
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <SelectButton
-value={viewMilestonesBool}
-onChange={(e) => onToggleMilestonesMode(e.value)}
-options={[{ label: '🏆 Milestones Only', value: true }]}
-/>
-                </div>
-              </AccordionTab>
-                <AccordionTab className="" header={detailsTitle}
+              <div className="">
+                <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
                   pt={{
-                    content: {
-                      className: 'p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll'
+                    accordiontab: {
+                      headerAction: {
+                        className: 'border-0 dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
+                      },
+                      content: {
+                        className: 'border-0 dark:bg-gray-950'
+                      }
                     }
                   }}>
-                  {/* <div className="overflow-y-scroll"> */}
-                  <DetailsList activities={detailsContent} milestoneMode={viewMilestonesBool} distanceUnit={unitOfDistance} />
-                  {/* </div> */}
-              </AccordionTab>
-            </Accordion>
+                  <AccordionTab header="Filters">
+                    <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
+                    <div className="flex flex-row mt-4">
+                      <div>
+                        Years:
+                      </div>
+                      <div>
+                        <MultiSelect
+                          value={selectedYears}
+                          onChange={(e) => onYearSelectChange(e.value)}
+                          options={yearOptions}
+                          disabled={viewMilestonesBool}
+                          optionLabel="name"
+                          display="chip"
+                          placeholder="Select Years"
+                          className="w-full md:w-20rem" />
+                      </div>
+                    </div>
+                    <div className="flex flex-row mt-4">
+                      <div>
+                        Activity Type:
+                      </div>
+                      <div className="card flex flex-wrap justify-content-center gap-3">
+                        <div className="flex align-items-center">
+                          <Checkbox
+                            inputId="activity1"
+                            name="hike"
+                            value={HIKING}
+                            onChange={onActivitySelectChange}
+                            checked={selectedActivities.includes(HIKING)}
+                            disabled={viewMilestonesBool}
+                          />
+                          <Image
+                            src="/malewalk.png"
+                            width={36}
+                            height={36}
+                            alt="Hike"
+                            title="Hike"
+                          />
+                          <label htmlFor="activity1" className="ml-2">Hike</label>
+                        </div>
+                        <div className="flex align-items-center">
+                          <Checkbox
+                            inputId="activity2"
+                            name="bike"
+                            value={BIKING}
+                            onChange={onActivitySelectChange}
+                            checked={selectedActivities.includes(BIKING)}
+                            disabled={viewMilestonesBool}
+                          />
+                          <Image
+                            src="/femalebicycle.png"
+                            width={44}
+                            height={44}
+                            alt="Bike"
+                            title="Bike"
+                          />
+                          <label htmlFor="activity2" className="ml-2">Bike</label>
+                        </div>
+                        <div className="flex align-items-center">
+                          <Checkbox
+                            inputId="activity3"
+                            name="travel"
+                            value={TRAVEL}
+                            onChange={onActivitySelectChange}
+                            checked={selectedActivities.includes(TRAVEL)}
+                            disabled={viewMilestonesBool}
+                          />
+                          <Image
+                            src="/airplane.png"
+                            width={36}
+                            height={36}
+                            alt="Travel"
+                            title="Travel"
+                          />
+                          <label htmlFor="activity3" className="ml-2">Travel</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      Distance:
+                      <div className="flex flex-row">
+                        <span>
+                          <SelectButton
+                            value={distanceOperator}
+                            tooltip="Distance less than or greater than"
+                            tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
+                            onChange={(e) => onDistanceOperatorChange(e.value)}
+                            options={operatorOptions}
+                            disabled={viewMilestonesBool}
+                          />
+                        </span>
+                        <span>
+                          <InputNumber
+                            value={distanceThreshold}
+                            onValueChange={(e) => onDistanceThresholdChange(e.value)}
+                            mode="decimal"
+                            min={0}
+                            useGrouping={false}
+                            maxFractionDigits={1}
+                            placeholder={unitOfDistance}
+                            suffix={` ${unitOfDistance}`}
+                            showButtons
+                            disabled={viewMilestonesBool}
+                            // buttonLayout="vertical"
+                            // decrementButtonClassName="p-button-secondary"
+                            // incrementButtonClassName="p-button-secondary"
+                            // incrementButtonIcon="pi pi-plus"
+                            // decrementButtonIcon="pi pi-minus"
+                            pt={{
+                              input: {
+                                root: {
+                                  className: 'max-w-24',
+                                },
+                              },
+                            }}
+                          />
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      Elevation Gain:
+                      <div className="flex flex-row">
+                        <span>
+                          <SelectButton
+                            value={elevationOperator}
+                            tooltip="Elevation less than or greater than"
+                            tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
+                            onChange={(e) => onElevationOperatorChange(e.value)}
+                            options={operatorOptions}
+                            disabled={viewMilestonesBool}
+                          />
+                        </span>
+                        <span>
+                          <InputNumber
+                            value={elevationThreshold}
+                            onValueChange={(e) => onElevationThresholdChange(e.value)}
+                            mode="decimal"
+                            min={0}
+                            useGrouping={false}
+                            maxFractionDigits={1}
+                            placeholder="ft"
+                            suffix=" ft"
+                            showButtons
+                            step={100}
+                            disabled={viewMilestonesBool}
+                            // buttonLayout="vertical"
+                            // decrementButtonClassName="p-button-secondary"
+                            // incrementButtonClassName="p-button-secondary"
+                            // incrementButtonIcon="pi pi-plus"
+                            // decrementButtonIcon="pi pi-minus"
+                            pt={{
+                              input: {
+                                root: {
+                                  className: 'max-w-24',
+                                },
+                              },
+                            }}
+                          />
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <SelectButton
+                        value={viewMilestonesBool}
+                        onChange={(e) => onToggleMilestonesMode(e.value)}
+                        options={[{ label: '🏆 Milestones Only', value: true }]}
+                      />
+                    </div>
+                  </AccordionTab>
+                  <AccordionTab className="" header={detailsTitle}
+                    pt={{
+                      content: {
+                        className: 'p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll'
+                      }
+                    }}>
+                    <DetailsList activities={detailsContent} milestoneMode={viewMilestonesBool} distanceUnit={unitOfDistance} />
+
+                  </AccordionTab>
+                </Accordion>
+              </div>
+            </div>
+            <div className="md:w-3/4 2xl:flex-1">
+              <APIProvider apiKey={apiKey}>
+                <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
+              </APIProvider>
+            </div>
           </div>
-      </div>
-          <div className="md:w-3/4 2xl:flex-1">
-        <APIProvider apiKey={apiKey}>
-            <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
-        </APIProvider>
-          </div>
-      </div>
-    </div>
-    </PrimeReactProvider>
+        </div>
+      </PrimeReactProvider>
+    </AuthProvider>
   );
 }
