@@ -4,11 +4,11 @@ import Image from "next/image";
 
 export default function EmptyDetailsPanel() {
     return (
-        <div className="h-full w-full relative">
-            <div className="absolute top-[15%] w-full text-center text-2xl">
+        <div className="h-full w-full relative flex flex-col">
+            <div className=" w-full text-center text-2xl pt-8">
                 Click on a map marker to view a memory
             </div>
-            <div className="w-full h-full bottom-[-15%] absolute">
+            <div className="w-full flex-grow relative">
                 <Image
                     className='w-full h-full'
                     alt="Activity Image"

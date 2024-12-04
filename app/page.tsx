@@ -261,12 +261,22 @@ export default function Home() {
                       }
                     }
                   }}>
-                  <AccordionTab header="Filters">
-                    <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
-                    <div className="flex flex-row mt-4">
-                      <div>
-                        Years:
-                      </div>
+                  <AccordionTab header="Filters"
+                    pt={{
+                      content: {
+                        className: 'p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll'
+                      }
+                    }}>
+                    <div className="text-md text-[#e2e8ffbf] pb-2">
+                      Who Was There?
+                    </div>
+                    <div className="pb-4">
+                      <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
+                    </div>
+                    <div className="text-md text-[#e2e8ffbf] pb-2">
+                      Years:
+                    </div>
+                    <div className="flex flex-row pb-4">
                       <div>
                         <MultiSelect
                           value={selectedYears}
@@ -276,13 +286,13 @@ export default function Home() {
                           optionLabel="name"
                           display="chip"
                           placeholder="Select Years"
-                          className="w-full md:w-20rem" />
+                          className="w-full" />
                       </div>
                     </div>
-                    <div className="flex flex-row mt-4">
-                      <div>
-                        Activity Type:
-                      </div>
+                    <div className="text-md text-[#e2e8ffbf] pb-2">
+                      Activity Type:
+                    </div>
+                    <div className="flex flex-row pb-4">
                       <div className="card flex flex-wrap justify-content-center gap-3">
                         <div className="flex align-items-center">
                           <Checkbox
@@ -294,13 +304,15 @@ export default function Home() {
                             disabled={viewMilestonesBool}
                           />
                           <Image
-                            src="/malewalk.png"
-                            width={36}
-                            height={36}
+                            src="/walkplain.png"
+                            width={24}
+                            height={24}
                             alt="Hike"
                             title="Hike"
+                            style={{ height: 24 }}
+                            className="mx-1"
                           />
-                          <label htmlFor="activity1" className="ml-2">Hike</label>
+                          <label htmlFor="activity1" className="">Hike</label>
                         </div>
                         <div className="flex align-items-center">
                           <Checkbox
@@ -312,13 +324,15 @@ export default function Home() {
                             disabled={viewMilestonesBool}
                           />
                           <Image
-                            src="/femalebicycle.png"
-                            width={44}
-                            height={44}
+                            src="/bicycleplain.png"
+                            width={24}
+                            height={24}
                             alt="Bike"
                             title="Bike"
+                            style={{ height: 24 }}
+                            className="mx-1.5"
                           />
-                          <label htmlFor="activity2" className="ml-2">Bike</label>
+                          <label htmlFor="activity2" className="">Bike</label>
                         </div>
                         <div className="flex align-items-center">
                           <Checkbox
@@ -330,104 +344,135 @@ export default function Home() {
                             disabled={viewMilestonesBool}
                           />
                           <Image
-                            src="/airplane.png"
-                            width={36}
-                            height={36}
+                            src="/airplaneplain.png"
+                            width={22}
+                            height={22}
                             alt="Travel"
                             title="Travel"
+                            style={{ height: 22 }}
+                            className="mx-2"
                           />
-                          <label htmlFor="activity3" className="ml-2">Travel</label>
+                          <label htmlFor="activity3" className="">Travel</label>
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div className="text-md text-[#e2e8ffbf] pb-2">
                       Distance:
-                      <div className="flex flex-row">
-                        <span>
-                          <SelectButton
-                            value={distanceOperator}
-                            tooltip="Distance less than or greater than"
-                            tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
-                            onChange={(e) => onDistanceOperatorChange(e.value)}
-                            options={operatorOptions}
-                            disabled={viewMilestonesBool}
-                          />
-                        </span>
-                        <span>
-                          <InputNumber
-                            value={distanceThreshold}
-                            onValueChange={(e) => onDistanceThresholdChange(e.value)}
-                            mode="decimal"
-                            min={0}
-                            useGrouping={false}
-                            maxFractionDigits={1}
-                            placeholder={unitOfDistance}
-                            suffix={` ${unitOfDistance}`}
-                            showButtons
-                            disabled={viewMilestonesBool}
-                            // buttonLayout="vertical"
-                            // decrementButtonClassName="p-button-secondary"
-                            // incrementButtonClassName="p-button-secondary"
-                            // incrementButtonIcon="pi pi-plus"
-                            // decrementButtonIcon="pi pi-minus"
-                            pt={{
-                              input: {
-                                root: {
-                                  className: 'max-w-24',
-                                },
+                    </div>
+                    <div className="flex flex-row pb-4 gap-4">
+                      <div>
+                        <SelectButton
+                          value={distanceOperator}
+                          tooltip="Distance less than or greater than"
+                          tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
+                          onChange={(e) => onDistanceOperatorChange(e.value)}
+                          options={operatorOptions}
+                          disabled={viewMilestonesBool}
+                          pt={{
+                            root: {
+                              className: 'flex flex-nowrap'
+                            },
+                            button: {
+                              className: '!py-2'
+                            }
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <InputNumber
+                          value={distanceThreshold}
+                          onValueChange={(e) => onDistanceThresholdChange(e.value)}
+                          mode="decimal"
+                          min={0}
+                          useGrouping={false}
+                          maxFractionDigits={1}
+                          placeholder={unitOfDistance}
+                          suffix={` ${unitOfDistance}`}
+                          showButtons
+                          disabled={viewMilestonesBool}
+                          // buttonLayout="vertical"
+                          // decrementButtonClassName="p-button-secondary"
+                          // incrementButtonClassName="p-button-secondary"
+                          // incrementButtonIcon="pi pi-plus"
+                          // decrementButtonIcon="pi pi-minus"
+                          pt={{
+                            input: {
+                              root: {
+                                className: '!py-2'
                               },
-                            }}
-                          />
-                        </span>
+                            },
+                          }}
+                        />
                       </div>
                     </div>
-                    <div className="mt-4">
+
+                    <div className="text-md text-[#e2e8ffbf] pb-2">
                       Elevation Gain:
-                      <div className="flex flex-row">
-                        <span>
-                          <SelectButton
-                            value={elevationOperator}
-                            tooltip="Elevation less than or greater than"
-                            tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
-                            onChange={(e) => onElevationOperatorChange(e.value)}
-                            options={operatorOptions}
-                            disabled={viewMilestonesBool}
-                          />
-                        </span>
-                        <span>
-                          <InputNumber
-                            value={elevationThreshold}
-                            onValueChange={(e) => onElevationThresholdChange(e.value)}
-                            mode="decimal"
-                            min={0}
-                            useGrouping={false}
-                            maxFractionDigits={1}
-                            placeholder="ft"
-                            suffix=" ft"
-                            showButtons
-                            step={100}
-                            disabled={viewMilestonesBool}
-                            // buttonLayout="vertical"
-                            // decrementButtonClassName="p-button-secondary"
-                            // incrementButtonClassName="p-button-secondary"
-                            // incrementButtonIcon="pi pi-plus"
-                            // decrementButtonIcon="pi pi-minus"
-                            pt={{
-                              input: {
-                                root: {
-                                  className: 'max-w-24',
-                                },
+                    </div>
+                    <div className="flex flex-row pb-4 gap-4 w-full">
+                      <div>
+                        <SelectButton
+                          value={elevationOperator}
+                          tooltip="Elevation less than or greater than"
+                          tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
+                          onChange={(e) => onElevationOperatorChange(e.value)}
+                          options={operatorOptions}
+                          disabled={viewMilestonesBool}
+                          pt={{
+                            root: {
+                              className: 'flex flex-nowrap'
+                            },
+                            button: {
+                              className: '!py-2'
+                            }
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <InputNumber
+                          value={elevationThreshold}
+                          onValueChange={(e) => onElevationThresholdChange(e.value)}
+                          mode="decimal"
+                          min={0}
+                          useGrouping={false}
+                          maxFractionDigits={1}
+                          placeholder="ft"
+                          suffix=" ft"
+                          showButtons
+                          step={100}
+                          disabled={viewMilestonesBool}
+                          // buttonLayout="vertical"
+                          // decrementButtonClassName="p-button-secondary"
+                          // incrementButtonClassName="p-button-secondary"
+                          // incrementButtonIcon="pi pi-plus"
+                          // decrementButtonIcon="pi pi-minus"
+                          pt={{
+                            input: {
+                              root: {
+                                className: '!py-2'
                               },
-                            }}
-                          />
-                        </span>
+                            },
+                          }}
+                        />
                       </div>
                     </div>
+
                     <div className="mt-4">
                       <SelectButton
                         value={viewMilestonesBool}
                         onChange={(e) => onToggleMilestonesMode(e.value)}
-                        options={[{ label: '🏆 Milestones Only', value: true }]}
+                        options={[{ label: '🏆 Milestones', value: true }]}
+                        pt={{
+                          // root: {
+                          //   className: 'flex flex-nowrap'
+                          // },
+                          button: {
+                            className: '!py-2 !rounded-md'
+                          },
+                          label: {
+                            className: 'font-normal'
+                          }
+                        }}
                       />
                     </div>
                   </AccordionTab>

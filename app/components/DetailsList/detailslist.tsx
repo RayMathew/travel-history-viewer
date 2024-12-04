@@ -17,13 +17,15 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
 
     // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
 
+    if (activities) {
+        activities = activities.sort((a, b) => {
 
-    activities = activities.sort((a, b) => {
+            if (new Date(a.startDate || a.date) < new Date(b.startDate || b.date)) return 1;
+            else if (new Date(a.startDate || a.date) > new Date(b.startDate || b.date)) return - 1;
+            else return 0;
+        });
+    }
 
-        if (new Date(a.startDate || a.date) < new Date(b.startDate || b.date)) return 1;
-        else if (new Date(a.startDate || a.date) > new Date(b.startDate || b.date)) return - 1;
-        else return 0;
-    });
 
     const [thumbnails, setThumbnails] = useState({});
 
@@ -77,13 +79,13 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
     const getDefaultThumbnail = (activity) => {
         switch (activity.type) {
             case HIKING:
-                return '/malewalk.png';
+                return '/malewalksquare.png';
             case BIKING:
                 return '/femalebicyclesquare.png';
             case TRAVEL:
-                return '/airplane.png';
+                return '/airplanesquare.png';
             default:
-                return '/malewalk.png';
+                return '/malewalksquare.png';
         }
     };
 
@@ -104,12 +106,12 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                             <div className='flex p-5 gap-4'>
                                 <div className='w-1/3  aspect-square relative h-full'>
                                     <Image
-                                        className='object-cover object-center rounded-lg'
+                                        className='object-cover object-center rounded-lg transition-opacity duration-700'
                                         alt="Activity Image"
                                         fill={true}
                                         src={thumbnailSrc}
                                         onLoadingComplete={(e) => {
-                                            e.target.style.opacity = 1; // Avoid flickering
+                                            e.style.opacity = 1;
                                         }}
                                         style={{ opacity: thumbnails[googlePhotosLink] ? 1 : 0 }}
                                     />

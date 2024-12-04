@@ -16,7 +16,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                 style={{
                     display: 'inline-block',
                     borderRadius: '50%',
-                    border: selected === RAY ? '4px solid blue' : '4px solid transparent',
+                    border: selected === RAY ? '4px solid #5FA5F9' : '4px solid transparent',
                     overflow: 'hidden',
                     cursor: 'pointer',
                 }}
@@ -41,7 +41,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                 style={{
                     display: 'inline-block',
                     borderRadius: '50%',
-                    border: selected === NAMRATA ? '4px solid blue' : '4px solid transparent',
+                    border: selected === NAMRATA ? '4px solid #5FA5F9' : '4px solid transparent',
                     overflow: 'hidden',
                     cursor: 'pointer',
                 }}
@@ -66,7 +66,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                 style={{
                     display: 'inline-block',
                     borderRadius: '50%',
-                    border: selected === 'both' ? '4px solid blue' : '4px solid transparent',
+                    border: selected === 'both' ? '4px solid #5FA5F9' : '4px solid transparent',
                     overflow: 'hidden',
                     cursor: 'pointer',
                 }}
