@@ -9,10 +9,10 @@ import {
 } from "@vis.gl/react-google-maps";
 import debounce from 'lodash.debounce';
 import AuthProvider from "./components/AuthProvider/authprovider";
-import { logout } from "@/lib/actions";
 import Image from "next/image";
 import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
+import NavbarAvatar from "./components/NavbarAvatar/navbaravatar";
 const DetailsList = React.lazy(() => import("./components/DetailsList/detailslist"));
 import { PrimeReactProvider } from "primereact/api";
 import 'primeicons/primeicons.css';
@@ -246,26 +246,17 @@ export default function Home() {
           <div className="w-full flex h-16">
             <div className="flex-1 flex">
               <Image
-                className="mx-3 self-center"
-                src="/stats.png"
-                width={44}
-                height={44}
-                alt="Go to stats page"
+                className="mx-4 self-center object-cover object-center rounded-lg"
+                src="/favicon.ico"
+                width={40}
+                height={40}
+                alt="Logo"
                 priority={false}
               />
+              <div className="font-semibold self-center">Memoir Map</div>
             </div>
-            <div className="flex-1">
-              <form
-                action={async () => {
-                  localStorage.clear();
-                  await logout();
-                }}
-              >
-                <button className="group relative w-full flex justify-center py-3 px-4 cursor-pointer text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 transition duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-1">
-                  {/* <PowerIcon className="w-6" /> */}
-                  <div className="hidden md:block">Sign Out</div>
-                </button>
-              </form>
+            <div className="p-4">
+              <NavbarAvatar />
             </div>
           </div>
           <div className="flex h-[calc(100vh-4rem)]">
@@ -396,7 +387,7 @@ export default function Home() {
                           onChange={(e) => onDistanceOperatorChange(e.value)}
                           options={operatorOptions}
                           disabled={viewMilestonesBool}
-className="transition-all duration-300"
+                          className="transition-all duration-300"
                           pt={{
                             root: {
                               className: 'flex flex-nowrap'
@@ -447,7 +438,7 @@ className="transition-all duration-300"
                           onChange={(e) => onElevationOperatorChange(e.value)}
                           options={operatorOptions}
                           disabled={viewMilestonesBool}
-className="transition-all duration-300"
+                          className="transition-all duration-300"
                           pt={{
                             root: {
                               className: 'flex flex-nowrap'
@@ -492,7 +483,7 @@ className="transition-all duration-300"
                         value={viewMilestonesBool}
                         onChange={(e) => onToggleMilestonesMode(e.value)}
                         options={[{ label: '🏆 Milestones', value: true }]}
-className="transition-all duration-300"
+                        className="transition-all duration-300"
                         pt={{
                           // root: {
                           //   className: 'flex flex-nowrap'
@@ -506,7 +497,7 @@ className="transition-all duration-300"
                         }}
                       />
                     </div>
-<div ref={filterPanelBottomRef}></div>
+                    <div ref={filterPanelBottomRef}></div>
 
                   </AccordionTab>
                   <AccordionTab header={detailsTitle}
@@ -519,11 +510,11 @@ className="transition-all duration-300"
                       }
                     }}>
                     <DetailsList
-activities={detailsContent}
-milestoneMode={viewMilestonesBool}
-distanceUnit={unitOfDistance}
+                      activities={detailsContent}
+                      milestoneMode={viewMilestonesBool}
+                      distanceUnit={unitOfDistance}
                       setDetailsInnerShadows={setDetailsInnerShadows}
-/>
+                    />
 
                   </AccordionTab>
                 </Accordion>
