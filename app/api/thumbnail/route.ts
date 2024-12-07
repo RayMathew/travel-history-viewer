@@ -25,4 +25,4 @@ export const GET = auth(async function GET(req: NextRequest) {
   } catch (err) {
     return NextResponse.json({ error: err.result.error }, { status: 500 });
   }
-});
+}) as any;

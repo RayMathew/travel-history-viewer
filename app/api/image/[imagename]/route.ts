@@ -3,14 +3,18 @@ import { auth } from "@/auth";
 import fs from "fs/promises";
 import path from "path";
 
-export const GET = auth(async function GET(req: NextRequest) {
+export const GET = auth(async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ imagename: string }> }
+) {
   const session = req.auth;
 
   if (!session)
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
 
-  const pathSegments = req.nextUrl.pathname.split("/");
-  const imagename = path.basename(pathSegments[pathSegments.length - 1]);
+  // const pathSegments = req.nextUrl.pathname.split("/");
+  // const imagename = path.basename(pathSegments[pathSegments.length - 1]);
+  const imagename = (await params).imagename;
   try {
     // Define the path to the image
     const imagePath = path.join(
@@ -37,4 +41,4 @@ export const GET = auth(async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
-});
+}) as any;
