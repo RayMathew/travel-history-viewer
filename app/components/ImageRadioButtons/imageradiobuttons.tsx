@@ -35,6 +35,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     width={72}
                     height={72}
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    className={`${disabled ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
                 />
             </label>
             <label
@@ -55,11 +56,12 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     onChange={(e) => selectRadioOption(e.target.value)}
                 />
                 <Image
-                    src="/api/image/nam"
+                    src="/api/image/namrata"
                     alt="Wife"
                     width={72}
                     height={72}
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    className={`${disabled ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
                 />
             </label>
             <label
@@ -78,6 +80,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     style={{ display: 'none' }}
                     disabled={disabled}
                     onChange={(e) => selectRadioOption(e.target.value)}
+                    className="transition-all"
                 />
                 <Image
                     src="/api/image/raynam"
@@ -85,6 +88,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     width={72}
                     height={72}
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    className={`${disabled ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
                 />
             </label>
         </div>

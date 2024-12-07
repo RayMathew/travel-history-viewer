@@ -1,6 +1,8 @@
 import { Client } from "@notionhq/client";
 import {
+  BIKING,
   DISTANCEUNIT,
+  HIKING,
   OUTDOOR_PROPERTIES,
   TRAVEL,
   TRAVEL_PROPERTIES,
@@ -235,14 +237,19 @@ const getPeople = (peopleObjArray) => {
 };
 
 const getDescriptiveActivityName = (
-  locationName: string,
+  name: string,
   startDateString: string
 ): string => {
-  if (!startDateString) return locationName;
+  if (!startDateString) return name;
 
   const dateOfTravel = new Date(startDateString);
+  const day = dateOfTravel.getDate();
   const travelMonth = dateOfTravel.toLocaleString("default", { month: "long" });
   const traveYear = dateOfTravel.getFullYear();
 
-  return `${locationName} (${travelMonth.slice(0, 3)} ${traveYear})`;
+  if (name === HIKING || name === BIKING) {
+    return `${name} (${day} ${travelMonth.slice(0, 3)} ${traveYear})`;
+  }
+
+  return `${name} (${travelMonth.slice(0, 3)} ${traveYear})`;
 };

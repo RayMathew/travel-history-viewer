@@ -23,6 +23,7 @@ import { Checkbox } from "primereact/checkbox";
 import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
 import { Toast } from 'primereact/toast';
+import { useIntersectionObserver } from 'primereact/hooks';
 
 import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
@@ -48,10 +49,20 @@ export default function Home() {
   const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
   const [detailsTitle, setDetailsTitle] = useState('Details');
+  const [detailsTitleClass, setDetailsTitleClass] = useState('');
   const [activeTab, setActiveTab] = useState(SECTIONS.FILTER_SECTION);
   const [detailsContent, setDetailsContent] = useState(null);
 
   const toast = useRef(null);
+
+  const [filterInnerShadows, setFilterInnerShadows] = useState('custom-bottom-inner-shadow');
+  const filterPanelTopRef = useRef(null);
+  const filterPanelTopVisible = useIntersectionObserver(filterPanelTopRef);
+  const filterPanelBottomRef = useRef(null);
+  const filterPanelBottomVisible = useIntersectionObserver(filterPanelBottomRef);
+
+  const [detailsInnerShadows, setDetailsInnerShadows] = useState('custom-bottom-inner-shadow');
+
 
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
@@ -116,6 +127,17 @@ export default function Home() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (filterPanelTopVisible) {
+      setFilterInnerShadows('custom-bottom-inner-shadow');
+    } else if (filterPanelBottomVisible) {
+      setFilterInnerShadows('custom-top-inner-shadow');
+    }
+    else if (!filterPanelTopVisible && !filterPanelBottomVisible) {
+      setFilterInnerShadows('custom-top-bottom-inner-shadow');
+    }
+  }, [filterPanelTopVisible, filterPanelBottomVisible]);
 
   const updateUIAndFilter = (filterUpdates) => {
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig(filterUpdates));
@@ -199,6 +221,7 @@ export default function Home() {
 
   const onMarkerClick = (event, activities, locationName) => {
     setDetailsTitle(`${locationName}`);
+    setDetailsTitleClass('text-slate-300 text-lg');
     setActiveTab(SECTIONS.DETAILS_SECTION);
     setDetailsContent(activities);
   };
@@ -254,29 +277,30 @@ export default function Home() {
                   pt={{
                     accordiontab: {
                       headerAction: {
-                        className: 'border-0 dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
+                        className: 'custom-border-top hover:!border-[#e2e8ff1a] dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
                       },
                       content: {
-                        className: 'border-0 dark:bg-gray-950'
+                        className: 'custom-border-bottom dark:bg-gray-950'
                       }
                     }
                   }}>
                   <AccordionTab header="Filters"
                     pt={{
                       content: {
-                        className: 'p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll'
+                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll transition-all duration-1000 ${filterInnerShadows}`
                       }
                     }}>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
                       Who Was There?
+                      <div ref={filterPanelTopRef}></div>
                     </div>
-                    <div className="pb-4">
+                    <div className="pb-7">
                       <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
                     </div>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Years:
+                      Years
                     </div>
-                    <div className="flex flex-row pb-4">
+                    <div className="flex flex-row pb-7">
                       <div>
                         <MultiSelect
                           value={selectedYears}
@@ -286,13 +310,14 @@ export default function Home() {
                           optionLabel="name"
                           display="chip"
                           placeholder="Select Years"
-                          className="w-full" />
+                          className="w-full transition-all duration-300"
+                        />
                       </div>
                     </div>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Activity Type:
+                      Activity Type
                     </div>
-                    <div className="flex flex-row pb-4">
+                    <div className="flex flex-row pb-7">
                       <div className="card flex flex-wrap justify-content-center gap-3">
                         <div className="flex align-items-center">
                           <Checkbox
@@ -302,6 +327,7 @@ export default function Home() {
                             onChange={onActivitySelectChange}
                             checked={selectedActivities.includes(HIKING)}
                             disabled={viewMilestonesBool}
+                            className="transition-all duration-300"
                           />
                           <Image
                             src="/walkplain.png"
@@ -310,7 +336,7 @@ export default function Home() {
                             alt="Hike"
                             title="Hike"
                             style={{ height: 24 }}
-                            className="mx-1"
+                            className="mx-1 brightness-50"
                           />
                           <label htmlFor="activity1" className="">Hike</label>
                         </div>
@@ -322,6 +348,7 @@ export default function Home() {
                             onChange={onActivitySelectChange}
                             checked={selectedActivities.includes(BIKING)}
                             disabled={viewMilestonesBool}
+                            className="transition-all duration-300"
                           />
                           <Image
                             src="/bicycleplain.png"
@@ -330,7 +357,7 @@ export default function Home() {
                             alt="Bike"
                             title="Bike"
                             style={{ height: 24 }}
-                            className="mx-1.5"
+                            className="mx-1.5 brightness-50"
                           />
                           <label htmlFor="activity2" className="">Bike</label>
                         </div>
@@ -342,6 +369,7 @@ export default function Home() {
                             onChange={onActivitySelectChange}
                             checked={selectedActivities.includes(TRAVEL)}
                             disabled={viewMilestonesBool}
+                            className="transition-all duration-300"
                           />
                           <Image
                             src="/airplaneplain.png"
@@ -350,16 +378,16 @@ export default function Home() {
                             alt="Travel"
                             title="Travel"
                             style={{ height: 22 }}
-                            className="mx-2"
+                            className="mx-2 brightness-50"
                           />
                           <label htmlFor="activity3" className="">Travel</label>
                         </div>
                       </div>
                     </div>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Distance:
+                      Distance
                     </div>
-                    <div className="flex flex-row pb-4 gap-4">
+                    <div className="flex flex-row pb-7 gap-4">
                       <div>
                         <SelectButton
                           value={distanceOperator}
@@ -368,6 +396,7 @@ export default function Home() {
                           onChange={(e) => onDistanceOperatorChange(e.value)}
                           options={operatorOptions}
                           disabled={viewMilestonesBool}
+className="transition-all duration-300"
                           pt={{
                             root: {
                               className: 'flex flex-nowrap'
@@ -390,6 +419,7 @@ export default function Home() {
                           suffix={` ${unitOfDistance}`}
                           showButtons
                           disabled={viewMilestonesBool}
+                          className="transition-all duration-300"
                           // buttonLayout="vertical"
                           // decrementButtonClassName="p-button-secondary"
                           // incrementButtonClassName="p-button-secondary"
@@ -405,11 +435,10 @@ export default function Home() {
                         />
                       </div>
                     </div>
-
                     <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Elevation Gain:
+                      Elevation Gain
                     </div>
-                    <div className="flex flex-row pb-4 gap-4 w-full">
+                    <div className="flex flex-row pb-7 gap-4 w-full">
                       <div>
                         <SelectButton
                           value={elevationOperator}
@@ -418,6 +447,7 @@ export default function Home() {
                           onChange={(e) => onElevationOperatorChange(e.value)}
                           options={operatorOptions}
                           disabled={viewMilestonesBool}
+className="transition-all duration-300"
                           pt={{
                             root: {
                               className: 'flex flex-nowrap'
@@ -441,6 +471,7 @@ export default function Home() {
                           showButtons
                           step={100}
                           disabled={viewMilestonesBool}
+                          className="transition-all duration-300"
                           // buttonLayout="vertical"
                           // decrementButtonClassName="p-button-secondary"
                           // incrementButtonClassName="p-button-secondary"
@@ -456,12 +487,12 @@ export default function Home() {
                         />
                       </div>
                     </div>
-
                     <div className="mt-4">
                       <SelectButton
                         value={viewMilestonesBool}
                         onChange={(e) => onToggleMilestonesMode(e.value)}
                         options={[{ label: '🏆 Milestones', value: true }]}
+className="transition-all duration-300"
                         pt={{
                           // root: {
                           //   className: 'flex flex-nowrap'
@@ -475,14 +506,24 @@ export default function Home() {
                         }}
                       />
                     </div>
+<div ref={filterPanelBottomRef}></div>
+
                   </AccordionTab>
-                  <AccordionTab className="" header={detailsTitle}
+                  <AccordionTab header={detailsTitle}
                     pt={{
                       content: {
-                        className: 'p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll'
+                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll ${detailsInnerShadows}`
+                      },
+                      headerTitle: {
+                        className: `${detailsTitleClass}`
                       }
                     }}>
-                    <DetailsList activities={detailsContent} milestoneMode={viewMilestonesBool} distanceUnit={unitOfDistance} />
+                    <DetailsList
+activities={detailsContent}
+milestoneMode={viewMilestonesBool}
+distanceUnit={unitOfDistance}
+                      setDetailsInnerShadows={setDetailsInnerShadows}
+/>
 
                   </AccordionTab>
                 </Accordion>

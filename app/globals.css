@@ -37,3 +37,66 @@ body {
     "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
     sans-serif;
 }
+
+.custom-border-bottom {
+  border: 1px solid rgba(226, 232, 255, 0.1);
+  border-top: none;
+  border-left: none;
+}
+
+.custom-border-top {
+  border-color: rgba(226, 232, 255, 0.1);
+  border: 1px solid;
+  border-bottom: none;
+  border-left: none;
+}
+
+.custom-top-inner-shadow {
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(217, 217, 217, 0) -1%,
+    #d9d9d9 7.34%,
+    #d9d9d9 25%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(217, 217, 217, 0) -1%,
+    #d9d9d9 7.34%,
+    #d9d9d9 25%
+  );
+}
+
+.custom-bottom-inner-shadow {
+  mask-image: linear-gradient(
+    to bottom,
+    #d9d9d9 87.87%,
+    rgba(217, 217, 217, 0) 96.94%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #d9d9d9 87.87%,
+    rgba(217, 217, 217, 0) 96.94%
+  );
+}
+
+.custom-top-bottom-inner-shadow {
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(217, 217, 217, 0) -1%,
+    #d9d9d9 7.34%,
+    #d9d9d9 25%,
+    #d9d9d9 87.87%,
+    rgba(217, 217, 217, 0) 96.94%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(217, 217, 217, 0) -1%,
+    #d9d9d9 7.34%,
+    #d9d9d9 25%,
+    #d9d9d9 87.87%,
+    rgba(217, 217, 217, 0) 96.94%
+  );
+}

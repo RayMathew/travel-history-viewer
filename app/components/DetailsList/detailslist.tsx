@@ -1,19 +1,27 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 
 import { Button } from 'primereact/button';
+import { useIntersectionObserver } from 'primereact/hooks';
 
-import { humanReadableDate } from '@/lib/maphelper';
+// import { humanReadableDate } from '@/lib/maphelper';
 import { getThumbnailFromCache, saveThumbnailToCache } from '@/lib/browsercachehelper';
 
 import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
 
-export default function DetailsList({ activities, milestoneMode = false, distanceUnit }) {
+
+
+export default function DetailsList({ activities, milestoneMode = false, distanceUnit, setDetailsInnerShadows }) {
     const { data } = useSession();
     const isAdmin: boolean = data?.user?.name !== 'Guest';
+
+    const detailsPanelTopRef = useRef(null);
+    const detailsPanelTopVisible = useIntersectionObserver(detailsPanelTopRef);
+    const detailsPanelBottomRef = useRef(null);
+    const detailsPanelBottomVisible = useIntersectionObserver(detailsPanelBottomRef);
 
     // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
 
@@ -75,6 +83,17 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
         // }
     }, [activities, getActivityThumbnail]);
 
+    useEffect(() => {
+        if (detailsPanelTopVisible) {
+            setDetailsInnerShadows('custom-bottom-inner-shadow');
+        } else if (detailsPanelBottomVisible) {
+            setDetailsInnerShadows('custom-top-inner-shadow');
+        }
+        else if (!detailsPanelTopVisible && !detailsPanelBottomVisible) {
+            setDetailsInnerShadows('custom-top-bottom-inner-shadow');
+        }
+    }, [detailsPanelTopVisible, detailsPanelBottomVisible]);
+
 
     const getDefaultThumbnail = (activity) => {
         switch (activity.type) {
@@ -89,11 +108,27 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
         }
     };
 
+    const getDoneBy = (doneByArray: string[]): string => {
+        const firstNames = doneByArray.map(fullName => fullName.split(" ")[0]);
+        return firstNames.join(", ");
+    };
+    const getPlaces = (places: string[]): string => {
+        return places.join(", ")
+    };
+    const getDuration = (startDateString: string, endDateString: string): string => {
+        const startDate = new Date(startDateString);
+        const endDate = new Date(endDateString);
+        const differenceInTime = endDate.getTime() - startDate.getTime();
+
+        return `${differenceInTime / (1000 * 3600 * 24)} days`;
+    };
+
     if (!activities) return (<EmptyDetailsPanel />);
 
 
     return (
         <div>
+            <div ref={detailsPanelTopRef}></div>
             {activities.map((activity) => {
                 const { googlePhotosLink } = activity;
                 const thumbnailSrc = thumbnails[googlePhotosLink] || getDefaultThumbnail(activity);
@@ -101,10 +136,10 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
 
                     // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
                     <div key={`${thumbnailSrc}-${activity.date}`}>
-                        <div className='bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
+                        <div className='p-5 mb-5 bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
 
-                            <div className='flex p-5 gap-4'>
-                                <div className='w-1/3  aspect-square relative h-full'>
+                            <div className='flex gap-4'>
+                                <div className='w-1/3 drop-shadow-xl aspect-square relative h-full'>
                                     <Image
                                         className='object-cover object-center rounded-lg transition-opacity duration-700'
                                         alt="Activity Image"
@@ -118,7 +153,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                 </div>
                                 {/* <img className='w-1/3 object-cover object-center aspect-square rounded-lg h-full' alt="Card" src={thumbnails[activity.googlePhotosLink] || getDefaultThumbnail(activity)} /> */}
                                 <div className='w-2/3 grid content-center'>
-                                    <div className='text-lg font-bold mb-2 self-center'>
+                                    <div className='text-md font-bold mb-2 self-center text-slate-300'>
                                         {/* {activity.type === TRAVEL && (
                                             activity.activityName
                                         )} */}
@@ -132,38 +167,81 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                 </div>
                             </div>
 
-                            <div className="">
+
+                            <div className="mt-4">
                                 {activity.type === TRAVEL && (
                                     <>
-                                        <div>{humanReadableDate(activity.startDate)}</div>
-                                        <div>{`People: ${activity.people}`}</div>
+                                        <div className='flex gap-4'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
+                                                <div className='text-sm'>Places</div>
+                                                <strong>{getPlaces(activity.places)}</strong>
+                                            </div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
+                                                <div className='text-sm'>People</div>
+                                                <strong>{activity.people}</strong>
+                                            </div>
+                                        </div>
+                                        <div className='flex gap-4 mt-4'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
+                                                <div className='text-sm'>Duration</div>
+                                                <strong>{getDuration(activity.startDate, activity.endDate)}</strong>
+                                            </div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
 
+                                            </div>
+                                        </div>
                                     </>
                                 )}
                                 {(activity.type === HIKING) && (
                                     <>
-                                        <div>{humanReadableDate(activity.date)}</div>
-                                        <div className=''>
-                                            <div>Hiked <strong>{`${activity.distance}`}</strong> {`${distanceUnit}`}</div>
-                                            <div>{`Elevation: ${activity.elevation} ft`}</div>
+                                        <div className='flex gap-4'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
+                                                <div className='text-sm'>Elevation Gain</div>
+                                                <strong>{`${activity.elevation} ft`}</strong>
+                                            </div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
+                                                <div className='text-sm'>Distance</div>
+                                                <strong>{`${activity.distance}`} {`${distanceUnit}`}</strong>
+                                            </div>
                                         </div>
+                                        <div className='flex gap-4 mt-4'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
+                                                <div className='text-sm'>Done By</div>
+                                                <strong>{getDoneBy(activity.doneBy)}</strong>
+                                            </div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
 
+                                            </div>
+                                        </div>
                                     </>
                                 )}
                                 {(activity.type === BIKING) && (
                                     <>
-                                        <div>{humanReadableDate(activity.date)}</div>
-                                        <div className=''>
-                                            <div>{`Distance: ${activity.distance} ${distanceUnit}`}</div>
-                                            <div>{`Elevation: ${activity.elevation} ft`}</div>
+                                        {/* <div>{humanReadableDate(activity.date)}</div> */}
+                                        <div className='flex gap-4'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
+                                                <div className='text-sm'>Elevation Gain</div>
+                                                <strong>{`${activity.elevation} ft`}</strong>
+                                            </div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
+                                                <div className='text-sm'>Distance</div>
+                                                <strong>{`${activity.distance}`} {`${distanceUnit}`}</strong>
+                                            </div>
                                         </div>
+                                        <div className='flex gap-4 mt-4'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
+                                                <div className='text-sm'>Done By</div>
+                                                <strong>{getDoneBy(activity.doneBy)}</strong>
+                                            </div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
 
+                                            </div>
+                                        </div>
                                     </>
                                 )}
                             </div>
 
-
-                            <div className='flex'>
+                            <div className='flex mt-4 gap-2'>
                                 {isAdmin && (
                                     <Button
                                         rounded
@@ -174,9 +252,9 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                             window.open(activity.googlePhotosLink, "_blank")
                                         }}
                                         disabled={!activity.googlePhotosLink}
-                                        tooltip="No album available"
+                                        tooltip={activity.googlePhotosLink ? '' : "No album available"}
                                         tooltipOptions={{ showOnDisabled: true, showDelay: 400 }}
-                                        className='aspect-square'
+                                        className='aspect-square drop-shadow-2xl'
                                     >
                                         <img className='w-6' src="/photoalbum.png" />
                                     </Button>
@@ -189,8 +267,8 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                     onClick={e => {
                                         window.open(activity.instagramLink, "_blank")
                                     }}
-                                    className='aspect-square'
-                                    tooltip="No post available"
+                                    className='aspect-square drop-shadow-2xl'
+                                    tooltip={activity.instagramLink ? '' : "No post available"}
                                     tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                     disabled={!activity.instagramLink}
                                 >
@@ -205,8 +283,8 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                         onClick={e => {
                                             window.open(activity.journalLink, "_blank")
                                         }}
-                                        className='aspect-square'
-                                        tooltip="No journal entry available"
+                                        className='aspect-square drop-shadow-2xl'
+                                        tooltip={activity.journalLink ? '' : "No journal entry available"}
                                         tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                         disabled={!activity.journalLink}
                                     >
@@ -222,8 +300,8 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                         onClick={e => {
                                             window.open(activity.allTrailsLink, "_blank")
                                         }}
-                                        className='aspect-square'
-                                        tooltip="No AllTrails link available"
+                                        className='aspect-square drop-shadow-2xl'
+                                        tooltip={activity.allTrailsLink ? '' : "No AllTrails link available"}
                                         tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                         disabled={!activity.allTrailsLink}
                                     >
@@ -235,6 +313,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                     </div>
                 )
             })}
+            <div ref={detailsPanelBottomRef}></div>
         </div>
     );
 

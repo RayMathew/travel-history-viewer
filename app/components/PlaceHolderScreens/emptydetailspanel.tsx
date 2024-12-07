@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-// import worldMarker from 
 
 export default function EmptyDetailsPanel() {
     return (
