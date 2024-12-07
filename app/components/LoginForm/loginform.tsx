@@ -16,11 +16,31 @@ export default function LoginForm() {
                 style={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                 className="bg-gray-800 rounded-lg shadow-xl overflow-hidden"
             >
-                <div className="p-8">
+                <div className="p-8 pt-0">
+                    <div className='flex justify-center my-6'>
+                        <div style={{
+                            width: '90px',
+                            height: '90px',
+                            overflow: 'hidden',
+                            borderRadius: '90px'
+                        }}>
+                            <img
+                                className="self-center object-cover object-center"
+                                src="logo.svg"
+                                width={130}
+                                height={130}
+                                alt="Logo"
+                                style={{
+                                    borderRadius: '90px',
+                                    transform: "translate(2px)",
+                                }}
+                            />
+                        </div>
+                    </div>
                     <h2 className="text-center text-3xl font-extrabold text-white">
                         Memoir Map
                     </h2>
-                    <p className="mt-4 text-center text-gray-400">But first, prove you&apos;re my wife.</p>
+                    {/* <p className="mt-4 text-center text-gray-400">But first, prove you&apos;re my wife.</p> */}
                     <form action={formAction} className="mt-8 space-y-6">
                         <div className="rounded-md shadow-sm">
                             <div>
@@ -60,9 +80,9 @@ export default function LoginForm() {
                         </div>
                     </form>
                     <div className="flex items-center justify-between uppercase gap-4 mt-6">
-                        <span className="block w-full h-px bg-gray-300"></span>
-                        <span>OR</span>
-                        <span className="block w-full h-px bg-gray-300"></span>
+                        <span className="block w-full h-px bg-slate-400"></span>
+                        <span className='text-slate-400'>OR</span>
+                        <span className="block w-full h-px bg-slate-400"></span>
                     </div>
                 </div>
 
@@ -77,7 +97,7 @@ export default function LoginForm() {
                             name="username"
                         />
                         <Button
-                            className="font-medium text-indigo-500 hover:text-indigo-400"
+                            className="font-medium text-blue-500 hover:text-blue-400"
                             type="submit"
                             aria-disabled={isPending}
                         >
