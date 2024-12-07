@@ -36,6 +36,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     height={72}
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
                     className={`${disabled ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
+                    unoptimized
                 />
             </label>
             <label
@@ -62,6 +63,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     height={72}
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
                     className={`${disabled ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
+                    unoptimized
                 />
             </label>
             <label
@@ -89,6 +91,7 @@ export default function ImageRadioButtons({ onChange, disabled }) {
                     height={72}
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
                     className={`${disabled ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
+                    unoptimized
                 />
             </label>
         </div>
