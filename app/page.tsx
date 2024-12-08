@@ -498,6 +498,7 @@ export default function Home() {
                       />
                     </div>
                     <div ref={filterPanelBottomRef}></div>
+                    <div className="h-8"></div>
 
                   </AccordionTab>
                   <AccordionTab header={detailsTitle}
