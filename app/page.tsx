@@ -15,6 +15,7 @@ import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons"
 import NavbarAvatar from "./components/NavbarAvatar/navbaravatar";
 const DetailsList = React.lazy(() => import("./components/DetailsList/detailslist"));
 import { PrimeReactProvider } from "primereact/api";
+import EmptyHomePage from "./components/PlaceHolderScreens/emptyhomepage";
 import 'primeicons/primeicons.css';
 import Tailwind from 'primereact/passthrough/tailwind';
 import { Accordion, AccordionTab } from 'primereact/accordion';
@@ -229,7 +230,11 @@ export default function Home() {
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+        <EmptyHomePage />
+      </PrimeReactProvider>
+    );
   }
 
   if (!notionData) {

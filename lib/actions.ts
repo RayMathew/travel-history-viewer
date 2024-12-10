@@ -19,7 +19,7 @@ export async function authenticate(
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return "Liar. You're not my wife.";
+          return "Liar. Stop pretending to be my wife.";
         default:
           return "Something went wrong.";
       }

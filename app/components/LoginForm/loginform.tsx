@@ -67,6 +67,13 @@ export default function LoginForm() {
                                     id="password"
                                 />
                             </div>
+                            <div className='text-center mt-3'>
+                                {(errorMessage) && (
+                                    <>
+                                        <p className="text-sm text-red-500">{errorMessage}</p>
+                                    </>
+                                )}
+                            </div>
                         </div>
 
                         <div>
@@ -74,6 +81,12 @@ export default function LoginForm() {
                                 className="group relative w-full flex justify-center py-3 px-4 cursor-pointer text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 transition duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-1"
                                 type="submit"
                                 aria-disabled={isPending}
+                                loading={isPending}
+                                pt={{
+                                    loadingIcon: {
+                                        className: 'mr-1'
+                                    }
+                                }}
                             >
                                 Sign In
                             </Button>
@@ -100,16 +113,17 @@ export default function LoginForm() {
                             className="font-medium text-blue-500 hover:text-blue-400"
                             type="submit"
                             aria-disabled={isPending}
+                            loading={isPending}
+                            pt={{
+                                loadingIcon: {
+                                    className: 'mr-1'
+                                }
+                            }}
                         >
                             Login as Guest
                         </Button>
                     </form>
                 </div>
-                {errorMessage && (
-                    <>
-                        <p className="text-sm text-red-500">{errorMessage}</p>
-                    </>
-                )}
             </div>
         </div>);
 }

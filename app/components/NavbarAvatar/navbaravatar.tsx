@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Avatar } from 'primereact/avatar';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { Menu as OverlayRows } from 'primereact/menu';
+import { Skeleton } from 'primereact/skeleton';
 import { useSession } from 'next-auth/react';
 import { logout } from "@/lib/actions";
 // import anime from 'animejs';
@@ -32,12 +33,18 @@ export default function NavbarAvatar() {
 
     return (
         <div className="relative">
-            <Avatar
-                label={userName.charAt(0)}
-                shape="circle"
-                className="cursor-pointer relative block"
-                onClick={(e) => op.current.toggle(e)}
-            />
+            {userName == '' && (
+                <Skeleton shape="circle" size="2.5rem" className="m-4"></Skeleton>
+            )}
+            {userName !== '' && (
+                <Avatar
+                    label={userName.charAt(0)}
+                    shape="circle"
+                    className="cursor-pointer relative block"
+                    onClick={(e) => op.current.toggle(e)}
+                />
+            )}
+
             <OverlayPanel ref={op}>
                 <OverlayRows model={rows} />
             </OverlayPanel>
