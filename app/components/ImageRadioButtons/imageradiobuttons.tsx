@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Skeleton } from 'primereact/skeleton';
 import Image from "next/image";
 import { NAMRATA, RAY } from "@/lib/constants";
+import { ImageWithRadioButtonsProps } from "@/lib/types/frontend";
 
-export default function ImageRadioButtons({ onChange, disabled }) {
+export default function ImageRadioButtons({ onChange, disabled }: ImageWithRadioButtonsProps) {
     const [selected, setSelected] = useState('both');
     const [loaded, setLoaded] = useState(false);
     const [visibilityClass, setVisibilityClass] = useState('h-0 invisible');
 
-    const selectRadioOption = (value) => {
+    const selectRadioOption = (value: string) => {
         setSelected(value);
         onChange(value);
     };

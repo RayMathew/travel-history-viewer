@@ -278,7 +278,10 @@ export const applyFiltersToMap = (
   //   return notionData;
 };
 
-export const applyMilestoneFilters = (notionData, distanceUnit: string) => {
+export const applyMilestoneFilters = (
+  notionData,
+  distanceUnit: string | null
+) => {
   // we do not need to recompute the milestones every time the user asks for it.
   // the milestones also remain the same no matter who the user is.
 

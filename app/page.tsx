@@ -9,10 +9,11 @@ import {
 } from "@vis.gl/react-google-maps";
 import debounce from 'lodash.debounce';
 import AuthProvider from "./components/AuthProvider/authprovider";
-import Image from "next/image";
 import CustomMap from "./components/CustomMap/custommap";
 import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
-import NavbarAvatar from "./components/NavbarAvatar/navbaravatar";
+import Navbar from "./components/Navbar/navbar";
+import ImageWithCheckBox from "./components/ImageWithCheckBox/imagewithcheckbox";
+import ThresholdFilter from "./components/ThresholdFilter/thresholdfilter";
 const DetailsList = React.lazy(() => import("./components/DetailsList/detailslist"));
 import { PrimeReactProvider } from "primereact/api";
 import EmptyHomePage from "./components/PlaceHolderScreens/emptyhomepage";
@@ -20,32 +21,31 @@ import 'primeicons/primeicons.css';
 import Tailwind from 'primereact/passthrough/tailwind';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { MultiSelect } from 'primereact/multiselect';
-import { Checkbox } from "primereact/checkbox";
-import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
 import { Toast } from 'primereact/toast';
 import { useIntersectionObserver } from 'primereact/hooks';
 
 import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
+import { Operator, YearOption } from "@/lib/types/frontend";
 
 export default function Home() {
   const [notionData, setNotionData] = useState(null);
   const [displayData, setDisplayData] = useState(null);
-  const [unitOfDistance, setUnitOfDistance] = useState(null);
+  const [unitOfDistance, setUnitOfDistance] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [selectedParticipant, setSelectedParticipant] = useState(null);
+  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null);
 
-  const [selectedYears, setSelectedYears] = useState([]);
-  const [yearOptions, setYearOptions] = useState([]);
-  const [selectedActivities, setSelectedActivities] = useState([]);
-  const [distanceThreshold, setDistanceThreshold] = useState(0);
-  const [elevationThreshold, setElevationThreshold] = useState(0);
+  const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+  const [distanceThreshold, setDistanceThreshold] = useState<number>(0);
+  const [elevationThreshold, setElevationThreshold] = useState<number>(0);
 
-  const operatorOptions = [' < ', ' > '];
-  const [distanceOperator, setDistanceOperator] = useState(operatorOptions[1]);
-  const [elevationOperator, setElevationOperator] = useState(operatorOptions[1]);
+  const operatorOptions: Operator[] = [' < ', ' > '];
+  const [distanceOperator, setDistanceOperator] = useState<Operator>(operatorOptions[1]);
+  const [elevationOperator, setElevationOperator] = useState<Operator>(operatorOptions[1]);
 
   const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
@@ -94,7 +94,7 @@ export default function Home() {
 
       setUnitOfDistance(distanceUnit);
 
-      const yearsForFilter = new Set();
+      const yearsForFilter = new Set<number>();
 
       outdoorsData.forEach(outdoorDatum => {
         outdoorDatum.activities.forEach(activity => {
@@ -104,7 +104,7 @@ export default function Home() {
 
       travelData.forEach(travelDatum => {
         travelDatum.activities.forEach(activity => {
-          if (activity.startDate) {
+          if (activity.startDate && activity.travelStatus !== 'Idea') {
             yearsForFilter.add(new Date(activity.startDate).getFullYear());
           }
         });
@@ -158,20 +158,20 @@ export default function Home() {
     };
   };
 
-  const onParticipantChange = (value) => {
+  const onParticipantChange = (value: string) => {
     setSelectedParticipant(value);
 
     updateUIAndFilter({ participant: value })
   };
 
-  const onYearSelectChange = (yearArray) => {
+  const onYearSelectChange = (yearArray: number[]) => {
     setSelectedYears(yearArray);
 
     updateUIAndFilter({ years: yearArray })
   };
 
   const onActivitySelectChange = (e) => {
-    let _selectedActivities = [...selectedActivities];
+    const _selectedActivities = [...selectedActivities];
 
     if (e.checked)
       _selectedActivities.push(e.value);
@@ -183,28 +183,28 @@ export default function Home() {
     updateUIAndFilter({ activityTypes: _selectedActivities });
   };
 
-  const onDistanceOperatorChange = (operator) => {
+  const onDistanceOperatorChange = (operator: Operator) => {
     setDistanceOperator(operator);
 
     updateUIAndFilter({ distance: { operator: operator.trim(), value: distanceOperator } });
   };
 
-  const onElevationOperatorChange = (operator) => {
+  const onElevationOperatorChange = (operator: Operator) => {
     setElevationOperator(operator);
 
     updateUIAndFilter({ elevation: { operator: operator.trim(), value: elevationOperator } });
   };
 
-  const debouncedUpdateMetricFilter = debounce((key, value, operator, updateState, updateFn) => {
+  const debouncedUpdateMetricFilter = debounce((key: string, value: number, operator: Operator, updateState, updateFn) => {
     updateState(value);
     updateFn({ [key]: { operator: operator.trim(), value } });
   }, 400);
 
-  const onDistanceThresholdChange = (value) => {
+  const onDistanceThresholdChange = (value: number) => {
     debouncedUpdateMetricFilter('distance', value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
   };
 
-  const onElevationThresholdChange = (value) => {
+  const onElevationThresholdChange = (value: number) => {
     debouncedUpdateMetricFilter('elevation', value, elevationOperator, setElevationThreshold, updateUIAndFilter);
   };
 
@@ -220,7 +220,7 @@ export default function Home() {
     }
   };
 
-  const onMarkerClick = (event, activities, locationName) => {
+  const onMarkerClick = (_event, activities, locationName: string) => {
     setDetailsTitle(`${locationName}`);
     setDetailsTitleClass('text-slate-300 text-lg');
     setActiveTab(SECTIONS.DETAILS_SECTION);
@@ -249,20 +249,7 @@ export default function Home() {
         <Toast ref={toast} />
         <div className="w-full h-screen">
           <div className="w-full flex h-16">
-            <div className="flex-1 flex">
-              <Image
-                className="mx-4 self-center object-cover object-center rounded-lg"
-                src="/favicon.ico"
-                width={40}
-                height={40}
-                alt="Logo"
-                priority={false}
-              />
-              <div className="font-semibold self-center">Memoir Map</div>
-            </div>
-            <div className="p-4">
-              <NavbarAvatar />
-            </div>
+            <Navbar />
           </div>
           <div className="flex h-[calc(100vh-4rem)]">
             <div className="md:w-1/4 2xl:w-128 ">
@@ -316,65 +303,44 @@ export default function Home() {
                     <div className="flex flex-row pb-7">
                       <div className="card flex flex-wrap justify-content-center gap-3">
                         <div className="flex align-items-center">
-                          <Checkbox
-                            inputId="activity1"
-                            name="hike"
+                          <ImageWithCheckBox
                             value={HIKING}
                             onChange={onActivitySelectChange}
                             checked={selectedActivities.includes(HIKING)}
                             disabled={viewMilestonesBool}
-                            className="transition-all duration-300"
-                          />
-                          <Image
-                            src="/walkplain.png"
-                            width={24}
-                            height={24}
-                            alt="Hike"
+                            imgSrc="/walkplain.png"
                             title="Hike"
-                            style={{ height: 24 }}
-                            className="mx-1 brightness-50"
+                            inputId="activity1"
+                            size={24}
+                            margin={'mx-1'}
                           />
                           <label htmlFor="activity1" className="">Hike</label>
                         </div>
                         <div className="flex align-items-center">
-                          <Checkbox
-                            inputId="activity2"
-                            name="bike"
+                          <ImageWithCheckBox
                             value={BIKING}
                             onChange={onActivitySelectChange}
                             checked={selectedActivities.includes(BIKING)}
                             disabled={viewMilestonesBool}
-                            className="transition-all duration-300"
-                          />
-                          <Image
-                            src="/bicycleplain.png"
-                            width={24}
-                            height={24}
-                            alt="Bike"
+                            imgSrc="/bicycleplain.png"
                             title="Bike"
-                            style={{ height: 24 }}
-                            className="mx-1.5 brightness-50"
+                            inputId="activity2"
+                            size={24}
+                            margin={'mx-1.5'}
                           />
                           <label htmlFor="activity2" className="">Bike</label>
                         </div>
                         <div className="flex align-items-center">
-                          <Checkbox
-                            inputId="activity3"
-                            name="travel"
+                          <ImageWithCheckBox
                             value={TRAVEL}
                             onChange={onActivitySelectChange}
                             checked={selectedActivities.includes(TRAVEL)}
                             disabled={viewMilestonesBool}
-                            className="transition-all duration-300"
-                          />
-                          <Image
-                            src="/airplaneplain.png"
-                            width={22}
-                            height={22}
-                            alt="Travel"
+                            imgSrc="/airplaneplain.png"
                             title="Travel"
-                            style={{ height: 22 }}
-                            className="mx-2 brightness-50"
+                            inputId="activity3"
+                            size={22}
+                            margin={'mx-2'}
                           />
                           <label htmlFor="activity3" className="">Travel</label>
                         </div>
@@ -384,104 +350,33 @@ export default function Home() {
                       Distance
                     </div>
                     <div className="flex flex-row pb-7 gap-4">
-                      <div>
-                        <SelectButton
-                          value={distanceOperator}
-                          tooltip="Distance less than or greater than"
-                          tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
-                          onChange={(e) => onDistanceOperatorChange(e.value)}
-                          options={operatorOptions}
-                          disabled={viewMilestonesBool}
-                          className="transition-all duration-300"
-                          pt={{
-                            root: {
-                              className: 'flex flex-nowrap'
-                            },
-                            button: {
-                              className: '!py-2'
-                            }
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <InputNumber
-                          value={distanceThreshold}
-                          onValueChange={(e) => onDistanceThresholdChange(e.value)}
-                          mode="decimal"
-                          min={0}
-                          useGrouping={false}
-                          maxFractionDigits={1}
-                          placeholder={unitOfDistance}
-                          suffix={` ${unitOfDistance}`}
-                          showButtons
-                          disabled={viewMilestonesBool}
-                          className="transition-all duration-300"
-                          // buttonLayout="vertical"
-                          // decrementButtonClassName="p-button-secondary"
-                          // incrementButtonClassName="p-button-secondary"
-                          // incrementButtonIcon="pi pi-plus"
-                          // decrementButtonIcon="pi pi-minus"
-                          pt={{
-                            input: {
-                              root: {
-                                className: '!py-2'
-                              },
-                            },
-                          }}
-                        />
-                      </div>
+                      <ThresholdFilter
+                        name="Distance"
+                        operator={distanceOperator}
+                        onOperatorChange={onDistanceOperatorChange}
+                        operatorOptions={operatorOptions}
+                        disabled={viewMilestonesBool}
+                        threshold={distanceThreshold}
+                        onThresholdChange={onDistanceThresholdChange}
+                        placeholder={unitOfDistance}
+                        step={1}
+                      />
                     </div>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
                       Elevation Gain
                     </div>
-                    <div className="flex flex-row pb-7 gap-4 w-full">
-                      <div>
-                        <SelectButton
-                          value={elevationOperator}
-                          tooltip="Elevation less than or greater than"
-                          tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
-                          onChange={(e) => onElevationOperatorChange(e.value)}
-                          options={operatorOptions}
-                          disabled={viewMilestonesBool}
-                          className="transition-all duration-300"
-                          pt={{
-                            root: {
-                              className: 'flex flex-nowrap'
-                            },
-                            button: {
-                              className: '!py-2'
-                            }
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <InputNumber
-                          value={elevationThreshold}
-                          onValueChange={(e) => onElevationThresholdChange(e.value)}
-                          mode="decimal"
-                          min={0}
-                          useGrouping={false}
-                          maxFractionDigits={1}
-                          placeholder="ft"
-                          suffix=" ft"
-                          showButtons
-                          step={100}
-                          disabled={viewMilestonesBool}
-                          className="transition-all duration-300"
-                          // buttonLayout="vertical"
-                          // decrementButtonClassName="p-button-secondary"
-                          // incrementButtonClassName="p-button-secondary"
-                          // incrementButtonIcon="pi pi-plus"
-                          // decrementButtonIcon="pi pi-minus"
-                          pt={{
-                            input: {
-                              root: {
-                                className: '!py-2'
-                              },
-                            },
-                          }}
-                        />
-                      </div>
+                    <div className="flex flex-row pb-7 gap-4">
+                      <ThresholdFilter
+                        name="Elevation"
+                        operator={elevationOperator}
+                        onOperatorChange={onElevationOperatorChange}
+                        operatorOptions={operatorOptions}
+                        disabled={viewMilestonesBool}
+                        threshold={elevationThreshold}
+                        onThresholdChange={onElevationThresholdChange}
+                        placeholder={`ft`}
+                        step={100}
+                      />
                     </div>
                     <div className="mt-4">
                       <SelectButton

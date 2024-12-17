@@ -34,7 +34,7 @@ export default function NavbarAvatar() {
     return (
         <div className="relative">
             {userName == '' && (
-                <Skeleton shape="circle" size="2.5rem" className="m-4"></Skeleton>
+                <Skeleton shape="circle" size="2rem"></Skeleton>
             )}
             {userName !== '' && (
                 <Avatar

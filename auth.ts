@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { User, UserSchema } from "./lib/definitions";
+import { User, UserSchema } from "./lib/types/backend";
 import { isOfTypeWithErrors, ValidationError } from "./lib/validationProcessor";
 
 function getUser(username: string): User | undefined {
