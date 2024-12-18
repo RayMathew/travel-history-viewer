@@ -8,6 +8,7 @@ import {
   TRAVEL_PROPERTIES,
 } from "./constants";
 import { removeNullValues } from "./datahelper";
+import { OutdoorsData, TravelData } from "./types/shared";
 
 let notionClient: Client | null = null;
 
@@ -21,19 +22,19 @@ function getNotionClient(): Client {
 export const fetchOutdoorsDBData = async (
   distanceUnit: string,
   isAdminUser: boolean
-) => {
+): Promise<OutdoorsData[]> => {
   //   const outdoorsData = [];
   const groupedData = new Map();
   //   console.time("outdoors data");
 
   try {
-    let dbData = await getNotionClient().databases.query({
+    const dbData = await getNotionClient().databases.query({
       database_id: process.env.NOTION_OUTDOORSDB_KEY!,
     });
 
     //   console.log(dbData);
 
-    dbData.results.forEach((page, index) => {
+    dbData.results.forEach((page) => {
       const { properties } = page;
       const type = getActivityType(
         properties[OUTDOOR_PROPERTIES.TAGS].multi_select
@@ -94,7 +95,9 @@ export const fetchOutdoorsDBData = async (
   return [...groupedData.values()];
 };
 
-export const fetchTravelDBData = async (isAdminUser: boolean) => {
+export const fetchTravelDBData = async (
+  isAdminUser: boolean
+): Promise<TravelData[]> => {
   //   const travelData = [];
   const groupedData = new Map();
 

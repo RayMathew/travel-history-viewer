@@ -35,3 +35,11 @@ export interface YearOption {
   name: number;
   value: number;
 }
+
+export type FilterOptions = {
+  participant?: string;
+  years?: number[];
+  activityTypes?: string[];
+  distance?: { operator: string; value: number };
+  elevation?: { operator: string; value: number };
+};

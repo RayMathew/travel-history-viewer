@@ -1,4 +1,12 @@
 import { RAY, NAMRATA, HIKING, BIKING, TRAVEL } from "@/lib/constants";
+import {
+  FilteredNotionData,
+  NotionData,
+  OutdoorActivity,
+  OutdoorsData,
+  TravelActivity,
+  TravelData,
+} from "./types/shared";
 
 const currentYear = new Date().getFullYear();
 const defaultFilters = {
@@ -30,14 +38,16 @@ const milestones = {
   },
 };
 
-let milestoneData;
+let milestoneData: OutdoorsData[];
 
 const operatorTranslation = {
   ">": (x: number, y: number) => x > y,
   "<": (x: number, y: number) => x < y,
 };
 
-export const getActivityImgSrc = (activityData) => {
+export const getActivityImgSrc = (
+  activityData: OutdoorActivity | TravelActivity
+) => {
   if (activityData.type == TRAVEL) return "/airplane.png";
 
   if (activityData.doneBy.includes(RAY)) {
@@ -72,7 +82,7 @@ export const humanReadableDate = (dateString: string): string => {
   return `${dayWithSuffix} ${month}, ${year}`;
 };
 
-export const countActivities = (filteredData) => {
+export const countActivities = (filteredData: FilteredNotionData) => {
   let count = 0;
   filteredData.outdoorsData.forEach(
     (locationData) => (count += locationData.activities.length)
@@ -84,16 +94,16 @@ export const countActivities = (filteredData) => {
 };
 
 export const applyFiltersToMap = (
-  initialLoad,
-  notionData,
+  initialLoad: boolean,
+  notionData: NotionData | null,
   filter = defaultFilters
-) => {
-  let filteredData;
+): FilteredNotionData => {
+  let filteredData: FilteredNotionData;
 
   console.log("asds", filter);
   console.log("start filter", notionData);
 
-  const yearFilter = (allData) => {
+  const yearFilter = (allData: NotionData): FilteredNotionData => {
     const filterYears = filter.years;
 
     // filter activities that were done in the current year
@@ -139,8 +149,12 @@ export const applyFiltersToMap = (
     return { outdoorsData, travelData };
   };
 
-  const participantFilter = (allData) => {
-    const filterByDoneBy = (data) => {
+  const participantFilter = (
+    allData: FilteredNotionData
+  ): FilteredNotionData => {
+    function filterByDoneBy(
+      data: OutdoorsData[] | TravelData[]
+    ): OutdoorsData[] | TravelData[] {
       const modifiedData = data.map((activityData) => {
         const filteredActivities = activityData.activities.filter(
           (activity) => {
@@ -163,15 +177,15 @@ export const applyFiltersToMap = (
         (activityData) => activityData.activities.length > 0
       );
       return filteredData;
-    };
+    }
     const outdoorsData = filterByDoneBy(allData.outdoorsData);
     const travelData = filterByDoneBy(allData.travelData);
 
     return { outdoorsData, travelData };
   };
 
-  const activityFilter = (allData) => {
-    const filterByActivityType = (data) => {
+  const activityFilter = (allData: FilteredNotionData): FilteredNotionData => {
+    const filterByActivityType = (data: OutdoorsData[] | TravelData[]) => {
       const modifiedData = data.map((activityData) => {
         const filteredActivities = activityData.activities.filter((activity) =>
           filter.activityTypes.includes(activity.type)
@@ -193,11 +207,11 @@ export const applyFiltersToMap = (
     return { outdoorsData, travelData };
   };
 
-  const distanceFilter = (allData) => {
+  const distanceFilter = (allData: FilteredNotionData): FilteredNotionData => {
     if (filter.distance.operator === ">" && filter.distance.value === 0)
       return allData;
     if (filter.distance.operator === "<" && filter.distance.value === 0)
-      return { outdoorsData: {}, travelData: allData.travelData };
+      return { outdoorsData: [], travelData: allData.travelData };
 
     const distanceThreshold = filter.distance.value;
     let outdoorsData = allData.outdoorsData.map((outdoorLocation) => {
@@ -222,11 +236,11 @@ export const applyFiltersToMap = (
     return { outdoorsData, travelData: allData.travelData };
   };
 
-  const elevationFilter = (allData) => {
+  const elevationFilter = (allData: FilteredNotionData): FilteredNotionData => {
     if (filter.elevation.operator === ">" && filter.elevation.value === 0)
       return allData;
     if (filter.elevation.operator === "<" && filter.elevation.value === 0)
-      return { outdoorsData: {}, travelData: {} };
+      return { outdoorsData: [], travelData: [] };
 
     const elevationThreshold = filter.elevation.value;
     let outdoorsData = allData.outdoorsData.map((outdoorLocation) => {
@@ -279,9 +293,10 @@ export const applyFiltersToMap = (
 };
 
 export const applyMilestoneFilters = (
-  notionData,
+  notionData: NotionData | null,
   distanceUnit: string | null
-) => {
+): FilteredNotionData | null => {
+  if (!notionData) return null;
   // we do not need to recompute the milestones every time the user asks for it.
   // the milestones also remain the same no matter who the user is.
 
@@ -292,11 +307,11 @@ export const applyMilestoneFilters = (
 
   if (distanceUnit === "miles") distanceUnit = "Mile";
 
-  const outdoorsData = [];
+  const outdoorsData: OutdoorsData[] = [];
 
   // get milestone numbers
   notionData.outdoorsData.forEach((outdoorLocation) => {
-    outdoorLocation.activities.forEach((activityData) => {
+    outdoorLocation.activities.forEach((activityData: OutdoorActivity) => {
       const typeOfActivity: typeof HIKING | typeof BIKING = activityData.type;
 
       if (activityData.distance > milestones[typeOfActivity].longest) {

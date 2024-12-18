@@ -27,11 +27,12 @@ import { useIntersectionObserver } from 'primereact/hooks';
 
 import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
-import { Operator, YearOption } from "@/lib/types/frontend";
+import { FilterOptions, Operator, YearOption } from "@/lib/types/frontend";
+import { FilteredNotionData, NotionData } from "@/lib/types/shared";
 
 export default function Home() {
-  const [notionData, setNotionData] = useState(null);
-  const [displayData, setDisplayData] = useState(null);
+  const [notionData, setNotionData] = useState<NotionData | null>(null);
+  const [displayData, setDisplayData] = useState<FilteredNotionData | null>(null);
   const [unitOfDistance, setUnitOfDistance] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -76,7 +77,7 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/notion");
-        const data = await response.json();
+        const data: NotionData = await response.json();
         setNotionData(data);
         setupData(data);
 
@@ -89,7 +90,7 @@ export default function Home() {
       }
     };
 
-    const setupData = (initialData) => {
+    const setupData = (initialData: NotionData) => {
       const { outdoorsData, travelData, distanceUnit } = initialData;
 
       setUnitOfDistance(distanceUnit);
@@ -148,9 +149,9 @@ export default function Home() {
   };
 
 
-  const updateFilterConfig = (filter) => {
+  const updateFilterConfig = (filter: FilterOptions): FilterOptions => {
     return {
-      participant: filter.participant || selectedParticipant,
+      participant: filter.participant || selectedParticipant!,
       years: filter.years || selectedYears,
       activityTypes: filter.activityTypes || selectedActivities,
       distance: filter.distance || { operator: distanceOperator.trim(), value: distanceThreshold },
