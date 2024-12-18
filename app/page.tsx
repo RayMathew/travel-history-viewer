@@ -141,7 +141,7 @@ export default function Home() {
     }
   }, [filterPanelTopVisible, filterPanelBottomVisible]);
 
-  const updateUIAndFilter = (filterUpdates) => {
+  const updateUIAndFilter = (filterUpdates: FilterOptions) => {
     const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig(filterUpdates));
     const count = countActivities(filteredData);
     displayInfo(count);
@@ -187,13 +187,13 @@ export default function Home() {
   const onDistanceOperatorChange = (operator: Operator) => {
     setDistanceOperator(operator);
 
-    updateUIAndFilter({ distance: { operator: operator.trim(), value: distanceOperator } });
+    updateUIAndFilter({ distance: { operator: operator.trim(), value: distanceThreshold } });
   };
 
   const onElevationOperatorChange = (operator: Operator) => {
     setElevationOperator(operator);
 
-    updateUIAndFilter({ elevation: { operator: operator.trim(), value: elevationOperator } });
+    updateUIAndFilter({ elevation: { operator: operator.trim(), value: elevationThreshold } });
   };
 
   const debouncedUpdateMetricFilter = debounce((key: string, value: number, operator: Operator, updateState, updateFn) => {

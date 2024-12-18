@@ -19,7 +19,7 @@ export default function ThresholdFilter({
             <div>
                 <SelectButton
                     value={operator}
-                    tooltip={`${name}less than or greater than`}
+                    tooltip={`${name} less than or greater than`}
                     tooltipOptions={{ showDelay: 500, hideDelay: 300 }}
                     onChange={(e) => onOperatorChange(e.value)}
                     options={operatorOptions}

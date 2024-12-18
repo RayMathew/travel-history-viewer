@@ -7,6 +7,7 @@ import {
   TravelActivity,
   TravelData,
 } from "./types/shared";
+import { FilterOptions } from "./types/frontend";
 
 const currentYear = new Date().getFullYear();
 const defaultFilters = {
@@ -96,7 +97,7 @@ export const countActivities = (filteredData: FilteredNotionData) => {
 export const applyFiltersToMap = (
   initialLoad: boolean,
   notionData: NotionData | null,
-  filter = defaultFilters
+  filter: FilterOptions = defaultFilters
 ): FilteredNotionData => {
   let filteredData: FilteredNotionData;
 
