@@ -1,4 +1,5 @@
 import { CheckboxChangeEvent } from "primereact/checkbox";
+import { OutdoorActivity, TravelActivity } from "./shared";
 
 export interface ImageWithRadioButtonsProps {
   onChange: (value: string) => void;
@@ -29,6 +30,13 @@ export interface ThresholdFilterProps {
   onThresholdChange: (value: number) => void;
   placeholder: string | null;
   step: number;
+}
+
+export interface DetailslistProps {
+  activities: OutdoorActivity[] | TravelActivity[];
+  milestoneMode: boolean;
+  distanceUnit: "km" | "miles";
+  setDetailsInnerShadows: (state: string) => void;
 }
 
 export interface YearOption {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, Profiler } from "react";
 import {
   APIProvider,
   // useMap,
@@ -33,14 +33,14 @@ import { FilteredNotionData, NotionData } from "@/lib/types/shared";
 export default function Home() {
   const [notionData, setNotionData] = useState<NotionData | null>(null);
   const [displayData, setDisplayData] = useState<FilteredNotionData | null>(null);
-  const [unitOfDistance, setUnitOfDistance] = useState<string | null>(null);
+  const [unitOfDistance, setUnitOfDistance] = useState<string>('km');
   const [loading, setLoading] = useState(true);
 
-  const [selectedParticipant, setSelectedParticipant] = useState<string | null>(null);
+  const [selectedParticipant, setSelectedParticipant] = useState<string>('both');
 
   const [selectedYears, setSelectedYears] = useState<number[]>([]);
   const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([BIKING, HIKING, TRAVEL]);
   const [distanceThreshold, setDistanceThreshold] = useState<number>(0);
   const [elevationThreshold, setElevationThreshold] = useState<number>(0);
 
@@ -69,15 +69,16 @@ export default function Home() {
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
 
-  const displayInfo = (info) => {
-    toast.current.show({ severity: 'info', summary: 'Info', detail: `Found ${info} activities` });
-  };
+  const displayInfo = useCallback((info: number) => {
+    toast.current?.show({ severity: 'info', summary: 'Info', detail: `Found ${info} activities` });
+  }, [toast]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/notion");
         const data: NotionData = await response.json();
+if (!data) throw Error('Notion data not available');
         setNotionData(data);
         setupData(data);
 
@@ -92,8 +93,6 @@ export default function Home() {
 
     const setupData = (initialData: NotionData) => {
       const { outdoorsData, travelData, distanceUnit } = initialData;
-
-      setUnitOfDistance(distanceUnit);
 
       const yearsForFilter = new Set<number>();
 
@@ -123,8 +122,7 @@ export default function Home() {
 
       setYearOptions(temp);
       setSelectedYears([filterYearsArray[filterYearsArray.length - 1]]);
-      setSelectedParticipant('both');
-      setSelectedActivities([BIKING, HIKING, TRAVEL]);
+      setUnitOfDistance(distanceUnit);
     };
 
     fetchData();
@@ -141,15 +139,7 @@ export default function Home() {
     }
   }, [filterPanelTopVisible, filterPanelBottomVisible]);
 
-  const updateUIAndFilter = (filterUpdates: FilterOptions) => {
-    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig(filterUpdates));
-    const count = countActivities(filteredData);
-    displayInfo(count);
-    setDisplayData(filteredData);
-  };
-
-
-  const updateFilterConfig = (filter: FilterOptions): FilterOptions => {
+    const updateFilterConfig = useCallback((filter: FilterOptions): FilterOptions => {
     return {
       participant: filter.participant || selectedParticipant!,
       years: filter.years || selectedYears,
@@ -157,7 +147,25 @@ export default function Home() {
       distance: filter.distance || { operator: distanceOperator.trim(), value: distanceThreshold },
       elevation: filter.elevation || { operator: elevationOperator.trim(), value: elevationThreshold }
     };
-  };
+  }, [
+    distanceOperator,
+    distanceThreshold,
+    elevationOperator,
+    elevationThreshold,
+    selectedActivities,
+    selectedParticipant,
+    selectedYears
+  ]);
+
+  const updateUIAndFilter = useCallback((filterUpdates: FilterOptions) => {
+    const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig(filterUpdates));
+    const count = countActivities(filteredData);
+    displayInfo(count);
+    setDisplayData(filteredData);
+  }, [displayInfo, notionData, updateFilterConfig]);
+
+
+
 
   const onParticipantChange = (value: string) => {
     setSelectedParticipant(value);
@@ -196,16 +204,20 @@ export default function Home() {
     updateUIAndFilter({ elevation: { operator: operator.trim(), value: elevationThreshold } });
   };
 
-  const debouncedUpdateMetricFilter = debounce((key: string, value: number, operator: Operator, updateState, updateFn) => {
+  const debouncedUpdateMetricFilter = useRef(
+debounce((key: string, value: number, operator: Operator, updateState, updateFn) => {
     updateState(value);
     updateFn({ [key]: { operator: operator.trim(), value } });
-  }, 400);
+  }, 400)
+  ).current;
 
   const onDistanceThresholdChange = (value: number) => {
+if (value === 0) return;
     debouncedUpdateMetricFilter('distance', value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
   };
 
   const onElevationThresholdChange = (value: number) => {
+if (value === 0) return;
     debouncedUpdateMetricFilter('elevation', value, elevationOperator, setElevationThreshold, updateUIAndFilter);
   };
 
@@ -227,6 +239,8 @@ export default function Home() {
     setActiveTab(SECTIONS.DETAILS_SECTION);
     setDetailsContent(activities);
   };
+
+const map = useRef(new Map()).current;
 
 
 

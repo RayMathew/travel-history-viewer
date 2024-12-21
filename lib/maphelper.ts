@@ -96,7 +96,7 @@ export const countActivities = (filteredData: FilteredNotionData) => {
 
 export const applyFiltersToMap = (
   initialLoad: boolean,
-  notionData: NotionData | null,
+  notionData: NotionData,
   filter: FilterOptions = defaultFilters
 ): FilteredNotionData => {
   let filteredData: FilteredNotionData;

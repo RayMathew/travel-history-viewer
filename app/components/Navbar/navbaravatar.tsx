@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Avatar } from 'primereact/avatar';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { Menu as OverlayRows } from 'primereact/menu';
@@ -9,39 +9,39 @@ import { logout } from "@/lib/actions";
 
 
 export default function NavbarAvatar() {
+    const op = useRef<OverlayPanel>(null);
+
     const { data } = useSession();
 
-    const userName: string = data?.user?.name ?? '';
+    const userName: string = data?.user?.name || '';
 
-    const rows = [
-        {
-            label: `Logged in as ${userName}`,
-        },
-        {
-            label: 'Sign Out',
-            icon: 'pi pi-sign-out',
-            command: () => {
-                localStorage.clear();
-                logout();
-            }
-        }
-    ];
+    const handleSignOut = () => {
+        localStorage.clear();
+        logout();
+    }
 
+    const handleAvatarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        op.current?.toggle(e);
+    }
 
-    const op = useRef(null);
-
+    const rows = useMemo(
+        () => [
+            { label: `Logged in as ${userName}` },
+            { label: 'Sign Out', icon: 'pi pi-sign-out', command: handleSignOut }
+        ],
+        [userName]
+    );
 
     return (
         <div className="relative">
-            {userName == '' && (
+            {!userName ? (
                 <Skeleton shape="circle" size="2rem"></Skeleton>
-            )}
-            {userName !== '' && (
+            ) : (
                 <Avatar
                     label={userName.charAt(0)}
                     shape="circle"
                     className="cursor-pointer relative block"
-                    onClick={(e) => op.current.toggle(e)}
+                    onClick={handleAvatarClick}
                 />
             )}
 

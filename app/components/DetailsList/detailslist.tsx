@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -11,10 +11,12 @@ import { getThumbnailFromCache, saveThumbnailToCache } from '@/lib/browsercacheh
 
 import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
+import { DetailslistProps } from '@/lib/types/frontend';
+import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 
 
 
-export default function DetailsList({ activities, milestoneMode = false, distanceUnit, setDetailsInnerShadows }) {
+export default function DetailsList({ activities, milestoneMode = false, distanceUnit, setDetailsInnerShadows }: DetailslistProps) {
     const { data } = useSession();
     const isAdmin: boolean = data?.user?.name !== 'Guest';
 
@@ -25,77 +27,13 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
 
     // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
 
-    if (activities) {
-        activities = activities.sort((a, b) => {
+    const sortedActivities = useMemo(() => {
+        return activities?.sort((a, b) => new Date(b.startDate || b.date) - new Date(a.startDate || a.date)) || [];
+    }, [activities]);
 
-            if (new Date(a.startDate || a.date) < new Date(b.startDate || b.date)) return 1;
-            else if (new Date(a.startDate || a.date) > new Date(b.startDate || b.date)) return - 1;
-            else return 0;
-        });
-    }
+    const [thumbnails, setThumbnails] = useState<Record<string, string>>({});
 
-
-    const [thumbnails, setThumbnails] = useState({});
-
-    const getActivityThumbnail = useCallback(async (googlePhotosLink, activity) => {
-
-        // if (googlePhotosLink) {
-        try {
-            const response = await fetch(`/api/thumbnail?glink=${googlePhotosLink}`);
-            const data = await response.json();
-            return data.thumbnailLink;
-        } catch (err) {
-            console.error('Error fetching thumbnail:', err);
-            return getDefaultThumbnail(activity);
-        }
-    }, []);;
-
-    useEffect(() => {
-        const fetchThumbnails = async () => {
-            const newThumbnails = {};
-
-            await Promise.all(
-                activities.map(async (activity) => {
-                    const { googlePhotosLink } = activity;
-
-                    if (!googlePhotosLink) {
-                        newThumbnails[googlePhotosLink] = getDefaultThumbnail(activity);
-                        return;
-                    }
-                    const cachedThumbnail = getThumbnailFromCache(activity.googlePhotosLink);
-
-                    if (cachedThumbnail) {
-                        // Use cached thumbnail
-                        newThumbnails[activity.googlePhotosLink] = cachedThumbnail;
-                    } else {
-                        const thumbnailUrl = await getActivityThumbnail(activity.googlePhotosLink, activity);
-                        newThumbnails[activity.googlePhotosLink] = thumbnailUrl;
-                        saveThumbnailToCache(activity.googlePhotosLink, thumbnailUrl);
-                    }
-                })
-            );
-
-            setThumbnails((prev) => ({ ...prev, ...newThumbnails }));
-        };
-
-        // if (activities.length > 0) {
-        fetchThumbnails();
-        // }
-    }, [activities, getActivityThumbnail]);
-
-    useEffect(() => {
-        if (detailsPanelTopVisible) {
-            setDetailsInnerShadows('custom-bottom-inner-shadow');
-        } else if (detailsPanelBottomVisible) {
-            setDetailsInnerShadows('custom-top-inner-shadow');
-        }
-        else if (!detailsPanelTopVisible && !detailsPanelBottomVisible) {
-            setDetailsInnerShadows('custom-top-bottom-inner-shadow');
-        }
-    }, [detailsPanelTopVisible, detailsPanelBottomVisible]);
-
-
-    const getDefaultThumbnail = (activity) => {
+    const getDefaultThumbnail = (activity: OutdoorActivity | TravelActivity) => {
         switch (activity.type) {
             case HIKING:
                 return '/malewalksquare.png';
@@ -107,6 +45,62 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                 return '/malewalksquare.png';
         }
     };
+
+    const getActivityThumbnail = useCallback(async (googlePhotosLink: string, activity: OutdoorActivity | TravelActivity) => {
+        try {
+            const response = await fetch(`/api/thumbnail?glink=${googlePhotosLink}`);
+            const data = await response.json();
+            return data.thumbnailLink;
+        } catch (err) {
+            console.error('Error fetching thumbnail:', err);
+            return getDefaultThumbnail(activity);
+        }
+    }, []);
+
+    useEffect(() => {
+        const fetchThumbnails = async () => {
+            const newThumbnails: Record<string, string> = {};
+
+            await Promise.all(
+                sortedActivities.map(async (activity) => {
+                    const { googlePhotosLink } = activity;
+
+                    if (googlePhotosLink == undefined) {
+                        newThumbnails['default'] = getDefaultThumbnail(activity);
+                        return;
+                    } else {
+                        const cachedThumbnail = getThumbnailFromCache(googlePhotosLink);
+
+                        if (cachedThumbnail) {
+                            // Use cached thumbnail
+                            newThumbnails[googlePhotosLink] = cachedThumbnail;
+                        } else {
+                            const thumbnailUrl = await getActivityThumbnail(googlePhotosLink, activity);
+                            newThumbnails[googlePhotosLink] = thumbnailUrl;
+                            saveThumbnailToCache(googlePhotosLink, thumbnailUrl);
+                        }
+                    }
+
+                })
+            );
+
+            setThumbnails((prev) => ({ ...prev, ...newThumbnails }));
+        };
+
+        fetchThumbnails();
+    }, [sortedActivities, getActivityThumbnail]);
+
+    useEffect(() => {
+        if (detailsPanelTopVisible) {
+            setDetailsInnerShadows('custom-bottom-inner-shadow');
+        } else if (detailsPanelBottomVisible) {
+            setDetailsInnerShadows('custom-top-inner-shadow');
+        }
+        else if (!detailsPanelTopVisible && !detailsPanelBottomVisible) {
+            setDetailsInnerShadows('custom-top-bottom-inner-shadow');
+        }
+    }, [detailsPanelTopVisible, detailsPanelBottomVisible, setDetailsInnerShadows]);
+
 
     const getDoneBy = (doneByArray: string[]): string => {
         const firstNames = doneByArray.map(fullName => fullName.split(" ")[0]);
@@ -123,19 +117,19 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
         return `${differenceInTime / (1000 * 3600 * 24)} days`;
     };
 
-    if (!activities) return (<EmptyDetailsPanel />);
+    if (!sortedActivities.length) return (<EmptyDetailsPanel />);
 
 
     return (
         <div>
             <div ref={detailsPanelTopRef}></div>
-            {activities.map((activity) => {
+            {sortedActivities.map((activity) => {
                 const { googlePhotosLink } = activity;
                 const thumbnailSrc = thumbnails[googlePhotosLink] || getDefaultThumbnail(activity);
                 return (
 
                     // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
-                    <div key={`${thumbnailSrc}-${activity.date}`}>
+                    <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
                         <div className='p-5 mb-5 bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
 
                             <div className='flex gap-4'>
@@ -148,7 +142,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                         onLoadingComplete={(e) => {
                                             e.style.opacity = 1;
                                         }}
-                                        style={{ opacity: thumbnails[googlePhotosLink] ? 1 : 0 }}
+                                        style={{ opacity: thumbnailSrc ? 1 : 0 }}
                                     />
                                 </div>
                                 {/* <img className='w-1/3 object-cover object-center aspect-square rounded-lg h-full' alt="Card" src={thumbnails[activity.googlePhotosLink] || getDefaultThumbnail(activity)} /> */}

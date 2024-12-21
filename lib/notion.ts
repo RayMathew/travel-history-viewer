@@ -188,7 +188,7 @@ export const fetchTravelDBData = async (
   return [...groupedData.values()];
 };
 
-const getDistance = (value, distanceUnit) => {
+const getDistance = (value: number, distanceUnit: string) => {
   if (distanceUnit === DISTANCEUNIT[2]) return value;
 
   return parseFloat((value * 1.6).toFixed(1)); // convert default miles value to km
