@@ -38,6 +38,17 @@ body {
     sans-serif;
 }
 
+nav { 
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  nav {
+    color: var(--foreground);
+    background: var(--background);
+  }
+}
+
 .custom-border-bottom {
   border: 1px solid rgba(226, 232, 255, 0.1);
   border-top: none;
