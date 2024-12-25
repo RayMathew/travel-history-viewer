@@ -15,7 +15,7 @@ export default function ThresholdFilter({
     step,
 }: ThresholdFilterProps) {
     return (
-        <>
+        <div className="w-full flex gap-4">
             <div>
                 <SelectButton
                     value={operator}
@@ -57,12 +57,12 @@ export default function ThresholdFilter({
                     pt={{
                         input: {
                             root: {
-                                className: '!py-2'
+                                className: '!py-2 w-full'
                             },
                         },
                     }}
                 />
             </div>
-        </>
+        </div>
     );
 }

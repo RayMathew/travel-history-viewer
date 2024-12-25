@@ -45,7 +45,11 @@ export default function NavbarAvatar() {
                 />
             )}
 
-            <OverlayPanel ref={op}>
+            <OverlayPanel ref={op} pt={{
+                root: {
+                    className: 'overlaycontrol'
+                }
+            }}>
                 <OverlayRows model={rows} />
             </OverlayPanel>
         </div>

@@ -39,7 +39,30 @@ body {
 }
 
 nav { 
-  background: transparent;
+  z-index: 1;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.7) 50%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+}
+
+nav::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  height: 20px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.overlaycontrol::before {
+  margin-left: 12.8rem !important;
 }
 
 @media (min-width: 768px) {

@@ -20,6 +20,7 @@ import EmptyHomePage from "./components/PlaceHolderScreens/emptyhomepage";
 import 'primeicons/primeicons.css';
 import Tailwind from 'primereact/passthrough/tailwind';
 import { Accordion, AccordionTab } from 'primereact/accordion';
+import { Sidebar } from 'primereact/sidebar';
 import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Toast } from 'primereact/toast';
@@ -35,6 +36,8 @@ export default function Home() {
   const [displayData, setDisplayData] = useState<FilteredNotionData | null>(null);
   const [unitOfDistance, setUnitOfDistance] = useState<string>('km');
   const [loading, setLoading] = useState(true);
+
+  const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const [selectedParticipant, setSelectedParticipant] = useState<string>('both');
 
@@ -68,6 +71,8 @@ export default function Home() {
 
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
+
+  const onMenuClick = () => setSidebarVisible(true);
 
   const displayInfo = useCallback((info: number) => {
     toast.current?.show({ severity: 'info', summary: 'Info', detail: `Found ${info} activities` });
@@ -299,7 +304,6 @@ const map = useRef(new Map()).current;
                       Years
                     </div>
                     <div className="flex flex-row pb-7">
-                      <div>
                         <MultiSelect
                           value={selectedYears}
                           onChange={(e) => onYearSelectChange(e.value)}
@@ -310,13 +314,12 @@ const map = useRef(new Map()).current;
                           placeholder="Select Years"
                           className="w-full transition-all duration-300"
                         />
-                      </div>
                     </div>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
                       Activity Type
                     </div>
                     <div className="flex flex-row pb-7">
-                      <div className="card flex flex-wrap justify-content-center gap-3">
+        <div className="card flex flex-wrap justify-content-center gap-5">
                         <div className="flex align-items-center">
                           <ImageWithCheckBox
                             value={HIKING}
@@ -364,7 +367,7 @@ const map = useRef(new Map()).current;
                     <div className="text-md text-[#e2e8ffbf] pb-2">
                       Distance
                     </div>
-                    <div className="flex flex-row pb-7 gap-4">
+      <div className="flex flex-row pb-7">
                       <ThresholdFilter
                         name="Distance"
                         operator={distanceOperator}
@@ -380,7 +383,7 @@ const map = useRef(new Map()).current;
                     <div className="text-md text-[#e2e8ffbf] pb-2">
                       Elevation Gain
                     </div>
-                    <div className="flex flex-row pb-7 gap-4">
+      <div className="flex flex-row pb-7">
                       <ThresholdFilter
                         name="Elevation"
                         operator={elevationOperator}
@@ -414,7 +417,59 @@ const map = useRef(new Map()).current;
                     </div>
                     <div ref={filterPanelBottomRef}></div>
                     <div className="h-8"></div>
+    </div>
+  );
 
+
+
+  return (
+    <Profiler id="MainProfile" onRender={onRender}>
+      <AuthProvider>
+        <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+          <Toast ref={toast} />
+          <div className="w-full h-screen relative md:static">
+            <Profiler id="NavBar" onRender={onRender}>
+              <nav className="w-full flex h-16 absolute md:static">
+                <Navbar onMenuClick={onMenuClick} />
+              </nav>
+            </Profiler>
+            <div className="flex w-full h-full md:h-[calc(100vh-4rem)] absolute top-0 md:static">
+              <Sidebar
+                visible={sidebarVisible}
+                onHide={() => setSidebarVisible(false)}
+                blockScroll
+                header={(
+                  <div className="w-full">
+                    <span className="text-lg">Filters</span>
+                  </div>
+                )}
+                className="w-5/6 md:hidden"
+              >
+                <FilterSection />
+              </Sidebar>
+              <div className="hidden md:block md:w-1/4 2xl:w-128">
+                {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
+
+                <div className="">
+                  <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
+                    pt={{
+                      accordiontab: {
+                        headerAction: {
+                          className: 'custom-border-top hover:!border-[#e2e8ff1a] dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
+                        },
+                        content: {
+                          className: 'custom-border-bottom dark:bg-gray-950'
+                        }
+                      }
+                    }}>
+                    <AccordionTab header="Filters"
+                      pt={{
+                        content: {
+                          className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll transition-all duration-1000 ${filterInnerShadows}`
+                        }
+                      }}>
+
+                      <FilterSection />
                   </AccordionTab>
                   <AccordionTab header={detailsTitle}
                     pt={{
@@ -436,7 +491,7 @@ const map = useRef(new Map()).current;
                 </Accordion>
               </div>
             </div>
-            <div className="md:w-3/4 2xl:flex-1">
+              <div className="w-full md:w-3/4 2xl:flex-1">
               <APIProvider apiKey={apiKey}>
                 <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
               </APIProvider>

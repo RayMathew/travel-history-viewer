@@ -111,6 +111,7 @@ export default function CustomMap({ displayData, onMarkerClick }) {
             mapTypeControl={false}
             mapTypeId={'terrain'}
             streetViewControl={false}
+            fullscreenControl={false}
             colorScheme={ColorScheme.DARK}
         // key={JSON.stringify(displayData)}
         >

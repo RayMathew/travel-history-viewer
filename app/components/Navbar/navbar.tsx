@@ -2,7 +2,7 @@ import Image from "next/image";
 import NavbarAvatar from "./navbaravatar";
 import { Button } from 'primereact/button';
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
 
     return (
         <>
@@ -13,6 +13,7 @@ export default function Navbar() {
                     rounded
                     text
                     raised
+                    onClick={onMenuClick}
                 />
                 <Image
                     className="md:mx-4 self-center translate-x-1/2 md:translate-x-0 object-cover object-center rounded-lg"
