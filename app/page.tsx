@@ -25,6 +25,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Toast } from 'primereact/toast';
 import { useIntersectionObserver } from 'primereact/hooks';
+import useIsMobile from "@/hooks/useIsMobile";
 
 import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
@@ -67,6 +68,8 @@ export default function Home() {
   const filterPanelBottomVisible = useIntersectionObserver(filterPanelBottomRef);
 
   const [detailsInnerShadows, setDetailsInnerShadows] = useState('custom-bottom-inner-shadow');
+
+  const isMobile = useIsMobile();
 
 
 
@@ -172,11 +175,11 @@ if (!data) throw Error('Notion data not available');
 
 
 
-  const onParticipantChange = (value: string) => {
+  const onParticipantChange = useCallback((value: string) => {
     setSelectedParticipant(value);
 
     updateUIAndFilter({ participant: value })
-  };
+  }, [updateUIAndFilter]);
 
   const onYearSelectChange = (yearArray: number[]) => {
     setSelectedYears(yearArray);
@@ -297,7 +300,7 @@ const map = useRef(new Map()).current;
                       Who Was There?
                       <div ref={filterPanelTopRef}></div>
                     </div>
-                    <div className="pb-7">
+      <div className="pb-5">
                       <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
                     </div>
                     <div className="text-md text-[#e2e8ffbf] pb-2">
@@ -434,6 +437,7 @@ const map = useRef(new Map()).current;
               </nav>
             </Profiler>
             <div className="flex w-full h-full md:h-[calc(100vh-4rem)] absolute top-0 md:static">
+{isMobile && (
               <Sidebar
                 visible={sidebarVisible}
                 onHide={() => setSidebarVisible(false)}
@@ -447,6 +451,7 @@ const map = useRef(new Map()).current;
               >
                 <FilterSection />
               </Sidebar>
+              )}
               <div className="hidden md:block md:w-1/4 2xl:w-128">
                 {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
 
@@ -469,7 +474,7 @@ const map = useRef(new Map()).current;
                         }
                       }}>
 
-                      <FilterSection />
+{!isMobile &&                       <FilterSection />
                   </AccordionTab>
                   <AccordionTab header={detailsTitle}
                     pt={{

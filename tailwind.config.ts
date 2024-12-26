@@ -11,6 +11,7 @@ const config: Config = {
     extend: {
       spacing: {
         "128": "32rem",
+        "6.5": "1.625rem",
       },
       colors: {
         background: "var(--background)",
