@@ -86,7 +86,7 @@ export default function Home() {
       try {
         const response = await fetch("/api/notion");
         const data: NotionData = await response.json();
-if (!data) throw Error('Notion data not available');
+        if (!data) throw Error('Notion data not available');
         setNotionData(data);
         setupData(data);
 
@@ -147,7 +147,7 @@ if (!data) throw Error('Notion data not available');
     }
   }, [filterPanelTopVisible, filterPanelBottomVisible]);
 
-    const updateFilterConfig = useCallback((filter: FilterOptions): FilterOptions => {
+  const updateFilterConfig = useCallback((filter: FilterOptions): FilterOptions => {
     return {
       participant: filter.participant || selectedParticipant!,
       years: filter.years || selectedYears,
@@ -213,19 +213,19 @@ if (!data) throw Error('Notion data not available');
   };
 
   const debouncedUpdateMetricFilter = useRef(
-debounce((key: string, value: number, operator: Operator, updateState, updateFn) => {
-    updateState(value);
-    updateFn({ [key]: { operator: operator.trim(), value } });
-  }, 400)
+    debounce((key: string, value: number, operator: Operator, updateState, updateFn) => {
+      updateState(value);
+      updateFn({ [key]: { operator: operator.trim(), value } });
+    }, 400)
   ).current;
 
   const onDistanceThresholdChange = (value: number) => {
-if (value === 0) return;
+    if (value === 0) return;
     debouncedUpdateMetricFilter('distance', value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
   };
 
   const onElevationThresholdChange = (value: number) => {
-if (value === 0) return;
+    if (value === 0) return;
     debouncedUpdateMetricFilter('elevation', value, elevationOperator, setElevationThreshold, updateUIAndFilter);
   };
 
@@ -248,7 +248,7 @@ if (value === 0) return;
     setDetailsContent(activities);
   };
 
-const map = useRef(new Map()).current;
+  const map = useRef(new Map()).current;
 
 
 
@@ -266,160 +266,151 @@ const map = useRef(new Map()).current;
 
 
 
-  return (
-    <AuthProvider>
-      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
-        <Toast ref={toast} />
-        <div className="w-full h-screen">
-          <div className="w-full flex h-16">
-            <Navbar />
-          </div>
-          <div className="flex h-[calc(100vh-4rem)]">
-            <div className="md:w-1/4 2xl:w-128 ">
-              {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
+  function onRender(id, phase, actualDuration, baseDuration, startTime, commitTime) {
+    // Aggregate or log render timings...
 
-              <div className="">
-                <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
-                  pt={{
-                    accordiontab: {
-                      headerAction: {
-                        className: 'custom-border-top hover:!border-[#e2e8ff1a] dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
-                      },
-                      content: {
-                        className: 'custom-border-bottom dark:bg-gray-950'
-                      }
-                    }
-                  }}>
-                  <AccordionTab header="Filters"
-                    pt={{
-                      content: {
-                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll transition-all duration-1000 ${filterInnerShadows}`
-                      }
-                    }}>
-                    <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Who Was There?
-                      <div ref={filterPanelTopRef}></div>
-                    </div>
+    if (map.get(id)) {
+      map.set(id, (map.get(id) + 1));
+    } else {
+      map.set(id, 1);
+    }
+
+    console.table([id, phase, actualDuration, baseDuration, startTime, commitTime]);
+    console.log(map.entries());
+  }
+
+  const FilterSection = () => (
+    <div className="w-full">
+      <div className="text-md text-[#e2e8ffbf] pb-2">
+        Who Was There?
+        <div ref={filterPanelTopRef}></div>
+      </div>
       <div className="pb-5">
-                      <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
-                    </div>
-                    <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Years
-                    </div>
-                    <div className="flex flex-row pb-7">
-                        <MultiSelect
-                          value={selectedYears}
-                          onChange={(e) => onYearSelectChange(e.value)}
-                          options={yearOptions}
-                          disabled={viewMilestonesBool}
-                          optionLabel="name"
-                          display="chip"
-                          placeholder="Select Years"
-                          className="w-full transition-all duration-300"
-                        />
-                    </div>
-                    <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Activity Type
-                    </div>
-                    <div className="flex flex-row pb-7">
+        <Profiler id="ImageradioButtons" onRender={onRender}>
+          <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
+        </Profiler>
+      </div>
+      <div className="text-md text-[#e2e8ffbf] pb-2">
+        Years
+      </div>
+      <div className="flex flex-row pb-7">
+        <MultiSelect
+          value={selectedYears}
+          onChange={(e) => onYearSelectChange(e.value)}
+          options={yearOptions}
+          disabled={viewMilestonesBool}
+          optionLabel="name"
+          display="chip"
+          placeholder="Select Years"
+          className="w-full transition-all duration-300"
+        />
+      </div>
+      <div className="text-md text-[#e2e8ffbf] pb-2">
+        Activity Type
+      </div>
+      <div className="flex flex-row pb-7">
         <div className="card flex flex-wrap justify-content-center gap-5">
-                        <div className="flex align-items-center">
-                          <ImageWithCheckBox
-                            value={HIKING}
-                            onChange={onActivitySelectChange}
-                            checked={selectedActivities.includes(HIKING)}
-                            disabled={viewMilestonesBool}
-                            imgSrc="/walkplain.png"
-                            title="Hike"
-                            inputId="activity1"
-                            size={24}
-                            margin={'mx-1'}
-                          />
-                          <label htmlFor="activity1" className="">Hike</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <ImageWithCheckBox
-                            value={BIKING}
-                            onChange={onActivitySelectChange}
-                            checked={selectedActivities.includes(BIKING)}
-                            disabled={viewMilestonesBool}
-                            imgSrc="/bicycleplain.png"
-                            title="Bike"
-                            inputId="activity2"
-                            size={24}
-                            margin={'mx-1.5'}
-                          />
-                          <label htmlFor="activity2" className="">Bike</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <ImageWithCheckBox
-                            value={TRAVEL}
-                            onChange={onActivitySelectChange}
-                            checked={selectedActivities.includes(TRAVEL)}
-                            disabled={viewMilestonesBool}
-                            imgSrc="/airplaneplain.png"
-                            title="Travel"
-                            inputId="activity3"
-                            size={22}
-                            margin={'mx-2'}
-                          />
-                          <label htmlFor="activity3" className="">Travel</label>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Distance
-                    </div>
+          <div className="flex align-items-center">
+            <Profiler id="ImageWithCheckBox1" onRender={onRender}>
+              <ImageWithCheckBox
+                value={HIKING}
+                onChange={onActivitySelectChange}
+                checked={selectedActivities.includes(HIKING)}
+                disabled={viewMilestonesBool}
+                imgSrc="/walkplain.png"
+                title="Hike"
+                inputId="activity1"
+                size={24}
+                margin={'mx-1'}
+              />
+            </Profiler>
+            <label htmlFor="activity1" className="">Hike</label>
+          </div>
+          <div className="flex align-items-center">
+            <ImageWithCheckBox
+              value={BIKING}
+              onChange={onActivitySelectChange}
+              checked={selectedActivities.includes(BIKING)}
+              disabled={viewMilestonesBool}
+              imgSrc="/bicycleplain.png"
+              title="Bike"
+              inputId="activity2"
+              size={24}
+              margin={'mx-1.5'}
+            />
+            <label htmlFor="activity2" className="">Bike</label>
+          </div>
+          <div className="flex align-items-center">
+            <ImageWithCheckBox
+              value={TRAVEL}
+              onChange={onActivitySelectChange}
+              checked={selectedActivities.includes(TRAVEL)}
+              disabled={viewMilestonesBool}
+              imgSrc="/airplaneplain.png"
+              title="Travel"
+              inputId="activity3"
+              size={22}
+              margin={'mx-2'}
+            />
+            <label htmlFor="activity3" className="">Travel</label>
+          </div>
+        </div>
+      </div>
+      <div className="text-md text-[#e2e8ffbf] pb-2">
+        Distance
+      </div>
       <div className="flex flex-row pb-7">
-                      <ThresholdFilter
-                        name="Distance"
-                        operator={distanceOperator}
-                        onOperatorChange={onDistanceOperatorChange}
-                        operatorOptions={operatorOptions}
-                        disabled={viewMilestonesBool}
-                        threshold={distanceThreshold}
-                        onThresholdChange={onDistanceThresholdChange}
-                        placeholder={unitOfDistance}
-                        step={1}
-                      />
-                    </div>
-                    <div className="text-md text-[#e2e8ffbf] pb-2">
-                      Elevation Gain
-                    </div>
+        <Profiler id="ThresholdFilter1" onRender={onRender}>
+          <ThresholdFilter
+            name="Distance"
+            operator={distanceOperator}
+            onOperatorChange={onDistanceOperatorChange}
+            operatorOptions={operatorOptions}
+            disabled={viewMilestonesBool}
+            threshold={distanceThreshold}
+            onThresholdChange={onDistanceThresholdChange}
+            placeholder={unitOfDistance}
+            step={1}
+          />
+        </Profiler>
+      </div>
+      <div className="text-md text-[#e2e8ffbf] pb-2">
+        Elevation Gain
+      </div>
       <div className="flex flex-row pb-7">
-                      <ThresholdFilter
-                        name="Elevation"
-                        operator={elevationOperator}
-                        onOperatorChange={onElevationOperatorChange}
-                        operatorOptions={operatorOptions}
-                        disabled={viewMilestonesBool}
-                        threshold={elevationThreshold}
-                        onThresholdChange={onElevationThresholdChange}
-                        placeholder={`ft`}
-                        step={100}
-                      />
-                    </div>
-                    <div className="mt-4">
-                      <SelectButton
-                        value={viewMilestonesBool}
-                        onChange={(e) => onToggleMilestonesMode(e.value)}
-                        options={[{ label: '🏆 Milestones', value: true }]}
-                        className="transition-all duration-300"
-                        pt={{
-                          // root: {
-                          //   className: 'flex flex-nowrap'
-                          // },
-                          button: {
-                            className: '!py-2 !rounded-md'
-                          },
-                          label: {
-                            className: 'font-normal'
-                          }
-                        }}
-                      />
-                    </div>
-                    <div ref={filterPanelBottomRef}></div>
-                    <div className="h-8"></div>
+        <ThresholdFilter
+          name="Elevation"
+          operator={elevationOperator}
+          onOperatorChange={onElevationOperatorChange}
+          operatorOptions={operatorOptions}
+          disabled={viewMilestonesBool}
+          threshold={elevationThreshold}
+          onThresholdChange={onElevationThresholdChange}
+          placeholder={`ft`}
+          step={100}
+        />
+      </div>
+      <div className="mt-4">
+        <SelectButton
+          value={viewMilestonesBool}
+          onChange={(e) => onToggleMilestonesMode(e.value)}
+          options={[{ label: '🏆 Milestones', value: true }]}
+          className="transition-all duration-300"
+          pt={{
+            // root: {
+            //   className: 'flex flex-nowrap'
+            // },
+            button: {
+              className: '!py-2 !rounded-md'
+            },
+            label: {
+              className: 'font-normal'
+            }
+          }}
+        />
+      </div>
+      <div ref={filterPanelBottomRef}></div>
+      <div className="h-8"></div>
     </div>
   );
 
@@ -437,20 +428,20 @@ const map = useRef(new Map()).current;
               </nav>
             </Profiler>
             <div className="flex w-full h-full md:h-[calc(100vh-4rem)] absolute top-0 md:static">
-{isMobile && (
-              <Sidebar
-                visible={sidebarVisible}
-                onHide={() => setSidebarVisible(false)}
-                blockScroll
-                header={(
-                  <div className="w-full">
-                    <span className="text-lg">Filters</span>
-                  </div>
-                )}
-                className="w-5/6 md:hidden"
-              >
-                <FilterSection />
-              </Sidebar>
+              {isMobile && (
+                <Sidebar
+                  visible={sidebarVisible}
+                  onHide={() => setSidebarVisible(false)}
+                  blockScroll
+                  header={(
+                    <div className="w-full">
+                      <span className="text-lg">Filters</span>
+                    </div>
+                  )}
+                  className="w-5/6 md:hidden"
+                >
+                  <FilterSection />
+                </Sidebar>
               )}
               <div className="hidden md:block md:w-1/4 2xl:w-128">
                 {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
@@ -474,36 +465,38 @@ const map = useRef(new Map()).current;
                         }
                       }}>
 
-{!isMobile &&                       <FilterSection />
-                  </AccordionTab>
-                  <AccordionTab header={detailsTitle}
-                    pt={{
-                      content: {
-                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll ${detailsInnerShadows}`
-                      },
-                      headerTitle: {
-                        className: `${detailsTitleClass}`
-                      }
-                    }}>
-                    <DetailsList
-                      activities={detailsContent}
-                      milestoneMode={viewMilestonesBool}
-                      distanceUnit={unitOfDistance}
-                      setDetailsInnerShadows={setDetailsInnerShadows}
-                    />
-
-                  </AccordionTab>
-                </Accordion>
+                      {!isMobile && <FilterSection />}
+                    </AccordionTab>
+                    <AccordionTab header={detailsTitle}
+                      pt={{
+                        content: {
+                          className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll ${detailsInnerShadows}`
+                        },
+                        headerTitle: {
+                          className: `${detailsTitleClass}`
+                        }
+                      }}>
+                      <Profiler id="DetailsList" onRender={onRender}>
+                        <DetailsList
+                          activities={detailsContent}
+                          milestoneMode={viewMilestonesBool}
+                          distanceUnit={unitOfDistance}
+                          setDetailsInnerShadows={setDetailsInnerShadows}
+                        />
+                      </Profiler>
+                    </AccordionTab>
+                  </Accordion>
+                </div>
+              </div>
+              <div className="w-full md:w-3/4 2xl:flex-1">
+                <APIProvider apiKey={apiKey}>
+                  <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
+                </APIProvider>
               </div>
             </div>
-              <div className="w-full md:w-3/4 2xl:flex-1">
-              <APIProvider apiKey={apiKey}>
-                <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
-              </APIProvider>
-            </div>
           </div>
-        </div>
-      </PrimeReactProvider>
-    </AuthProvider>
+        </PrimeReactProvider>
+      </AuthProvider>
+    </Profiler>
   );
 }
