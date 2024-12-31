@@ -80,7 +80,7 @@ export default function Home() {
   const onMenuClick = () => setSidebarVisible(true);
 
   const displayInfo = useCallback((info: number) => {
-    toast.current?.show({ severity: 'info', summary: 'Info', detail: `Found ${info} activities` });
+    toast.current?.show({ severity: 'info', summary: 'Info', detail: `${info} activities` });
   }, [toast]);
 
   useEffect(() => {
@@ -144,9 +144,9 @@ export default function Home() {
     } else if (filterPanelBottomVisible) {
       setFilterInnerShadows('custom-top-inner-shadow');
     }
-    else if (!filterPanelTopVisible && !filterPanelBottomVisible) {
-      setFilterInnerShadows('custom-top-bottom-inner-shadow');
-    }
+    // else if (!filterPanelTopVisible && !filterPanelBottomVisible) {
+    //   setFilterInnerShadows('custom-top-bottom-inner-shadow');
+    // }
   }, [filterPanelTopVisible, filterPanelBottomVisible]);
 
   const updateFilterConfig = useCallback((filter: FilterOptions): FilterOptions => {
@@ -474,7 +474,11 @@ export default function Home() {
     <Profiler id="MainProfile" onRender={onRender}>
       <AuthProvider>
         <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
-          <Toast ref={toast} />
+          <Toast ref={toast} pt={{
+            root: {
+              className: `${isMobile ? '!w-[calc(100vw-10%)]' : ''}`
+            }
+          }} position={isMobile ? "bottom-left" : "top-right"} />
           <div className="w-full h-screen relative md:static">
             <Profiler id="NavBar" onRender={onRender}>
               <nav className="w-full flex h-16 absolute md:static">

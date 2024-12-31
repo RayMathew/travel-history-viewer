@@ -38,7 +38,62 @@ body {
     sans-serif;
 }
 
-nav { 
+/* Firefox old*/
+@-moz-keyframes flashing {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes flashing {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+/* IE */
+@-ms-keyframes flashing {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+/* Opera and prob css3 final iteration */
+@keyframes flashing {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.flashing-image {
+  -moz-animation: flashing normal 2s infinite ease-in-out; /* Firefox */
+  -webkit-animation: flashing normal 2s infinite ease-in-out; /* Webkit */
+  -ms-animation: flashing normal 2s infinite ease-in-out; /* IE */
+  animation: flashing normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
+}
+
+nav {
   z-index: 1;
   background-image: linear-gradient(
     to bottom,

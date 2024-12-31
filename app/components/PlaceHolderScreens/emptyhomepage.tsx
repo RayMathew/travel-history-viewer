@@ -1,9 +1,21 @@
 import React from "react";
 import { Skeleton } from 'primereact/skeleton';
+import Image from "next/image";
 
 export default function EmptyHomePage() {
-    return (
-        <div className="w-full h-full">
+
+    return (<>
+        <div className="md:hidden h-screen w-full flex justify-center pb-80">
+            <Image
+                className="self-center object-cover object-center rounded-lg flashing-image"
+                src="/favicon.ico"
+                width={85}
+                height={85}
+                alt="Logo"
+                priority={false}
+            />
+        </div>
+        <div className="hidden md:block w-full h-full">
             <div className="w-full h-16 grid justify-items-end">
                 <Skeleton shape="circle" size="2.5rem" className="m-4"></Skeleton>
             </div>
@@ -31,5 +43,9 @@ export default function EmptyHomePage() {
                 </div>
             </div>
         </div>
+    </>
     );
+    // return (
+
+    // );
 }
