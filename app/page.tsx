@@ -10,7 +10,7 @@ import {
 import debounce from 'lodash.debounce';
 import AuthProvider from "./components/AuthProvider/authprovider";
 import CustomMap from "./components/CustomMap/custommap";
-import ImageRadioButtons from "./components/ImageRadioButtons/imageradiobuttons";
+import Image from "next/image";
 import Navbar from "./components/Navbar/navbar";
 import ImageWithCheckBox from "./components/ImageWithCheckBox/imagewithcheckbox";
 import ThresholdFilter from "./components/ThresholdFilter/thresholdfilter";
@@ -23,12 +23,13 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Sidebar } from 'primereact/sidebar';
 import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
+import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
 import { useIntersectionObserver } from 'primereact/hooks';
 import useIsMobile from "@/hooks/useIsMobile";
 
 import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
-import { BIKING, HIKING, TRAVEL, SECTIONS } from "@/lib/constants";
+import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA } from "@/lib/constants";
 import { FilterOptions, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData } from "@/lib/types/shared";
 
@@ -68,7 +69,8 @@ export default function Home() {
   const filterPanelBottomVisible = useIntersectionObserver(filterPanelBottomRef);
 
   const [detailsInnerShadows, setDetailsInnerShadows] = useState('custom-bottom-inner-shadow');
-
+  const [loaded, setLoaded] = useState(false);
+  const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
   const isMobile = useIsMobile();
 
 
@@ -279,6 +281,44 @@ export default function Home() {
     console.log(map.entries());
   }
 
+  const onLoadProfilePic = () => {
+    setLoaded(true);
+    setProfileVisibilityClass('');
+  };
+
+
+  const renderPicRadio = (value: string, src: string, alt: string) => (
+    <label
+      style={{
+        display: 'inline-block',
+        borderRadius: '50%',
+        border: selectedParticipant === value ? '4px solid #5FA5F9' : '4px solid transparent',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        marginBottom: '0.5rem'
+      }}
+    >
+      <input
+        type="radio"
+        name="profile"
+        value={value}
+        style={{ display: 'none' }}
+        disabled={viewMilestonesBool}
+        onChange={(e) => onParticipantChange(e.target.value)}
+      />
+      <Image
+        src={src}
+        alt={alt}
+        width={72}
+        height={72}
+        onLoad={onLoadProfilePic}
+        style={{ borderRadius: '50%', objectFit: 'cover' }}
+        className={`${viewMilestonesBool ? 'blur-sm brightness-75' : ''} transition-all duration-300`}
+        unoptimized
+      />
+    </label>
+  );
+
   const FilterSection = () => (
     <div className="w-full">
       <div className="text-md text-[#e2e8ffbf] pb-2">
@@ -287,7 +327,21 @@ export default function Home() {
       </div>
       <div className="pb-5">
         <Profiler id="ImageradioButtons" onRender={onRender}>
-          <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} />
+          {/* <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} /> */}
+          <>
+            {!loaded && (
+              <div className="flex flex-row justify-center gap-6.5">
+                {[...Array(3)].map((_, index) => (
+                  <Skeleton key={index} shape="circle" size="5rem" className="" ></Skeleton>
+                ))}
+              </div>
+            )}
+            <div className={`flex flex-row justify-center gap-6.5 ${profileVisibilityClass}`}>
+              {renderPicRadio(RAY, "/api/image/ray", "Me")}
+              {renderPicRadio(NAMRATA, "/api/image/namrata", "Wife")}
+              {renderPicRadio("both", "/api/image/raynam", "Both")}
+            </div>
+          </>
         </Profiler>
       </div>
       <div className="text-md text-[#e2e8ffbf] pb-2">
