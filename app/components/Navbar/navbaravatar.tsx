@@ -3,17 +3,17 @@ import { Avatar } from 'primereact/avatar';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { Menu as OverlayRows } from 'primereact/menu';
 import { Skeleton } from 'primereact/skeleton';
-import { useSession } from 'next-auth/react';
 import { logout } from "@/lib/actions";
+import { UserContext } from "@/app/providers/UserProvider/userprovider";
+import { useContext } from "react";
 // import anime from 'animejs';
 
 
 export default function NavbarAvatar() {
+    const userContext = useContext(UserContext);
     const op = useRef<OverlayPanel>(null);
 
-    const { data } = useSession();
-
-    const userName: string = data?.user?.name || '';
+    const { userName } = userContext;
 
     const handleSignOut = () => {
         localStorage.clear();

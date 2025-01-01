@@ -189,3 +189,42 @@ nav::after {
     rgba(217, 217, 217, 0) 96.94%
   );
 }
+
+/* mobile dialog box for activity details  */
+
+@keyframes expand {
+  0% {
+    max-height: 0;
+    opacity: 0;
+  }
+  /* 50% {
+    max-height: 0;
+    opacity: 0;
+  } */
+  100% {
+    max-height: 500px;
+    opacity: 1;
+  }
+}
+div[role="dialog"] {
+  max-height: 500px;
+  opacity: 0;
+  /* Styles for the parent element */
+  background-color: rgba(17, 24, 39, 1) !important;
+}
+
+div[role="dialog"].info-window-animation {
+  animation: 0.1s expand 0.3s ease-out;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+  /* opacity: 1; */
+  max-height: 500px;
+}
+
+.gm-style .gm-style-iw-d::-webkit-scrollbar {
+  display: none;
+}
+
+.stuff {
+  transition: all 0.3s ease-out;
+}

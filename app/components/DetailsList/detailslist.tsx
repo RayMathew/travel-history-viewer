@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
 
 import { Button } from 'primereact/button';
 import { useIntersectionObserver } from 'primereact/hooks';
@@ -13,12 +12,15 @@ import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
 import { DetailslistProps } from '@/lib/types/frontend';
 import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
+import { UserContext } from "@/app/providers/UserProvider/userprovider";
+import { useContext } from "react";
 
 
 
-export default function DetailsList({ activities, milestoneMode = false, distanceUnit, setDetailsInnerShadows }: DetailslistProps) {
-    const { data } = useSession();
-    const isAdmin: boolean = data?.user?.name !== 'Guest';
+export default function DetailsList({ activities, milestoneMode = false, setDetailsInnerShadows }: DetailslistProps) {
+    const { unitOfDistance, userName } = useContext(UserContext);
+
+    const isAdmin: boolean = userName !== 'Guest';
 
     const detailsPanelTopRef = useRef(null);
     const detailsPanelTopVisible = useIntersectionObserver(detailsPanelTopRef);
@@ -195,7 +197,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                             </div>
                                             <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
                                                 <div className='text-sm'>Distance</div>
-                                                <strong>{`${activity.distance}`} {`${distanceUnit}`}</strong>
+                                                <strong>{`${activity.distance}`} {`${unitOfDistance}`}</strong>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
@@ -219,7 +221,7 @@ export default function DetailsList({ activities, milestoneMode = false, distanc
                                             </div>
                                             <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
                                                 <div className='text-sm'>Distance</div>
-                                                <strong>{`${activity.distance}`} {`${distanceUnit}`}</strong>
+                                                <strong>{`${activity.distance}`} {`${unitOfDistance}`}</strong>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>

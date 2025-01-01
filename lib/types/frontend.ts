@@ -33,9 +33,8 @@ export interface ThresholdFilterProps {
 }
 
 export interface DetailslistProps {
-  activities: OutdoorActivity[] | TravelActivity[];
+  activities: OutdoorActivity[] | TravelActivity[] | null;
   milestoneMode: boolean;
-  distanceUnit: "km" | "miles";
   setDetailsInnerShadows: (state: string) => void;
 }
 
