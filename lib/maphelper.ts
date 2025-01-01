@@ -270,7 +270,9 @@ export const applyFiltersToMap = (
   // recursive function that runs the initial load filter again with the previous year if current year data is empty
   if (
     filteredData.outdoorsData.length === 0 &&
-    filteredData.travelData.length === 0 &&
+    (filteredData.travelData.length === 0 || // either travelData is empty, or it consists only of Future Trips
+      (filteredData.travelData.length === 1 &&
+        filteredData.travelData[0].locationName === "Future Trips")) &&
     initialLoad
   ) {
     return applyFiltersToMap(true, notionData, {
