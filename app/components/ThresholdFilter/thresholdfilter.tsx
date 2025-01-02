@@ -57,7 +57,7 @@ export default function ThresholdFilter({
                     pt={{
                         input: {
                             root: {
-                                className: '!py-2 w-full rounded-none rounded-l-md'
+                                className: '!py-2 w-full rounded-none rounded-l-md dark:focus:shadow-none'
                             },
                         },
                         incrementButton: {

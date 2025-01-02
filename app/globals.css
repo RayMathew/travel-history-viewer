@@ -219,10 +219,20 @@ div[role="dialog"].info-window-animation {
   overflow: hidden;
   /* opacity: 1; */
   max-height: 500px;
+  max-width: 80vw !important;
+  padding-left: 0 !important;
+}
+
+.gm-style .gm-style-iw {
+  font-size: 1rem !important;
 }
 
 .gm-style .gm-style-iw-d::-webkit-scrollbar {
   display: none;
+}
+
+.gm-style .gm-style-iw-tc::after {
+  background-color: rgba(17, 24, 39, 1) !important;
 }
 
 .stuff {

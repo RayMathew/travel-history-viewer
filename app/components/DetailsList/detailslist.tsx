@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo, useContext } from 'react';
 
 import Image from 'next/image';
 
@@ -13,14 +13,18 @@ import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
 import { DetailslistProps } from '@/lib/types/frontend';
 import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
-import { useContext } from "react";
+import useIsMobile from '@/hooks/useIsMobile';
 
 
 
-export default function DetailsList({ activities, milestoneMode = false, setDetailsInnerShadows }: DetailslistProps) {
+export default function DetailsList({ activities, milestoneMode = false }: DetailslistProps) {
+    const [detailsInnerShadows, setDetailsInnerShadows] = useState('custom-bottom-inner-shadow');
+    const [panelHtClsMobile, setPanelHtClsMobile] = useState('');
     const { unitOfDistance, userName } = useContext(UserContext);
 
     const isAdmin: boolean = userName !== 'Guest';
+
+    const isMobile = useIsMobile();
 
     const detailsPanelTopRef = useRef(null);
     const detailsPanelTopVisible = useIntersectionObserver(detailsPanelTopRef);
@@ -92,8 +96,23 @@ export default function DetailsList({ activities, milestoneMode = false, setDeta
         fetchThumbnails();
     }, [sortedActivities, getActivityThumbnail]);
 
+    // adjust height of details list panel for mobile mode
     useEffect(() => {
-        if (detailsPanelTopVisible) {
+        if (isMobile) {
+            if (sortedActivities.length === 1) {
+                setPanelHtClsMobile('!max-h-106 !h-[calc(61vh)]');
+            } else {
+                setPanelHtClsMobile('!h-[calc(61vh)]');
+            }
+        }
+    }, [isMobile, sortedActivities]);
+
+    // handle shadow based on scroll position
+    useEffect(() => {
+        if (isMobile && sortedActivities.length === 1) {
+            setDetailsInnerShadows('');
+        }
+        else if (detailsPanelTopVisible) {
             setDetailsInnerShadows('custom-bottom-inner-shadow');
         } else if (detailsPanelBottomVisible) {
             setDetailsInnerShadows('custom-top-inner-shadow');
@@ -123,7 +142,7 @@ export default function DetailsList({ activities, milestoneMode = false, setDeta
 
 
     return (
-        <div>
+        <div className={`${detailsInnerShadows} ${panelHtClsMobile} w-[calc(80vw)] md:!h-full md:w-full overflow-x-hidden`}>
             <div ref={detailsPanelTopRef}></div>
             {sortedActivities.map((activity) => {
                 const { googlePhotosLink } = activity;
@@ -149,7 +168,7 @@ export default function DetailsList({ activities, milestoneMode = false, setDeta
                                 </div>
                                 {/* <img className='w-1/3 object-cover object-center aspect-square rounded-lg h-full' alt="Card" src={thumbnails[activity.googlePhotosLink] || getDefaultThumbnail(activity)} /> */}
                                 <div className='w-2/3 grid content-center'>
-                                    <div className='text-md font-bold mb-2 self-center text-slate-300'>
+                                    <div className='text-md font-medium mb-2 self-center text-slate-300'>
                                         {/* {activity.type === TRAVEL && (
                                             activity.activityName
                                         )} */}

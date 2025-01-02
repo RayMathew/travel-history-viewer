@@ -34,7 +34,6 @@ export default function Home() {
 
     const [notionData, setNotionData] = useState<NotionData | null>(null);
     const [displayData, setDisplayData] = useState<FilteredNotionData | null>(null);
-    // const [unitOfDistance, setUnitOfDistance] = useState<NotionData["distanceUnit"]>('km');
     const [loading, setLoading] = useState(true);
 
     const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -66,7 +65,6 @@ export default function Home() {
     const filterPanelBottomRef = useRef(null);
     const filterPanelBottomVisible = useIntersectionObserver(filterPanelBottomRef);
 
-    const [detailsInnerShadows, setDetailsInnerShadows] = useState('custom-bottom-inner-shadow');
     const [loaded, setLoaded] = useState(false);
     const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
     const isMobile = useIsMobile();
@@ -220,12 +218,12 @@ export default function Home() {
     ).current;
 
     const onDistanceThresholdChange = (value: number) => {
-        if (value === 0) return;
+        if (value === distanceThreshold) return;
         debouncedUpdateMetricFilter('distance', value, distanceOperator, setDistanceThreshold, updateUIAndFilter);
     };
 
     const onElevationThresholdChange = (value: number) => {
-        if (value === 0) return;
+        if (value === elevationThreshold) return;
         debouncedUpdateMetricFilter('elevation', value, elevationOperator, setElevationThreshold, updateUIAndFilter);
     };
 
@@ -532,7 +530,7 @@ export default function Home() {
                                 <AccordionTab header={detailsTitle}
                                     pt={{
                                         content: {
-                                            className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll ${detailsInnerShadows}`
+                                            className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll`
                                         },
                                         headerTitle: {
                                             className: `${detailsTitleClass}`
@@ -542,8 +540,6 @@ export default function Home() {
                                         <DetailsList
                                             activities={detailsContent}
                                             milestoneMode={viewMilestonesBool}
-                                            // distanceUnit={unitOfDistance}
-                                            setDetailsInnerShadows={setDetailsInnerShadows}
                                         />
                                     </Profiler>
                                 </AccordionTab>

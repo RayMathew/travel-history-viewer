@@ -80,13 +80,11 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
                 />
             </AdvancedMarker>
             {infoWindowShown && (
-                <InfoWindow anchor={marker} headerContent={<h2>InfoWindow content!</h2>}
-                    onClose={handleClose} className="bg-gray-900 p-4">
+                <InfoWindow anchor={marker} headerContent={<h2 className="ml-4">{locationName}</h2>}
+                    onClose={handleClose} className="bg-gray-900 text-base w-[calc(80vw)]">
                     <DetailsList
                         activities={activities}
-                        milestoneMode={viewMilestonesBool}
-                        distanceUnit={unitOfDistance}
-                        setDetailsInnerShadows={setDetailsInnerShadows}
+                        milestoneMode={isMilestoneMode}
                     />
 
                 </InfoWindow>

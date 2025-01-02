@@ -35,7 +35,6 @@ export interface ThresholdFilterProps {
 export interface DetailslistProps {
   activities: OutdoorActivity[] | TravelActivity[] | null;
   milestoneMode: boolean;
-  setDetailsInnerShadows: (state: string) => void;
 }
 
 export interface YearOption {
