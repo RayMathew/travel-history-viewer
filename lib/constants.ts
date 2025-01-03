@@ -3,6 +3,11 @@ export const NAMRATA = "Namrata Date";
 export const HIKING = "Hiking";
 export const BIKING = "Biking";
 export const TRAVEL = "Travel";
+export const APPNAME = "Memoir Map";
+export const APPDESC =
+  "A map of all the hikes, bike rides, and travels done by my wife and me.";
+export const GITHUBID = "RayMathew";
+export const TWITTERID = "@RayMathew_";
 
 export const OUTDOOR_PROPERTIES = {
   TAGS: "Tags",
