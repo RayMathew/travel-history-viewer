@@ -58,8 +58,10 @@ export const metadata: Metadata = {
   verification: {
     google: 'b4h28dUyRR2JuWGRoDJgfvVB_RGJ9fj8AqssqNr6S90',
     yandex: 'be654a2c5b3b0408',
-    yahoo: '9D6F46FAA4F7B92DC9DC5FBF3A877320',
   },
+  other: {
+    "msvalidate.01": '9D6F46FAA4F7B92DC9DC5FBF3A877320', // this is actually verification for yahoo Search, which uses Microsfot Bing. Hence 'ms'.
+  }
   // appleWebApp: { // uncomment this after you first test how it works without the config
   //   title: APPNAME,
   //   statusBarStyle: 'black-translucent',
