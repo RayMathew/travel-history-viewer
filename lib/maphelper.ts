@@ -9,7 +9,7 @@ import {
 } from "./types/shared";
 import { FilterOptions } from "./types/frontend";
 
-const currentYear = new Date().getFullYear();
+let currentYear = new Date().getFullYear();
 const defaultFilters = {
   participant: "both",
   years: [currentYear],
@@ -30,12 +30,14 @@ const milestones = {
     longestInCurrentYear: 0,
     mostElevationGained: 0,
     mostElevationGainedPerUnitDistance: 0,
+    steepestGrade: "0",
   },
   [BIKING]: {
     longest: 0,
     longestInCurrentYear: 0,
     mostElevationGained: 0,
     mostElevationGainedPerUnitDistance: 0,
+    steepestGrade: "0",
   },
 };
 
@@ -92,6 +94,20 @@ export const countActivities = (filteredData: FilteredNotionData) => {
     (locationData) => (count += locationData.activities.length)
   );
   return count;
+};
+
+export const getGrade = (
+  elevation: number,
+  distance: number,
+  distanceUnit: string
+): string => {
+  // convert horizontal distance in miles or km to feet
+  if (distanceUnit == "km") {
+    distance *= 3280.84;
+  } else {
+    distance *= 5280;
+  }
+  return ((elevation / distance) * 100).toFixed(2);
 };
 
 export const applyFiltersToMap = (
@@ -275,9 +291,11 @@ export const applyFiltersToMap = (
         filteredData.travelData[0].locationName === "Future Trips")) &&
     initialLoad
   ) {
+    currentYear--;
+
     return applyFiltersToMap(true, notionData, {
       ...filter,
-      years: [filter.years[0] - 1],
+      years: [currentYear],
     });
   } else {
     filteredData = participantFilter(filteredData);
@@ -337,22 +355,28 @@ export const applyMilestoneFilters = (
       ) {
         milestones[typeOfActivity].mostElevationGainedPerUnitDistance =
           activityData.elevation / activityData.distance;
+
+        milestones[typeOfActivity].steepestGrade = getGrade(
+          activityData.elevation,
+          activityData.distance,
+          distanceUnit!
+        );
       }
     });
   });
 
   const milestoneLabels = {
     [HIKING]: {
-      longest: "Longest Hike",
-      longestInCurrentYear: "Longest Hike This Year",
-      mostElevationGained: "Most Elevation Gained Hike",
-      mostElevationGainedPerUnitDistance: `Most Elevation Gained Hike Per ${distanceUnit}`,
+      longest: "Longest Ever Hike",
+      longestInCurrentYear: "Longest Hike In", // fill the current year later
+      mostElevationGained: "Most Elevation Gained Hike Ever",
+      mostElevationGainedPerUnitDistance: `Steepest Hike Ever`,
     },
     [BIKING]: {
-      longest: "Longest Bike Ride",
-      longestInCurrentYear: "Longest Bike Ride This Year",
-      mostElevationGained: "Most Elevation Gained Bike Ride",
-      mostElevationGainedPerUnitDistance: `Most Elevation Gained Bike Ride Per ${distanceUnit}`,
+      longest: "Longest Ever Bike Ride",
+      longestInCurrentYear: "Longest Bike Ride In", // fill the current year later
+      mostElevationGained: "Most Elevation Gained Bike Ride Ever",
+      mostElevationGainedPerUnitDistance: `Steepest Bike Ride Ever`,
     },
   };
 
@@ -375,11 +399,11 @@ export const applyMilestoneFilters = (
 
         if (activityData.distance === milestones[HIKING].longestInCurrentYear)
           labels.push(
-            `${milestoneLabels[HIKING].longestInCurrentYear} (${milestones[
-              HIKING
-            ].longestInCurrentYear.toFixed(1)}${
-              distanceUnit === "Mile" ? " miles" : " km"
-            })`
+            `${
+              milestoneLabels[HIKING].longestInCurrentYear
+            } ${currentYear} (${milestones[HIKING].longestInCurrentYear.toFixed(
+              1
+            )}${distanceUnit === "Mile" ? " miles" : " km"})`
           );
 
         if (activityData.elevation === milestones[HIKING].mostElevationGained)
@@ -392,9 +416,9 @@ export const applyMilestoneFilters = (
           milestones[HIKING].mostElevationGainedPerUnitDistance
         )
           labels.push(
-            `${
-              milestoneLabels[HIKING].mostElevationGainedPerUnitDistance
-            } (${milestones[HIKING].mostElevationGainedPerUnitDistance.toFixed(
+            `${milestoneLabels[HIKING].mostElevationGainedPerUnitDistance} (${
+              milestones[HIKING].steepestGrade
+            }%, ${milestones[HIKING].mostElevationGainedPerUnitDistance.toFixed(
               1
             )} ft /${distanceUnit === "Mile" ? " mile" : " km"})`
           );
@@ -408,11 +432,11 @@ export const applyMilestoneFilters = (
 
         if (activityData.distance === milestones[BIKING].longestInCurrentYear)
           labels.push(
-            `${milestoneLabels[BIKING].longestInCurrentYear} (${milestones[
-              BIKING
-            ].longestInCurrentYear.toFixed(1)}${
-              distanceUnit === "Mile" ? " miles" : " km"
-            })`
+            `${
+              milestoneLabels[BIKING].longestInCurrentYear
+            } ${currentYear} (${milestones[BIKING].longestInCurrentYear.toFixed(
+              1
+            )}${distanceUnit === "Mile" ? " miles" : " km"})`
           );
 
         if (activityData.elevation === milestones[BIKING].mostElevationGained)
@@ -425,9 +449,9 @@ export const applyMilestoneFilters = (
           milestones[BIKING].mostElevationGainedPerUnitDistance
         )
           labels.push(
-            `${
-              milestoneLabels[BIKING].mostElevationGainedPerUnitDistance
-            } (${milestones[BIKING].mostElevationGainedPerUnitDistance.toFixed(
+            `${milestoneLabels[BIKING].mostElevationGainedPerUnitDistance} (${
+              milestones[BIKING].steepestGrade
+            }%, ${milestones[BIKING].mostElevationGainedPerUnitDistance.toFixed(
               1
             )} ft /${distanceUnit === "Mile" ? " mile" : " km"})`
           );

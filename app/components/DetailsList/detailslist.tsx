@@ -14,6 +14,7 @@ import { DetailslistProps } from '@/lib/types/frontend';
 import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from '@/hooks/useIsMobile';
+import { getGrade } from '@/lib/maphelper';
 
 
 
@@ -225,7 +226,8 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                 <strong>{getDoneBy(activity.doneBy)}</strong>
                                             </div>
                                             <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
-
+<div className='text-sm font-extralight'>Grade</div>
+                                                <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
                                     </>
@@ -249,7 +251,8 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                 <strong>{getDoneBy(activity.doneBy)}</strong>
                                             </div>
                                             <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
-
+<div className='text-sm font-extralight'>Grade</div>
+                                                <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
                                     </>
