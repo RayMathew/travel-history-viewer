@@ -101,9 +101,9 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
     useEffect(() => {
         if (isMobile) {
             if (sortedActivities.length === 1) {
-                setPanelHtClsMobile('!max-h-106 !h-[calc(61vh)]');
+                setPanelHtClsMobile('!max-h-106 !h-[calc(61vh)] flex justify-center');
             } else {
-                setPanelHtClsMobile('!h-[calc(61vh)]');
+                setPanelHtClsMobile('!h-[calc(61vh)] flex justify-center');
             }
         }
     }, [isMobile, sortedActivities]);
@@ -152,7 +152,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
 
                     // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
                     <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
-                        <div className='p-5 mb-5 bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
+                        <div className='p-5 mb-5 w-[calc(70vw)] md:w-full bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
 
                             <div className='flex gap-4'>
                                 <div className='w-1/3 drop-shadow-xl aspect-square relative h-full'>
@@ -202,7 +202,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                 <div className='text-sm font-extralight'>Duration</div>
                                                 <div className='font-medium'>{getDuration(activity.startDate, activity.endDate)}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-zinc-900 dark:text-white'>
 
                                             </div>
                                         </div>

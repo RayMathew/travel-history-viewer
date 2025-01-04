@@ -99,10 +99,6 @@ body {
 
 @media (max-width: 768px) {
   nav {
-    color: var(--foreground);
-    background: var(--background);
-  }
-  nav {
     z-index: 1;
     background-image: linear-gradient(
       to bottom,
@@ -212,7 +208,7 @@ div[role="dialog"] {
   max-height: 500px;
   opacity: 0;
   /* Styles for the parent element */
-  background-color: rgba(17, 24, 39, 1) !important;
+  background-color: #121212 !important;
 }
 
 div[role="dialog"].info-window-animation {
