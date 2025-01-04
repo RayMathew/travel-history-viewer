@@ -152,7 +152,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
 
                     // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
                     <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
-                        <div className='p-5 mb-5 bg-white text-gray-700 shadow-md rounded-md dark:bg-gray-900 dark:text-white'>
+                        <div className='p-5 mb-5 bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
 
                             <div className='flex gap-4'>
                                 <div className='w-1/3 drop-shadow-xl aspect-square relative h-full'>
@@ -188,19 +188,19 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 {activity.type === TRAVEL && (
                                     <>
                                         <div className='flex gap-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
-                                                <div className='text-sm'>Places</div>
-                                                <strong>{getPlaces(activity.places)}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Places</div>
+                                                <div className='font-medium'>{getPlaces(activity.places)}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
-                                                <div className='text-sm'>People</div>
-                                                <strong>{activity.people}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
+                                                <div className='text-sm font-extralight'>People</div>
+                                                <div className='font-medium'>{activity.people}</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
-                                                <div className='text-sm'>Duration</div>
-                                                <strong>{getDuration(activity.startDate, activity.endDate)}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Duration</div>
+                                                <div className='font-medium'>{getDuration(activity.startDate, activity.endDate)}</div>
                                             </div>
                                             <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
 
@@ -211,22 +211,22 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 {(activity.type === HIKING) && (
                                     <>
                                         <div className='flex gap-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
-                                                <div className='text-sm'>Elevation Gain</div>
-                                                <strong>{`${activity.elevation} ft`}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Elevation Gain</div>
+                                                <div className='font-medium'>{`${activity.elevation} ft`}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
-                                                <div className='text-sm'>Distance</div>
-                                                <strong>{`${activity.distance}`} {`${unitOfDistance}`}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
+                                                <div className='text-sm font-extralight'>Distance</div>
+                                                <div className='font-medium'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
-                                                <div className='text-sm'>Done By</div>
-                                                <strong>{getDoneBy(activity.doneBy)}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Done By</div>
+                                                <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
-<div className='text-sm font-extralight'>Grade</div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Grade</div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
@@ -234,24 +234,24 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 )}
                                 {(activity.type === BIKING) && (
                                     <>
-                                        {/* <div>{humanReadableDate(activity.date)}</div> */}
+                                        {/* <div className='font-medium'>{humanReadableDate(activity.date)}</div> */}
                                         <div className='flex gap-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
-                                                <div className='text-sm'>Elevation Gain</div>
-                                                <strong>{`${activity.elevation} ft`}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Elevation Gain</div>
+                                                <div className='font-medium'>{`${activity.elevation} ft`}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white flex flex-col'>
-                                                <div className='text-sm'>Distance</div>
-                                                <strong>{`${activity.distance}`} {`${unitOfDistance}`}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
+                                                <div className='text-sm font-extralight'>Distance</div>
+                                                <div className='font-medium'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-gray-800 dark:text-white'>
-                                                <div className='text-sm'>Done By</div>
-                                                <strong>{getDoneBy(activity.doneBy)}</strong>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='text-sm font-extralight'>Done By</div>
+                                                <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-gray-900 dark:text-white'>
-<div className='text-sm font-extralight'>Grade</div>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white relative'>
+                                                <div className='text-sm font-extralight'>Grade</div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
@@ -318,7 +318,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                         onClick={e => {
                                             window.open(activity.allTrailsLink, "_blank")
                                         }}
-                                        className='aspect-square drop-shadow-2xl'
+                                        className='aspect-square dark:from-zinc-400 dark:to-zinc-900'
                                         tooltip={activity.allTrailsLink ? '' : "No AllTrails link available"}
                                         tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
                                         disabled={!activity.allTrailsLink}

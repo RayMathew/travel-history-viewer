@@ -496,7 +496,7 @@ export default function Home() {
                             className="w-5/6 md:hidden"
                             pt={{
                                 root: {
-                                    className: 'dark:bg-gray-950'
+                                    className: 'dark:!bg-[#121212]'
                                 }
                             }}
                         >
@@ -511,17 +511,17 @@ export default function Home() {
                                 pt={{
                                     accordiontab: {
                                         headerAction: {
-                                            className: 'custom-border-top hover:!border-[#e2e8ff1a] dark:bg-gray-950 dark:hover:bg-gray-950 dark:hover:text-white\/80 dark:focus:shadow-none'
+                                            className: 'custom-border-top hover:!border-[#e2e8ff1a] dark:!bg-[#121212] dark:hover:!bg-[#121212] dark:hover:text-white\/80 dark:focus:shadow-none'
                                         },
                                         content: {
-                                            className: 'custom-border-bottom dark:bg-gray-950'
+                                            className: 'custom-border-bottom dark:!bg-[#121212]'
                                         }
                                     }
                                 }}>
                                 <AccordionTab header="Filters"
                                     pt={{
                                         content: {
-                                            className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll transition-all duration-1000 ${filterInnerShadows}`
+                                            className: `p-0 h-[calc(100vh-11.25rem)] border-y-0 overflow-y-scroll transition-all duration-1000 ${filterInnerShadows}`
                                         }
                                     }}>
 
