@@ -65,7 +65,7 @@ export const humanReadableDate = (dateString: string): string => {
 
   // Get the day, month, and year
   const day = date.getDate();
-  const month = date.toLocaleString("default", { month: "long" });
+  const month = date.toLocaleString("default", { month: "short" });
   const year = date.getFullYear();
 
   // Add ordinal suffix to the day
@@ -369,14 +369,14 @@ export const applyMilestoneFilters = (
     [HIKING]: {
       longest: "Longest Ever Hike",
       longestInCurrentYear: "Longest Hike In", // fill the current year later
-      mostElevationGained: "Most Elevation Gained Hike Ever",
-      mostElevationGainedPerUnitDistance: `Steepest Hike Ever`,
+      mostElevationGained: "Most Elevation Gained Ever Hike",
+      mostElevationGainedPerUnitDistance: `Steepest Ever Hike`,
     },
     [BIKING]: {
       longest: "Longest Ever Bike Ride",
       longestInCurrentYear: "Longest Bike Ride In", // fill the current year later
-      mostElevationGained: "Most Elevation Gained Bike Ride Ever",
-      mostElevationGainedPerUnitDistance: `Steepest Bike Ride Ever`,
+      mostElevationGained: "Most Elevation Gained Ever Bike Ride",
+      mostElevationGainedPerUnitDistance: `Steepest Ever Bike Ride`,
     },
   };
 

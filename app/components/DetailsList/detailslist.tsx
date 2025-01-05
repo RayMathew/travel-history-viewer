@@ -101,9 +101,9 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
     useEffect(() => {
         if (isMobile) {
             if (sortedActivities.length === 1) {
-                setPanelHtClsMobile('!max-h-106 !h-[calc(61vh)] flex justify-center');
+                setPanelHtClsMobile('!max-h-106 !h-[calc(61vh)]');
             } else {
-                setPanelHtClsMobile('!h-[calc(61vh)] flex justify-center');
+                setPanelHtClsMobile('!h-[calc(61vh)]');
             }
         }
     }, [isMobile, sortedActivities]);
@@ -143,7 +143,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
 
 
     return (
-        <div className={`${detailsInnerShadows} ${panelHtClsMobile} w-[calc(80vw)] md:!h-full md:w-full overflow-x-hidden`}>
+        <div className={`${detailsInnerShadows} ${panelHtClsMobile} md:!h-full overflow-x-hidden`}>
             <div ref={detailsPanelTopRef}></div>
             {sortedActivities.map((activity) => {
                 const { googlePhotosLink } = activity;
@@ -152,7 +152,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
 
                     // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
                     <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
-                        <div className='p-5 mb-5 w-[calc(70vw)] md:w-full bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
+                        <div className='p-5 mb-5 w-[calc(85vw)] m-auto md:w-full bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
 
                             <div className='flex gap-4'>
                                 <div className='w-1/3 drop-shadow-xl aspect-square relative h-full'>

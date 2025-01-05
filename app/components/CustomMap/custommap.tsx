@@ -12,7 +12,7 @@ import { getActivityImgSrc } from "@/lib/maphelper";
 import useIsMobile from "@/hooks/useIsMobile";
 const DetailsList = React.lazy(() => import("../DetailsList/detailslist"));
 
-const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClick, isMobile }) => {
+const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClick, isMobile, isMilestoneMode }) => {
     const [markerRef, marker] = useAdvancedMarkerRef();
     // const infoWindowRef = useRef(null);
 
@@ -81,7 +81,7 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
             </AdvancedMarker>
             {infoWindowShown && (
                 <InfoWindow anchor={marker} headerContent={<h2 className="ml-4">{locationName}</h2>}
-                    onClose={handleClose} className="bg-gray-900 text-base w-[calc(80vw)]">
+                    onClose={handleClose} className="dark:!bg-[#121212] text-base w-[calc(100vw)]">
                     <DetailsList
                         activities={activities}
                         milestoneMode={isMilestoneMode}
@@ -94,7 +94,7 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
     );
 };
 
-export default function CustomMap({ displayData, onMarkerClick }) {
+export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode }) {
     const map = useMap();
     const isMobile = useIsMobile();
     console.log('rerender map', displayData)
@@ -138,6 +138,7 @@ export default function CustomMap({ displayData, onMarkerClick }) {
                     onMarkerClick={onMarkerClick}
                     activities={location.activities}
                     locationName={location.locationName}
+                    isMilestoneMode={isMilestoneMode}
                     position={{
                         lat: location.coordinates.lat,
                         lng: location.coordinates.lng,

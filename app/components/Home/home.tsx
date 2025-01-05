@@ -548,7 +548,7 @@ export default function Home() {
                     </div>
                     <div className="w-full md:w-3/4 2xl:flex-1">
                         <APIProvider apiKey={apiKey}>
-                            <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} />
+                            <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} isMilestoneMode={viewMilestonesBool} />
                         </APIProvider>
                     </div>
                 </div>

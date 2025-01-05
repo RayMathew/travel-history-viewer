@@ -247,12 +247,14 @@ const getDescriptiveActivityName = (
 
   const dateOfTravel = new Date(startDateString);
   const day = dateOfTravel.getDate();
-  const travelMonth = dateOfTravel.toLocaleString("default", { month: "long" });
+  const travelMonth = dateOfTravel.toLocaleString("default", {
+    month: "short",
+  });
   const traveYear = dateOfTravel.getFullYear();
 
   if (name === HIKING || name === BIKING) {
-    return `${name} (${day} ${travelMonth.slice(0, 3)} ${traveYear})`;
+    return `${name} (${day} ${travelMonth}, ${traveYear})`;
   }
 
-  return `${name} (${travelMonth.slice(0, 3)} ${traveYear})`;
+  return `${name} (${travelMonth} ${traveYear})`;
 };
