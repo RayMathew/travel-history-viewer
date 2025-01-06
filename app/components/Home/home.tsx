@@ -42,7 +42,9 @@ export default function Home() {
 
     const [selectedYears, setSelectedYears] = useState<number[]>([]);
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
+    const [yearWarningClass, setYearWarningClass] = useState<string>('hidden');
     const [selectedActivities, setSelectedActivities] = useState<string[]>([BIKING, HIKING, TRAVEL]);
+    const [activityWarningClass, setActivityWarningClass] = useState<string>('hidden');
     const [distanceThreshold, setDistanceThreshold] = useState<number>(0);
     const [elevationThreshold, setElevationThreshold] = useState<number>(0);
 
@@ -193,8 +195,13 @@ export default function Home() {
 
     const onYearSelectChange = (yearArray: number[]) => {
         setSelectedYears(yearArray);
-
         updateUIAndFilter({ years: yearArray })
+
+        if (!yearArray.length) {
+            setYearWarningClass('block');
+        } else {
+            setYearWarningClass('hidden');
+        }
     };
 
     const onActivitySelectChange = (e) => {
@@ -206,8 +213,13 @@ export default function Home() {
             _selectedActivities.splice(_selectedActivities.indexOf(e.value), 1);
 
         setSelectedActivities(_selectedActivities);
-
         updateUIAndFilter({ activityTypes: _selectedActivities });
+
+        if (!_selectedActivities.length) {
+            setActivityWarningClass('block');
+        } else {
+            setActivityWarningClass('hidden');
+        }
     };
 
     const onDistanceOperatorChange = (operator: Operator) => {
@@ -348,21 +360,27 @@ export default function Home() {
                 Years
             </div>
             <div className="flex flex-row pb-7">
-                <MultiSelect
-                    value={selectedYears}
-                    onChange={(e) => onYearSelectChange(e.value)}
-                    options={yearOptions}
-                    disabled={viewMilestonesBool}
-                    optionLabel="name"
-                    display="chip"
-                    placeholder="Select Years"
-                    className="w-full transition-all duration-300"
-                />
+                <div className="flex w-full flex-col">
+                    <MultiSelect
+                        value={selectedYears}
+                        onChange={(e) => onYearSelectChange(e.value)}
+                        options={yearOptions}
+                        disabled={viewMilestonesBool}
+                        optionLabel="name"
+                        display="chip"
+                        placeholder="Select Years"
+                        className="!w-full transition-all duration-300"
+                    />
+                    <div className={`${yearWarningClass} mt-2 px-4 py-2 rounded text-sm leading-5 transition-all duration-300 dark:bg-orange-400/10 dark:text-orange-300`}>
+                        <i className="pi pi-exclamation-circle leading-4 pr-2"></i>
+                        <span>Select at least one year</span>
+                    </div>
+                </div>
             </div>
             <div className="text-md text-[#e2e8ffbf] pb-2">
                 Activity Type
             </div>
-            <div className="flex flex-row pb-7">
+            <div className="pb-7">
                 <div className="card flex flex-wrap justify-content-center gap-5">
                     <div className="flex align-items-center">
                         <Profiler id="ImageWithCheckBox1" onRender={onRender}>
@@ -408,6 +426,10 @@ export default function Home() {
                         />
                         <label htmlFor="activity3" className="">Travel</label>
                     </div>
+                </div>
+                <div className={`${activityWarningClass} mt-2 px-4 py-2 rounded text-sm leading-5 transition-all duration-300 dark:bg-orange-400/10 dark:text-orange-300`}>
+                    <i className="pi pi-exclamation-circle leading-4 pr-2"></i>
+                    <span>Select at least one activity</span>
                 </div>
             </div>
             <div className="text-md text-[#e2e8ffbf] pb-2">
