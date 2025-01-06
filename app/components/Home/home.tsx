@@ -252,17 +252,9 @@ export default function Home() {
 
     if (loading) {
         return (
-            // <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
             <EmptyHomePage />
-            // </PrimeReactProvider>
         );
     }
-
-    if (!notionData) {
-        return <div>Error fetching Notion data</div>;
-    }
-
-
 
     function onRender(id, phase, actualDuration, baseDuration, startTime, commitTime) {
         // Aggregate or log render timings...

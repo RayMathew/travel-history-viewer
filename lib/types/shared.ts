@@ -4,6 +4,12 @@ type TravelStatus = "Idea" | "Not started" | "Planning" | "Booked" | "Visited";
 type JournalStatus = "Not started" | "In Progress" | "Complete";
 type DateString = `${number}-${number}-${number}`;
 
+export type Milestones = {
+  distance?: boolean;
+  elevation?: boolean;
+  grade?: boolean;
+};
+
 export type OutdoorActivity = {
   type: OutdoorActivityType;
   locationName: string;
@@ -15,6 +21,7 @@ export type OutdoorActivity = {
   distance: number;
   date: DateString;
   activityName: string;
+  milestones: Milestones;
 };
 
 export type OutdoorsData = {

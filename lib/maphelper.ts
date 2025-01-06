@@ -10,6 +10,11 @@ import {
 import { FilterOptions } from "./types/frontend";
 
 let currentYear = new Date().getFullYear();
+
+export const getCurrentYear = (): number => {
+  return currentYear;
+};
+
 const defaultFilters = {
   participant: "both",
   years: [currentYear],
@@ -389,85 +394,73 @@ export const applyMilestoneFilters = (
     };
     outdoorLocation.activities.forEach((activityData) => {
       const labels = [];
+      activityData.milestones = {};
       if (activityData.type === HIKING) {
-        if (activityData.distance === milestones[HIKING].longest)
-          labels.push(
-            `${milestoneLabels[HIKING].longest} (${milestones[
-              HIKING
-            ].longest.toFixed(1)}${distanceUnit === "Mile" ? " miles" : " km"})`
-          );
+        if (activityData.distance === milestones[HIKING].longest) {
+          labels.push(`${milestoneLabels[HIKING].longest}`);
+          activityData.milestones.distance = true;
+        }
 
-        if (activityData.distance === milestones[HIKING].longestInCurrentYear)
+        if (activityData.distance === milestones[HIKING].longestInCurrentYear) {
           labels.push(
-            `${
-              milestoneLabels[HIKING].longestInCurrentYear
-            } ${currentYear} (${milestones[HIKING].longestInCurrentYear.toFixed(
-              1
-            )}${distanceUnit === "Mile" ? " miles" : " km"})`
+            `${milestoneLabels[HIKING].longestInCurrentYear} ${currentYear}`
           );
+          activityData.milestones.distance = true;
+        }
 
-        if (activityData.elevation === milestones[HIKING].mostElevationGained)
-          labels.push(
-            `${milestoneLabels[HIKING].mostElevationGained} (${milestones[HIKING].mostElevationGained} ft)`
-          );
+        if (activityData.elevation === milestones[HIKING].mostElevationGained) {
+          labels.push(`${milestoneLabels[HIKING].mostElevationGained}`);
+          activityData.milestones.elevation = true;
+        }
 
         if (
           activityData.elevation / activityData.distance ===
           milestones[HIKING].mostElevationGainedPerUnitDistance
-        )
+        ) {
           labels.push(
-            `${milestoneLabels[HIKING].mostElevationGainedPerUnitDistance} (${
-              milestones[HIKING].steepestGrade
-            }%, ${milestones[HIKING].mostElevationGainedPerUnitDistance.toFixed(
-              1
-            )} ft /${distanceUnit === "Mile" ? " mile" : " km"})`
+            `${milestoneLabels[HIKING].mostElevationGainedPerUnitDistance}`
           );
+          activityData.milestones.grade = true;
+        }
       } else if (activityData.type === BIKING) {
-        if (activityData.distance === milestones[BIKING].longest)
-          labels.push(
-            `${milestoneLabels[BIKING].longest} (${milestones[
-              BIKING
-            ].longest.toFixed(1)}${distanceUnit === "Mile" ? " miles" : " km"})`
-          );
+        if (activityData.distance === milestones[BIKING].longest) {
+          labels.push(`${milestoneLabels[BIKING].longest}`);
+          activityData.milestones.distance = true;
+        }
 
-        if (activityData.distance === milestones[BIKING].longestInCurrentYear)
+        if (activityData.distance === milestones[BIKING].longestInCurrentYear) {
           labels.push(
-            `${
-              milestoneLabels[BIKING].longestInCurrentYear
-            } ${currentYear} (${milestones[BIKING].longestInCurrentYear.toFixed(
-              1
-            )}${distanceUnit === "Mile" ? " miles" : " km"})`
+            `${milestoneLabels[BIKING].longestInCurrentYear} ${currentYear}`
           );
+          activityData.milestones.distance = true;
+        }
 
-        if (activityData.elevation === milestones[BIKING].mostElevationGained)
-          labels.push(
-            `${milestoneLabels[BIKING].mostElevationGained} (${milestones[BIKING].mostElevationGained} ft)`
-          );
+        if (activityData.elevation === milestones[BIKING].mostElevationGained) {
+          labels.push(`${milestoneLabels[BIKING].mostElevationGained}`);
+          activityData.milestones.elevation = true;
+        }
 
         if (
           activityData.elevation / activityData.distance ===
           milestones[BIKING].mostElevationGainedPerUnitDistance
-        )
+        ) {
           labels.push(
-            `${milestoneLabels[BIKING].mostElevationGainedPerUnitDistance} (${
-              milestones[BIKING].steepestGrade
-            }%, ${milestones[BIKING].mostElevationGainedPerUnitDistance.toFixed(
-              1
-            )} ft /${distanceUnit === "Mile" ? " mile" : " km"})`
+            `${milestoneLabels[BIKING].mostElevationGainedPerUnitDistance}`
           );
+          activityData.milestones.grade = true;
+        }
       }
 
       // check if the activity has any of the milestones
       if (labels.length) {
         //Special case where one activity has multiple milestones
-        const namePrefix =
-          labels.length === 1 ? labels[0] : labels.join(" AND ");
+        let namePrefix = labels.length === 1 ? labels[0] : labels.join(" AND ");
 
         const data = structuredClone(activityData);
-        // data.locationName = `${namePrefix} - ${data.locationName} ${new Date(
-        //   activityData.date
-        // ).getFullYear()}`;
 
+        if (!namePrefix.includes(currentYear.toString())) {
+          namePrefix += ` (${humanReadableDate(data.date)})`;
+        }
         data.locationName = namePrefix;
 
         outdoorLocationClone.activities.push(data);

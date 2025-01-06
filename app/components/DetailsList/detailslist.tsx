@@ -139,6 +139,12 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
         return `${differenceInTime / (1000 * 3600 * 24)} days`;
     };
 
+    const getHighlightColor = (is_A_Miletone: boolean | undefined) => {
+        if (milestoneMode && is_A_Miletone) return 'dark:bg-emerald-900';
+        return 'dark:bg-zinc-800/50';
+
+    };
+
     if (!sortedActivities.length) return (<EmptyDetailsPanel />);
 
 
@@ -211,21 +217,21 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 {(activity.type === HIKING) && (
                                     <>
                                         <div className='flex gap-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.elevation)}`}>
                                                 <div className='text-sm font-extralight'>Elevation Gain</div>
                                                 <div className='font-medium'>{`${activity.elevation} ft`}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
+                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white flex flex-col ${getHighlightColor(activity.milestones?.distance)}`}>
                                                 <div className='text-sm font-extralight'>Distance</div>
                                                 <div className='font-medium'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white dark:bg-zinc-800/50'>
                                                 <div className='text-sm font-extralight'>Done By</div>
                                                 <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.grade)}`}>
                                                 <div className='text-sm font-extralight'>Grade</div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
@@ -236,21 +242,21 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                     <>
                                         {/* <div className='font-medium'>{humanReadableDate(activity.date)}</div> */}
                                         <div className='flex gap-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.elevation)}`}>
                                                 <div className='text-sm font-extralight'>Elevation Gain</div>
                                                 <div className='font-medium'>{`${activity.elevation} ft`}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
+                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white flex flex-col ${getHighlightColor(activity.milestones?.distance)}`}>
                                                 <div className='text-sm font-extralight'>Distance</div>
                                                 <div className='font-medium'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white dark:bg-zinc-800/50'>
                                                 <div className='text-sm font-extralight'>Done By</div>
                                                 <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white relative'>
+                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white relative ${getHighlightColor(activity.milestones?.grade)}`}>
                                                 <div className='text-sm font-extralight'>Grade</div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
