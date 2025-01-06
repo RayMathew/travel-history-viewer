@@ -21,7 +21,7 @@ import { Toast } from 'primereact/toast';
 import { useIntersectionObserver } from 'primereact/hooks';
 import useIsMobile from "@/hooks/useIsMobile";
 
-import { countActivities, applyFiltersToMap, applyMilestoneFilters } from "@/lib/maphelper";
+import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYear } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA } from "@/lib/constants";
 import { FilterOptions, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
@@ -69,14 +69,16 @@ export default function Home() {
     const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
     const isMobile = useIsMobile();
 
+    const firstTimeDataLoad = useRef(false);
+
 
 
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
 
     const onMenuClick = () => setSidebarVisible(true);
 
-    const displayInfo = useCallback((info: number) => {
-        toast.current?.show({ severity: 'info', summary: 'Info', detail: `${info} activities` });
+    const displayInfo = useCallback((info: number | null, customInfo?: string | undefined) => {
+        toast.current?.show({ severity: 'info', summary: 'Info', detail: customInfo || `${info} activities` });
     }, [toast]);
 
     useEffect(() => {
@@ -133,6 +135,16 @@ export default function Home() {
 
         fetchData();
     }, []);
+
+    // actions after first api call
+    useEffect(() => {
+        if (displayData && !firstTimeDataLoad.current) {
+            const count = countActivities(displayData);
+            displayInfo(null, `${count} activities in ${getCurrentYear()}`);
+            firstTimeDataLoad.current = true;
+        }
+
+    }, [displayData]);
 
     useEffect(() => {
         if (filterPanelTopVisible) {
