@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo, useContext } 
 import Image from 'next/image';
 
 import { Button } from 'primereact/button';
+import { Tooltip } from 'primereact/tooltip';
 import { useIntersectionObserver } from 'primereact/hooks';
 
 // import { humanReadableDate } from '@/lib/maphelper';
@@ -232,7 +233,16 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                 <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
                                             </div>
                                             <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.grade)}`}>
-                                                <div className='text-sm font-extralight'>Grade</div>
+                                                <div className='flex flex-row justify-between'>
+                                                    <div className='text-sm font-extralight'>Grade</div>
+                                                    <i className="hiking-grade-tooltip pi pi-question-circle text-slate-300 !leading-5 !text-xs !font-thin"
+                                                        data-pr-tooltip="Ratio of the vertical rise to the horizontal distance traveled, as a percentage"
+                                                        data-pr-position="right"
+                                                        data-pr-at="right center"
+                                                        data-pr-my="left center-2"
+                                                    ></i>
+                                                    <Tooltip target=".hiking-grade-tooltip" />
+                                                </div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
@@ -257,7 +267,16 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                 <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
                                             </div>
                                             <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white relative ${getHighlightColor(activity.milestones?.grade)}`}>
-                                                <div className='text-sm font-extralight'>Grade</div>
+                                                <div className='flex flex-row justify-between'>
+                                                    <div className='text-sm font-extralight'>Grade</div>
+                                                    <i className="hiking-grade-tooltip pi pi-question-circle text-slate-300 !leading-5 !text-xs !font-thin"
+                                                        data-pr-tooltip="Ratio of the vertical rise to the horizontal distance traveled, as a percentage"
+                                                        data-pr-position="right"
+                                                        data-pr-at="right center"
+                                                        data-pr-my="left center-2"
+                                                    ></i>
+                                                    <Tooltip target=".hiking-grade-tooltip" />
+                                                </div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
