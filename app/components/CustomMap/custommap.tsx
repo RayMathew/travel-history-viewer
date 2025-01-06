@@ -12,28 +12,26 @@ import { getActivityImgSrc } from "@/lib/maphelper";
 import useIsMobile from "@/hooks/useIsMobile";
 const DetailsList = React.lazy(() => import("../DetailsList/detailslist"));
 
-const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClick, isMobile, isMilestoneMode }) => {
+const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClick, isMobile, isMilestoneMode, isOpen,
+    onOpen,
+    onClose
+}) => {
     const [markerRef, marker] = useAdvancedMarkerRef();
-    // const infoWindowRef = useRef(null);
-
-    const [infoWindowShown, setInfoWindowShown] = useState(false);
     // const [animateClass, setAnimateClass] = useState("");
 
     const handleMobileMarkerClick = useCallback(
         () => {
-            setInfoWindowShown(isShown => !isShown);
+            if (isOpen) {
+                onClose(); // Close if already open
+            } else {
+                onOpen(); // Open this marker
+            }
         },
         []
     );
 
-    // if the maps api closes the infowindow, we have to synchronize our state
-    const handleClose = useCallback(() => {
-        setInfoWindowShown(false);
-        // setAnimateClass("");
-    }, []);
-
     useEffect(() => {
-        if (infoWindowShown) {
+        if (isOpen) {
             let retries = 0;
             const interval = setInterval(() => {
                 const dialogElement = document.querySelector('div[role="dialog"]');
@@ -44,19 +42,19 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
 
                 retries++;
                 if (retries > 10) {
-                    clearInterval(interval); // Stop trying after 10 attempts (~500ms)
+                    clearInterval(interval);
                 }
             }, 50); // Check every 50ms
 
             return () => {
-                clearInterval(interval); // Ensure cleanup if `infoWindowShown` changes
+                clearInterval(interval);
                 const dialogElement = document.querySelector('div[role="dialog"]');
                 if (dialogElement) {
                     dialogElement.classList.remove("info-window-animation");
                 }
             };
         }
-    }, [infoWindowShown]);
+    }, [isOpen]);
 
     return (
         <>
@@ -79,16 +77,14 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
                     alt={activities[0].type}
                 />
             </AdvancedMarker>
-            {infoWindowShown && (
+            {isOpen && (
                 <InfoWindow anchor={marker} headerContent={<h2 className="ml-4">{locationName}</h2>}
-                    onClose={handleClose} className="dark:!bg-[#121212] text-base w-[calc(100vw)]">
+                    onClose={onClose} className="dark:!bg-[#121212] text-base w-[calc(100vw)]">
                     <DetailsList
                         activities={activities}
                         milestoneMode={isMilestoneMode}
                     />
-
                 </InfoWindow>
-
             )}
         </>
     );
@@ -97,6 +93,7 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
 export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode }) {
     const map = useMap();
     const isMobile = useIsMobile();
+    const [openMarkerId, setOpenMarkerId] = useState(null);
     console.log('rerender map', displayData)
 
     useEffect(() => {
@@ -128,6 +125,10 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
 
     }, [map, displayData]);
 
+    const handleMarkerClick = (markerId) => {
+        setOpenMarkerId((prevId) => (prevId === markerId ? null : markerId)); // Toggle marker
+    };
+
     const renderMarkers = (markerData) => {
         return markerData.map((location, index) => {
             if (!location.coordinates) return null;
@@ -143,6 +144,9 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
                         lat: location.coordinates.lat,
                         lng: location.coordinates.lng,
                     }}
+                    isOpen={openMarkerId === index}
+                    onOpen={() => handleMarkerClick(index)}
+                    onClose={() => handleMarkerClick(null)}
                 />
             );
         })

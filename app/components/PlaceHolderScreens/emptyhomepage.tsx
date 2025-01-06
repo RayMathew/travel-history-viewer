@@ -12,7 +12,7 @@ export default function EmptyHomePage() {
                 width={85}
                 height={85}
                 alt="Logo"
-                priority={false}
+                priority={true}
             />
         </div>
         <div className="hidden md:block w-full h-full">
