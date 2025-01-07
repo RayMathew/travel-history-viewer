@@ -215,7 +215,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                         </div>
                                     </>
                                 )}
-                                {(activity.type === HIKING) && (
+                                {(activity.type === HIKING || activity.type === BIKING) && (
                                     <>
                                         <div className='flex gap-4'>
                                             <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.elevation)}`}>
@@ -236,46 +236,16 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                 <div className='flex flex-row justify-between'>
                                                     <div className='text-sm font-extralight'>Grade</div>
                                                     <i className="hiking-grade-tooltip pi pi-question-circle text-slate-300 !leading-5 !text-xs !font-thin"
-                                                        data-pr-tooltip="Ratio of the vertical rise to the horizontal distance traveled, as a percentage"
-                                                        data-pr-position="right"
-                                                        data-pr-at="right center"
-                                                        data-pr-my="left center-2"
                                                     ></i>
-                                                    <Tooltip target=".hiking-grade-tooltip" />
-                                                </div>
-                                                <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                                {(activity.type === BIKING) && (
-                                    <>
-                                        {/* <div className='font-medium'>{humanReadableDate(activity.date)}</div> */}
-                                        <div className='flex gap-4'>
-                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.elevation)}`}>
-                                                <div className='text-sm font-extralight'>Elevation Gain</div>
-                                                <div className='font-medium'>{`${activity.elevation} ft`}</div>
-                                            </div>
-                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white flex flex-col ${getHighlightColor(activity.milestones?.distance)}`}>
-                                                <div className='text-sm font-extralight'>Distance</div>
-                                                <div className='font-medium'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
-                                            </div>
-                                        </div>
-                                        <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white dark:bg-zinc-800/50'>
-                                                <div className='text-sm font-extralight'>Done By</div>
-                                                <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
-                                            </div>
-                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white relative ${getHighlightColor(activity.milestones?.grade)}`}>
-                                                <div className='flex flex-row justify-between'>
-                                                    <div className='text-sm font-extralight'>Grade</div>
-                                                    <i className="hiking-grade-tooltip pi pi-question-circle text-slate-300 !leading-5 !text-xs !font-thin"
-                                                        data-pr-tooltip="Ratio of the vertical rise to the horizontal distance traveled, as a percentage"
-                                                        data-pr-position="right"
-                                                        data-pr-at="right center"
-                                                        data-pr-my="left center-2"
-                                                    ></i>
-                                                    <Tooltip target=".hiking-grade-tooltip" />
+                                                    <Tooltip target=".hiking-grade-tooltip" className='w-96'>
+                                                        <Image
+                                                            alt="Activity Image"
+                                                            width={374}
+                                                            height={63.9}
+                                                            src="/grade.png"
+                                                        />
+                                                        E.g., a 10% grade means there is a 10-meter elevation gain for every 100 meters traveled horizontally.
+                                                    </Tooltip>
                                                 </div>
                                                 <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
