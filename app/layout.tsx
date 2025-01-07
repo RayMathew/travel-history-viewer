@@ -61,18 +61,18 @@ export const metadata: Metadata = {
   },
   other: {
     "msvalidate.01": '9D6F46FAA4F7B92DC9DC5FBF3A877320', // this is actually verification for yahoo Search, which uses Microsfot Bing. Hence 'ms'.
-  }
-  // appleWebApp: { // uncomment this after you first test how it works without the config
-  //   title: APPNAME,
-  //   statusBarStyle: 'black-translucent',
-  //   startupImage: [
-  //     '/assets/startup/apple-touch-startup-image-768x1004.png',
-  //     {
-  //       url: '/assets/startup/apple-touch-startup-image-1536x2008.png',
-  //       media: '(device-width: 768px) and (device-height: 1024px)',
-  //     },
-  //   ],
-  // },
+  },
+  appleWebApp: { // uncomment this after you first test how it works without the config
+    title: APPNAME,
+    statusBarStyle: 'black-translucent',
+    // startupImage: [
+    //   '/assets/startup/apple-touch-startup-image-768x1004.png',
+    //   {
+    //     url: '/assets/startup/apple-touch-startup-image-1536x2008.png',
+    //     media: '(device-width: 768px) and (device-height: 1024px)',
+    //   },
+    // ],
+  },
 };
 
 export const viewport: Viewport = {
