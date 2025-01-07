@@ -349,9 +349,9 @@ export default function Home() {
                             </div>
                         )}
                         <div className={`flex flex-row justify-center gap-6.5 ${profileVisibilityClass}`}>
-                            {renderPicRadio(RAY, "/api/image/ray", "Me")}
-                            {renderPicRadio(NAMRATA, "/api/image/namrata", "Wife")}
-                            {renderPicRadio("both", "/api/image/raynam", "Both")}
+                            {renderPicRadio(RAY, "/ray.jpg", "Me")}
+                            {renderPicRadio(NAMRATA, "/namrata.jpg", "Wife")}
+                            {renderPicRadio("both", "/raynam.jpg", "Both")}
                         </div>
                     </>
                 </Profiler>
