@@ -29,7 +29,7 @@ export default function LoginForm() {
                                 src="logo.svg"
                                 width={130}
                                 height={130}
-                                alt="Logo"
+                                alt="Memoir Map Logo"
                                 style={{
                                     borderRadius: '90px',
                                     transform: "translate(2px)",

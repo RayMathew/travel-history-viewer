@@ -29,8 +29,7 @@ export default function ImageWithCheckBox(
                 src={imgSrc}
                 width={size}
                 height={size}
-                alt={title}
-                title={title}
+                alt=""
                 style={{ height: size }}
                 className={`${margin} brightness-50`}
             />

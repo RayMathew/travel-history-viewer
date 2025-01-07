@@ -165,7 +165,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 <div className='w-1/3 drop-shadow-xl aspect-square relative h-full'>
                                     <Image
                                         className='object-cover object-center rounded-lg transition-opacity duration-700'
-                                        alt="Activity Image"
+                                        alt="Activity image thumbnail"
                                         fill={true}
                                         src={thumbnailSrc}
                                         onLoadingComplete={(e) => {
@@ -239,7 +239,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                     ></i>
                                                     <Tooltip target=".hiking-grade-tooltip" className='w-96'>
                                                         <Image
-                                                            alt="Activity Image"
+                                                            alt="Explanation of grade as an equation"
                                                             width={374}
                                                             height={63.9}
                                                             src="/grade.png"

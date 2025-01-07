@@ -11,7 +11,7 @@ export default function EmptyHomePage() {
                 src="/favicon.ico"
                 width={85}
                 height={85}
-                alt="Logo"
+                alt="Memoir Map Logo"
                 priority={true}
             />
         </div>

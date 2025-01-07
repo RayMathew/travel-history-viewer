@@ -10,7 +10,7 @@ export default function EmptyDetailsPanel() {
             <div className="w-full flex-grow relative">
                 <Image
                     className='w-full h-full'
-                    alt="Activity Image"
+                    alt="Generic image of a map marker"
                     fill={true}
                     src="/markerimage.svg"
                 />
