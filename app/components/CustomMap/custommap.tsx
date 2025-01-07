@@ -94,7 +94,7 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
     const map = useMap();
     const isMobile = useIsMobile();
     const [openMarkerId, setOpenMarkerId] = useState(null);
-    console.log('rerender map', displayData)
+    // console.log('rerender map', displayData)
 
     useEffect(() => {
         if (!map || !displayData) return;
@@ -129,7 +129,7 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
         setOpenMarkerId((prevId) => (prevId === markerId ? null : markerId)); // Toggle marker
     };
 
-    const renderMarkers = (markerData) => {
+    const renderMarkers = (identifier: string, markerData) => {
         return markerData.map((location, index) => {
             if (!location.coordinates) return null;
             return (
@@ -144,8 +144,8 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
                         lat: location.coordinates.lat,
                         lng: location.coordinates.lng,
                     }}
-                    isOpen={openMarkerId === index}
-                    onOpen={() => handleMarkerClick(index)}
+                    isOpen={openMarkerId === `${identifier}${index}`}
+                    onOpen={() => handleMarkerClick(`${identifier}${index}`)}
                     onClose={() => handleMarkerClick(null)}
                 />
             );
@@ -164,8 +164,8 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
             colorScheme={ColorScheme.DARK}
         // key={JSON.stringify(displayData)}
         >
-            {renderMarkers(displayData.outdoorsData)}
-            {renderMarkers(displayData.travelData)}
+            {renderMarkers('outdoors', displayData.outdoorsData)}
+            {renderMarkers('travel', displayData.travelData)}
         </Map>
     );
 };
