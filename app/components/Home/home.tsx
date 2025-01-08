@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback, createContext, Profiler } from "react";
+import React, { useEffect, useState, useRef, useCallback, Profiler } from "react";
 import {
     APIProvider,
 } from "@vis.gl/react-google-maps";
@@ -18,7 +18,6 @@ import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
-import { useIntersectionObserver } from 'primereact/hooks';
 import useIsMobile from "@/hooks/useIsMobile";
 
 import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYear } from "@/lib/maphelper";
@@ -61,19 +60,11 @@ export default function Home() {
 
     const toast = useRef(null);
 
-    const [filterInnerShadows, setFilterInnerShadows] = useState('custom-bottom-inner-shadow');
-    const filterPanelTopRef = useRef(null);
-    const filterPanelTopVisible = useIntersectionObserver(filterPanelTopRef);
-    const filterPanelBottomRef = useRef(null);
-    const filterPanelBottomVisible = useIntersectionObserver(filterPanelBottomRef);
-
     const [loaded, setLoaded] = useState(false);
     const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
     const isMobile = useIsMobile();
 
     const firstTimeDataLoad = useRef(false);
-
-
 
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
 
@@ -147,17 +138,6 @@ export default function Home() {
         }
 
     }, [displayData]);
-
-    useEffect(() => {
-        if (filterPanelTopVisible) {
-            setFilterInnerShadows('custom-bottom-inner-shadow');
-        } else if (filterPanelBottomVisible) {
-            setFilterInnerShadows('custom-top-inner-shadow');
-        }
-        // else if (!filterPanelTopVisible && !filterPanelBottomVisible) {
-        //   setFilterInnerShadows('custom-top-bottom-inner-shadow');
-        // }
-    }, [filterPanelTopVisible, filterPanelBottomVisible]);
 
     const updateFilterConfig = useCallback((filter: FilterOptions): FilterOptions => {
         return {
@@ -335,7 +315,6 @@ export default function Home() {
         <div className="w-full">
             <div className="text-md text-[#e2e8ffbf] pb-2">
                 Who Was There?
-                <div ref={filterPanelTopRef}></div>
             </div>
             <div className="pb-5">
                 <Profiler id="ImageradioButtons" onRender={onRender}>
@@ -485,7 +464,6 @@ export default function Home() {
                     }}
                 />
             </div>
-            <div ref={filterPanelBottomRef}></div>
             <div className="h-8"></div>
         </div>
     );
@@ -547,7 +525,7 @@ export default function Home() {
                                 <AccordionTab header="Filters"
                                     pt={{
                                         content: {
-                                            className: `p-0 h-[calc(100vh-11.25rem)] border-y-0 overflow-y-scroll transition-all duration-1000 ${filterInnerShadows}`
+                                            className: `p-0 h-[calc(100vh-11.25rem)] border-y-0 overflow-y-scroll transition-all duration-1000 vanishing-shadow`
                                         }
                                     }}>
 

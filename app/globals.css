@@ -39,7 +39,7 @@ body {
 }
 
 .dark-background {
-  background-color: rgb(18, 18, 18, 1);
+  background-color: rgba(18, 18, 18, 1);
 }
 
 /* Firefox old*/
@@ -186,6 +186,57 @@ body {
     #d9d9d9 87.87%,
     rgba(217, 217, 217, 0) 96.94%
   );
+}
+
+.vanishing-shadow {
+  overflow: auto;
+  max-height: calc(100vh - 11.25rem);
+  background: /* Shadow covers */ linear-gradient(
+      white 30%,
+      rgba(18, 18, 18, 1)
+    ),
+    linear-gradient(rgba(18, 18, 18, 1), white 70%) 0 100%,
+    /* Shadows */
+      radial-gradient(
+        50% 0,
+        farthest-side,
+        rgba(18, 18, 18, 1),
+        rgba(18, 18, 18, 1)
+      ),
+    radial-gradient(
+        50% 100%,
+        farthest-side,
+        rgba(18, 18, 18, 1),
+        rgba(18, 18, 18, 1)
+      )
+      0 100%;
+  background: /* Shadow covers */ linear-gradient(
+      rgba(18, 18, 18, 1) 30%,
+      /* Darker color for shadow fade */ rgba(18, 18, 18, 1)
+    ),
+    linear-gradient(rgba(18, 18, 18, 1), rgba(18, 18, 18, 1) 70%) 0 100%,
+    /* Shadows */
+      radial-gradient(
+        farthest-side at 50% 0,
+        rgba(255, 255, 255, 0.2),
+        /* Subtle highlight for dark background */ rgba(18, 18, 18, 1)
+      ),
+    radial-gradient(
+        farthest-side at 50% 100%,
+        rgba(255, 255, 255, 0.2),
+        rgba(18, 18, 18, 1)
+      )
+      0 100%;
+  background-repeat: no-repeat;
+  background-color: rgba(18, 18, 18, 1);
+  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  /* Opera doesn't support this in the shorthand */
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* use the same shadow for details list section */
+.vanishing-shadow.details-list {
+  max-height: 100%;
 }
 
 /* mobile dialog box for activity details  */
