@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchOutdoorsDBData, fetchTravelDBData } from "@/lib/notion";
 import { auth } from "@/auth";
+import etag from "etag";
 import { DISTANCEUNIT } from "@/lib/constants";
 
 export const GET = auth(async function GET(req: NextRequest) {
@@ -18,10 +19,26 @@ export const GET = auth(async function GET(req: NextRequest) {
     const outdoorsData = await fetchOutdoorsDBData(distanceUnit, isAdminUser);
     const travelData = await fetchTravelDBData(isAdminUser);
 
-    return NextResponse.json(
-      { outdoorsData, travelData, distanceUnit },
-      { status: 200 }
-    );
+    const consolidatedResponse = { outdoorsData, travelData, distanceUnit };
+
+    const generatedETag = etag(JSON.stringify(consolidatedResponse));
+
+    const clientETag = req.headers.get("If-None-Match");
+
+    // Respond with 304 if ETags match (client can use cached version)
+    if (clientETag === generatedETag) {
+      return new Response(null, {
+        status: 304,
+      });
+    }
+
+    return NextResponse.json(consolidatedResponse, {
+      status: 200,
+      headers: {
+        ETag: generatedETag,
+        "Cache-Control": "private, max-age=60, must-revalidate",
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
