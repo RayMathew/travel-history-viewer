@@ -6,18 +6,23 @@ import { Skeleton } from 'primereact/skeleton';
 import { logout } from "@/lib/actions";
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import { useContext } from "react";
+import { useRouter } from 'next/navigation';
 // import anime from 'animejs';
 
 
 export default function NavbarAvatar() {
     const userContext = useContext(UserContext);
+    const router = useRouter();
     const op = useRef<OverlayPanel>(null);
 
     const { userName } = userContext;
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         localStorage.clear();
-        logout();
+
+        await logout();
+
+        router.push('/login');
     }
 
     const handleAvatarClick = (e: React.MouseEvent<HTMLDivElement>) => {

@@ -3,10 +3,19 @@
 import { Button } from 'primereact/button';
 import { useActionState } from 'react';
 import { authenticate } from '../../../lib/actions';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
+    const router = useRouter();
     const [errorMessage, formAction, isPending] = useActionState(
-        authenticate,
+        async (prevState, formData) => {
+            const result = await authenticate(prevState, formData);
+            // empty response indicates successful login
+            if (!result) {
+                router.push('/');
+            }
+            return result; // Return error message
+        },
         undefined,
     );
 
