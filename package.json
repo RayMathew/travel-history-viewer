@@ -13,7 +13,7 @@
     "@vis.gl/react-google-maps": "^1.4.0",
     "bcrypt": "^5.1.1",
     "lodash.debounce": "^4.0.8",
-    "next": "15.0.2",
+    "next": "^15.1.4",
     "next-auth": "^5.0.0-beta.25",
     "open-graph-scraper": "^6.8.2",
     "primeicons": "^7.0.0",
