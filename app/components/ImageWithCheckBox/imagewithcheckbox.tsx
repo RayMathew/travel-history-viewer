@@ -10,7 +10,6 @@ export default function ImageWithCheckBox(
         checked,
         disabled,
         imgSrc,
-        title,
         inputId,
         size,
         margin

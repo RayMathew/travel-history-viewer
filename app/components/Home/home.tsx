@@ -8,6 +8,7 @@ import { Sidebar } from 'primereact/sidebar';
 import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Skeleton } from 'primereact/skeleton';
+import { CheckboxChangeEvent } from "primereact/checkbox";
 import { Toast } from 'primereact/toast';
 
 import Navbar from "../Navbar/navbar";
@@ -21,7 +22,7 @@ import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from "@/hooks/useIsMobile";
 import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYear } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA } from "@/lib/constants";
-import { FilterOptions, Operator, YearOption } from "@/lib/types/frontend";
+import { FilterOptions, FilterOptionsPrep, OnMarkerClick, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
 
 
@@ -47,14 +48,13 @@ export default function Home() {
 
     const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
-    const [activeTab, setActiveTab] = useState(SECTIONS.FILTER_SECTION);
+    const [activeTab, setActiveTab] = useState<number | number[]>(SECTIONS.FILTER_SECTION);
     const [detailsTitle, setDetailsTitle] = useState('Details');
-    const [detailsTitleClass, setDetailsTitleClass] = useState('');
     const [detailsContent, setDetailsContent] = useState<TravelActivity[] | OutdoorActivity[] | null>(null);
 
-    const toast = useRef(null);
+    const toast = useRef<Toast | null>(null);
 
-    const [loaded, setLoaded] = useState(false);
+    const [portraitLoaded, setPortraitLoaded] = useState(false);
     const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
     const isMobile = useIsMobile();
 
@@ -133,7 +133,7 @@ export default function Home() {
 
     }, [displayData]);
 
-    const updateFilterConfig = useCallback((filter: FilterOptions): FilterOptions => {
+    const updateFilterConfig = useCallback((filter: FilterOptionsPrep): FilterOptions => {
         return {
             participant: filter.participant || selectedParticipant!,
             years: filter.years || selectedYears,
@@ -151,9 +151,9 @@ export default function Home() {
         selectedYears
     ]);
 
-    const updateUIAndFilter = useCallback((filterUpdates: FilterOptions) => {
-        const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig(filterUpdates));
-        const count = countActivities(filteredData);
+    const updateUIAndFilter = useCallback((filterUpdates: FilterOptionsPrep) => {
+        const filteredData = applyFiltersToMap(false, notionData!, updateFilterConfig(filterUpdates)); //NDA
+        const count = countActivities(filteredData!); //NDA
         displayInfo(count);
         setDisplayData(filteredData);
     }, [displayInfo, notionData, updateFilterConfig]);
@@ -178,13 +178,13 @@ export default function Home() {
         }
     };
 
-    const onActivitySelectChange = (e) => {
+    const onActivitySelectChange = (fn: CheckboxChangeEvent) => {
         const _selectedActivities = [...selectedActivities];
 
-        if (e.checked)
-            _selectedActivities.push(e.value);
+        if (fn.checked)
+            _selectedActivities.push(fn.value);
         else
-            _selectedActivities.splice(_selectedActivities.indexOf(e.value), 1);
+            _selectedActivities.splice(_selectedActivities.indexOf(fn.value), 1);
 
         setSelectedActivities(_selectedActivities);
         updateUIAndFilter({ activityTypes: _selectedActivities });
@@ -237,7 +237,7 @@ export default function Home() {
         }
     };
 
-    const onMarkerClick = (_event, activities, locationName: string) => {
+    const onMarkerClick: OnMarkerClick = (_event, activities, locationName) => {
         setDetailsTitle(`${locationName}`);
         setDetailsTitleClass('text-slate-300 text-lg');
         setActiveTab(SECTIONS.DETAILS_SECTION);

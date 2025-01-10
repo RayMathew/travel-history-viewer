@@ -2,7 +2,7 @@ import Image from "next/image";
 import NavbarAvatar from "./navbaravatar";
 import { Button } from 'primereact/button';
 
-export default function Navbar({ onMenuClick }) {
+export default function Navbar({ onMenuClick }: { onMenuClick: () => void }) {
 
     return (
         <>

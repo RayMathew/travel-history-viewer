@@ -1,5 +1,7 @@
-type OutdoorActivityType = "Hiking" | "Biking";
-type TravelActivityType = "Travel";
+// Note: NDA - Notion Data Assumption. I'm going to write NDA in all the places where I assume I haven't made a mistake while creating Notion data.
+
+export type OutdoorActivityType = "Hiking" | "Biking";
+export type TravelActivityType = "Travel";
 type TravelStatus = "Idea" | "Not started" | "Planning" | "Booked" | "Visited";
 type JournalStatus = "Not started" | "In Progress" | "Complete";
 type DateString = `${number}-${number}-${number}`;
@@ -9,6 +11,8 @@ export type Milestones = {
   elevation?: boolean;
   grade?: boolean;
 };
+
+export type Coordinates = { lat: number; lng: number };
 
 export type OutdoorActivity = {
   type: OutdoorActivityType;
@@ -26,10 +30,7 @@ export type OutdoorActivity = {
 
 export type OutdoorsData = {
   locationName: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
+  coordinates: Coordinates;
   activities: OutdoorActivity[];
 };
 
@@ -50,10 +51,7 @@ export type TravelActivity = {
 
 export type TravelData = {
   locationName: string;
-  coordinates: {
-    lat: number;
-    lng: number;
-  };
+  coordinates: Coordinates;
   activities: TravelActivity[];
 };
 

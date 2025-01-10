@@ -38,7 +38,7 @@ export default function ThresholdFilter({
             <div>
                 <InputNumber
                     value={threshold}
-                    onValueChange={(e) => onThresholdChange(e.value)}
+                    onValueChange={(e) => onThresholdChange(e.value!)}
                     mode="decimal"
                     min={0}
                     useGrouping={false}

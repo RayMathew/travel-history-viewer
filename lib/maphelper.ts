@@ -7,7 +7,7 @@ import {
   TravelActivity,
   TravelData,
 } from "./types/shared";
-import { FilterOptions } from "./types/frontend";
+import { FilterOptions, OperatorNoSpaces } from "./types/frontend";
 
 let currentYear = new Date().getFullYear();
 
@@ -15,7 +15,7 @@ export const getCurrentYear = (): number => {
   return currentYear;
 };
 
-const defaultFilters = {
+const defaultFilters: FilterOptions = {
   participant: "both",
   years: [currentYear],
   activityTypes: [HIKING, BIKING, TRAVEL],
@@ -48,7 +48,10 @@ const milestones = {
 
 let milestoneData: OutdoorsData[];
 
-const operatorTranslation = {
+const operatorTranslation: Record<
+  OperatorNoSpaces,
+  (x: number, y: number) => boolean
+> = {
   ">": (x: number, y: number) => x > y,
   "<": (x: number, y: number) => x < y,
 };
@@ -117,9 +120,10 @@ export const getGrade = (
 
 export const applyFiltersToMap = (
   initialLoad: boolean,
-  notionData: NotionData,
+  notionData: NotionData | null,
   filter: FilterOptions = defaultFilters
-): FilteredNotionData => {
+): FilteredNotionData | null => {
+  if (!notionData) return null;
   let filteredData: FilteredNotionData;
 
   console.log("asds", filter);
@@ -174,9 +178,7 @@ export const applyFiltersToMap = (
   const participantFilter = (
     allData: FilteredNotionData
   ): FilteredNotionData => {
-    function filterByDoneBy(
-      data: OutdoorsData[] | TravelData[]
-    ): OutdoorsData[] | TravelData[] {
+    const filterByDoneBy = (data: OutdoorsData[] | TravelData[]) => {
       const modifiedData = data.map((activityData) => {
         const filteredActivities = activityData.activities.filter(
           (activity) => {
@@ -199,7 +201,7 @@ export const applyFiltersToMap = (
         (activityData) => activityData.activities.length > 0
       );
       return filteredData;
-    }
+    };
     const outdoorsData = filterByDoneBy(allData.outdoorsData);
     const travelData = filterByDoneBy(allData.travelData);
 
@@ -387,7 +389,7 @@ export const applyMilestoneFilters = (
 
   // get all activities that match milestone numbers
   notionData.outdoorsData.forEach((outdoorLocation) => {
-    const outdoorLocationClone = {
+    const outdoorLocationClone: OutdoorsData = {
       coordinates: outdoorLocation.coordinates,
       locationName: outdoorLocation.locationName,
       activities: [],

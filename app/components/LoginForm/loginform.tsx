@@ -7,7 +7,7 @@ import { Button } from 'primereact/button';
 import { authenticate } from '../../../lib/actions';
 import 'primeicons/primeicons.css';
 
-export default function LoginForm({ onClick }) {
+export default function LoginForm({ onClick }: { onClick: () => void }) {
     const router = useRouter();
     const [errorMessage, formAction, isPending] = useActionState(
         async (prevState, formData) => {

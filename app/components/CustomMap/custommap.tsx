@@ -10,12 +10,21 @@ import {
 } from "@vis.gl/react-google-maps";
 import { getActivityImgSrc } from "@/lib/maphelper";
 import useIsMobile from "@/hooks/useIsMobile";
+import { CustomMapProps, MarkerWithInfoWindowProps } from "@/lib/types/frontend";
+import { OutdoorsData, TravelData } from "@/lib/types/shared";
 const DetailsList = React.lazy(() => import("../DetailsList/detailslist"));
 
-const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClick, isMobile, isMilestoneMode, isOpen,
+const MarkerWithInfoWindow = ({
+    activities,
+    locationName,
+    position,
+    onMarkerClick,
+    isMobile,
+    isMilestoneMode,
+    isOpen,
     onOpen,
     onClose
-}) => {
+}: MarkerWithInfoWindowProps) => {
     const [markerRef, marker] = useAdvancedMarkerRef();
     // const [animateClass, setAnimateClass] = useState("");
 
@@ -71,10 +80,10 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
                 title={locationName}
             >
                 <Image
-                    src={getActivityImgSrc(activities[0])}
+                    src={getActivityImgSrc(activities![0])}
                     width={50}
                     height={50}
-                    alt={activities[0].type}
+                    alt={activities![0].type}
                 />
             </AdvancedMarker>
             {isOpen && (
@@ -90,10 +99,10 @@ const MarkerWithInfoWindow = ({ activities, locationName, position, onMarkerClic
     );
 };
 
-export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode }) {
+export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode }: CustomMapProps) {
     const map = useMap();
     const isMobile = useIsMobile();
-    const [openMarkerId, setOpenMarkerId] = useState(null);
+    const [openMarkerId, setOpenMarkerId] = useState<string | null>(null);
     // console.log('rerender map', displayData)
 
     useEffect(() => {
@@ -102,7 +111,7 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
         const bounds = new window.google.maps.LatLngBounds();
         const { outdoorsData, travelData } = displayData;
 
-        const extendBounds = (data) => {
+        const extendBounds = (data: OutdoorsData[] | TravelData[]) => {
             for (var i = 0; i < data.length; i++) {
                 bounds.extend(
                     new window.google.maps.LatLng(
@@ -125,11 +134,12 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
 
     }, [map, displayData]);
 
-    const handleMarkerClick = (markerId) => {
-        setOpenMarkerId((prevId) => (prevId === markerId ? null : markerId)); // Toggle marker
+    const handleMarkerClick = (markerId: string | null) => {
+        // if the same marker is clicked again, set it to null to close it and indicate all markers are closed. Else set a new marker is open in place of the old.
+        setOpenMarkerId((prevId) => (prevId === markerId ? null : markerId));
     };
 
-    const renderMarkers = (identifier: string, markerData) => {
+    const renderMarkers = (identifier: string, markerData: OutdoorsData[] | TravelData[]) => {
         return markerData.map((location, index) => {
             if (!location.coordinates) return null;
             return (
@@ -152,9 +162,11 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
         })
     };
 
+    if (!displayData) return null;
+
     return (
         <Map
-            mapId="DEMO"
+            mapId="memoirmap"
             defaultZoom={2}
             defaultCenter={{ lat: 5.145259, lng: -27.8719489 }}
             mapTypeControl={false}
@@ -162,7 +174,6 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
             streetViewControl={false}
             fullscreenControl={false}
             colorScheme={ColorScheme.DARK}
-        // key={JSON.stringify(displayData)}
         >
             {renderMarkers('outdoors', displayData.outdoorsData)}
             {renderMarkers('travel', displayData.travelData)}

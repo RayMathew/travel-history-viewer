@@ -8,7 +8,13 @@ import {
   TRAVEL_PROPERTIES,
 } from "./constants";
 import { removeNullValues } from "./datahelper";
-import { OutdoorsData, TravelData } from "./types/shared";
+import { Coordinates, OutdoorsData, TravelData } from "./types/shared";
+import {
+  OutdoorActivityTag,
+  CoordinatesRaw,
+  Places,
+  People,
+} from "./types/backend";
 
 let notionClient: Client | null = null;
 
@@ -121,7 +127,7 @@ export const fetchTravelDBData = async (
         properties[TRAVEL_PROPERTIES.PLACES].rich_text[0]
       );
       const coordinatesArray = getTravelCoordinates(
-        properties[TRAVEL_PROPERTIES.COORDINATES].rich_text[0]
+        properties[TRAVEL_PROPERTIES.COORDINATES]
       );
       const instagramLink = properties[OUTDOOR_PROPERTIES.INSTAGRAM].url;
       const activityName = getDescriptiveActivityName(
@@ -194,14 +200,16 @@ const getDistance = (value: number, distanceUnit: string) => {
   return parseFloat((value * 1.6).toFixed(1)); // convert default miles value to km
 };
 
-const getActivityType = (tagArray): string => {
+const getActivityType = (tagArray: OutdoorActivityTag[]): string => {
   const tag = tagArray.find(
     (tagObject) => tagObject.name == "Hiking" || tagObject.name == "Biking"
   );
-  return tag.name;
+  return tag!.name; // NDA
 };
 
-const getOutdoorCoordinates = (coordinatesObj) => {
+const getOutdoorCoordinates = (
+  coordinatesObj: CoordinatesRaw
+): { lat: number; lng: number } => {
   const lat = parseFloat(coordinatesObj.rich_text[0].plain_text.split(",")[0]);
   const lng = parseFloat(
     coordinatesObj.rich_text[0].plain_text.split(",")[1].trim()
@@ -210,18 +218,19 @@ const getOutdoorCoordinates = (coordinatesObj) => {
   return { lat, lng };
 };
 
-const getAllPlaces = (placesObj) => {
+const getAllPlaces = (placesObj: Places): string[] => {
   if (!placesObj) return [];
 
   return placesObj.plain_text.split(", ");
 };
 
-const getTravelCoordinates = (coordinatesObj) => {
-  const coordinatesArray = [];
+const getTravelCoordinates = (coordinatesObj: CoordinatesRaw) => {
+  const coordinatesArray: Coordinates[] = [];
 
-  if (!coordinatesObj) return coordinatesArray;
+  if (!coordinatesObj.rich_text[0]) return coordinatesArray;
 
-  const coordinatesStringArray = coordinatesObj.plain_text.split("\n");
+  const coordinatesStringArray =
+    coordinatesObj.rich_text[0].plain_text.split("\n");
 
   coordinatesStringArray.forEach((coordinatesString) => {
     const lat = parseFloat(coordinatesString.split(",")[0]);
@@ -232,7 +241,7 @@ const getTravelCoordinates = (coordinatesObj) => {
   return coordinatesArray;
 };
 
-const getPeople = (peopleObjArray) => {
+const getPeople = (peopleObjArray: People[]) => {
   const people: string[] = [];
   peopleObjArray.forEach((peopleObj) => people.push(peopleObj.name));
 

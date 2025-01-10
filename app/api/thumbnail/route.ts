@@ -16,13 +16,13 @@ export const GET = auth(async function GET(req: NextRequest) {
     const { result } = data;
     return NextResponse.json(
       {
-        thumbnailLink: result.ogImage[0].url,
+        thumbnailLink: result?.ogImage[0]?.url,
       },
       {
         status: 200,
       }
     );
-  } catch (err) {
-    return NextResponse.json({ error: err.result.error }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }) as any;

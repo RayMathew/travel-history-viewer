@@ -20,7 +20,7 @@ export const OUTDOOR_PROPERTIES = {
   ALL_TRAILS: "All Trails",
   PHOTOS: "Google Photos Album",
   INSTAGRAM: "Instagram",
-};
+} as const;
 
 export const TRAVEL_PROPERTIES = {
   NAME: "Name",
@@ -33,15 +33,15 @@ export const TRAVEL_PROPERTIES = {
   PLACES: "Places",
   COORDINATES: "Coordinates",
   INSTAGRAM: "Instagram",
-};
+} as const;
 
 export const SECTIONS = {
   FILTER_SECTION: 0,
   DETAILS_SECTION: 1,
-};
+} as const;
 
 export const DISTANCEUNIT = {
   1: "km",
   2: "miles",
   3: "km",
-};
+} as const;
