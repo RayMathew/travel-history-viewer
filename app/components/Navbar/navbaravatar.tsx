@@ -19,7 +19,6 @@ export default function NavbarAvatar() {
 
     const handleSignOut = async () => {
         localStorage.clear();
-
         await logout();
 
         router.push('/login');

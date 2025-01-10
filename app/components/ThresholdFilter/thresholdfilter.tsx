@@ -49,11 +49,6 @@ export default function ThresholdFilter({
                     step={step}
                     disabled={disabled}
                     className="transition-all duration-300"
-                    // buttonLayout="vertical"
-                    // decrementButtonClassName="p-button-secondary"
-                    // incrementButtonClassName="p-button-secondary"
-                    // incrementButtonIcon="pi pi-plus"
-                    // decrementButtonIcon="pi pi-minus"
                     pt={{
                         input: {
                             root: {

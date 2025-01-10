@@ -9,6 +9,8 @@ export const APPDESC =
 export const GITHUBID = "RayMathew";
 export const TWITTERID = "@RayMathew_";
 
+export const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
+
 export const OUTDOOR_PROPERTIES = {
   TAGS: "Tags",
   COORDINATES: "Coordinates",

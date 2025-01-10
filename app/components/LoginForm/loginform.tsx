@@ -4,8 +4,8 @@ import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { Button } from 'primereact/button';
-import { authenticate } from '../../../lib/actions';
 import 'primeicons/primeicons.css';
+import { authenticate } from '../../../lib/actions';
 
 export default function LoginForm({ onClick }: { onClick: () => void }) {
     const router = useRouter();
@@ -29,11 +29,13 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
             >
                 <div className="p-8 pt-0">
                     <div className='flex justify-center my-6'>
-                        <div style={{
-                            width: '90px',
-                            height: '90px',
-                            borderRadius: '90px'
-                        }}>
+                        <div
+                            style={{
+                                width: '90px',
+                                height: '90px',
+                                borderRadius: '90px'
+                            }}
+                        >
                             <img
                                 className="self-center object-cover object-center"
                                 src="logo.svg"
@@ -50,7 +52,6 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                     <h2 className="text-center text-3xl text-zinc-100">
                         Memoir Map
                     </h2>
-                    {/* <p className="mt-4 text-center text-gray-400">But first, prove you&apos;re my wife.</p> */}
                     <form action={formAction} className="mt-8 space-y-6">
                         <div className="rounded-md shadow-sm">
                             <div>
@@ -85,7 +86,6 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                                 )}
                             </div>
                         </div>
-
                         <div>
                             <Button
                                 className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-100 dark:hover:bg-zinc-300 dark:text-zinc-900 shadow-[0_1px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_1px_20px_rgba(0,0,0,0.15)] font-semibold text-sm"
@@ -156,5 +156,6 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                     </div>
                 </div>
             </div>
-        </div>);
+        </div>
+    );
 }

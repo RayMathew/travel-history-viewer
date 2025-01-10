@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { Skeleton } from 'primereact/skeleton';
 import Image from "next/image";
+import { Skeleton } from 'primereact/skeleton';
 import { NAMRATA, RAY } from "@/lib/constants";
 import { ImageWithRadioButtonsProps } from "@/lib/types/frontend";
 

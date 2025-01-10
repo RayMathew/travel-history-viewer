@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import Image from "next/image";
 import {
     AdvancedMarker,
@@ -39,6 +39,9 @@ const MarkerWithInfoWindow = ({
         []
     );
 
+    // hacky code to animate PrimeReact lib's Infowindow.
+    // div[role="dialog"] initially does not exist, so we keep waiting for it to exist after the user taps on the marker. 
+    // Once it exists, access it and animate it.
     useEffect(() => {
         if (isOpen) {
             let retries = 0;
@@ -53,7 +56,7 @@ const MarkerWithInfoWindow = ({
                 if (retries > 10) {
                     clearInterval(interval);
                 }
-            }, 50); // Check every 50ms
+            }, 50);
 
             return () => {
                 clearInterval(interval);

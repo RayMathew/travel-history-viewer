@@ -11,7 +11,7 @@ export default function LoginPage() {
         const mainPanel = document.getElementById("mainpanel");
         const content = motivationPanel?.querySelector("div");
         if (!panelVisible) {
-            motivationPanel?.classList.add("h-64");
+            motivationPanel?.classList.add("h-72");
             motivationPanel?.classList.remove("h-0");
             setTimeout(() => {
                 content?.classList.remove("opacity-0");
@@ -24,7 +24,7 @@ export default function LoginPage() {
             setPanelVisible(true);
         }
         else {
-            motivationPanel?.classList.remove("h-64");
+            motivationPanel?.classList.remove("h-72");
             motivationPanel?.classList.add("h-0");
             content?.classList.add("opacity-0");
             content?.classList.remove("opacity-100");
@@ -41,12 +41,11 @@ export default function LoginPage() {
                 </div>
                 <div id="motivationpanel" className='w-full h-0 transition-all duration-500 dark:bg-zinc-900 rounded-2xl overflow-hidden dark:border-neutral-800'>
                     <div className='opacity-0 p-8 dark:text-zinc-400'>
-                        <p>I built this website as a way for my wife and me to revisit our adventures together. Given that we hike, bike or travel about once a month, recording our experiences with photos, journal entries, and AllTrails, there's a lot to keep track of!</p>
+                        <p>I built this website as a way for my wife and me to revisit our adventures together. Given that we hike, bike and travel regularly, recording our experiences with photos, journal entries, and AllTrails, there&apos;s a lot to keep track of!</p>
                         <p>Along the way I learnt a ton about NextJS, TailwindCSS and Google Maps API. Check out the GitHub and Medium links to know more.</p>
                     </div>
                 </div>
             </div>
-
         </main>
     );
 }

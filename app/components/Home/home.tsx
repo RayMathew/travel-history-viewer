@@ -21,19 +21,19 @@ import EmptyHomePage from "../PlaceHolderScreens/emptyhomepage";
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from "@/hooks/useIsMobile";
 import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYear } from "@/lib/maphelper";
-import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA } from "@/lib/constants";
+import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA, apiKey } from "@/lib/constants";
 import { FilterOptions, FilterOptionsPrep, OnMarkerClick, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
 
 
 export default function Home() {
+    // app level states
     const { unitOfDistance, setUnitOfDistance } = useContext(UserContext);
-
     const [notionData, setNotionData] = useState<NotionData | null>(null);
     const [displayData, setDisplayData] = useState<FilteredNotionData | null>(null);
     const [loading, setLoading] = useState(true);
     const [sidebarVisible, setSidebarVisible] = useState(false);
-
+    // filter states
     const [selectedParticipant, setSelectedParticipant] = useState<string>('both');
     const [selectedYears, setSelectedYears] = useState<number[]>([]);
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
@@ -45,58 +45,35 @@ export default function Home() {
     const operatorOptions: Operator[] = [' < ', ' > '];
     const [distanceOperator, setDistanceOperator] = useState<Operator>(operatorOptions[1]);
     const [elevationOperator, setElevationOperator] = useState<Operator>(operatorOptions[1]);
-
+    //helper states
+    const isMobile = useIsMobile();
     const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
-
     const [activeTab, setActiveTab] = useState<number | number[]>(SECTIONS.FILTER_SECTION);
     const [detailsTitle, setDetailsTitle] = useState('Details');
     const [detailsContent, setDetailsContent] = useState<TravelActivity[] | OutdoorActivity[] | null>(null);
-
-    const toast = useRef<Toast | null>(null);
-
     const [portraitLoaded, setPortraitLoaded] = useState(false);
     const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
-    const isMobile = useIsMobile();
-
+    // helper refs
+    const toast = useRef<Toast | null>(null);
     const firstTimeDataLoad = useRef(false);
 
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
-
-    const onMenuClick = () => setSidebarVisible(true);
-
+    // toast function
     const displayInfo = useCallback((info: number | null, customInfo?: string | undefined) => {
         toast.current?.show({ severity: 'info', summary: 'Info', detail: customInfo || `${info} activities` });
     }, [toast]);
 
+    // first api call
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("/api/notion");
-                const data: NotionData = await response.json();
-                if (!data) throw Error('Notion data not available');
-                setNotionData(data);
-                setupData(data);
-
-                const initialfilteredData = applyFiltersToMap(true, data);
-                setDisplayData(initialfilteredData);
-            } catch (error) {
-                console.error("Error fetching data from Notion:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         const setupData = (initialData: NotionData) => {
             const { outdoorsData, travelData, distanceUnit } = initialData;
-
             const yearsForFilter = new Set<number>();
 
+            // get all years that have data
             outdoorsData.forEach(outdoorDatum => {
                 outdoorDatum.activities.forEach(activity => {
                     yearsForFilter.add(new Date(activity.date).getFullYear());
                 });
             });
-
             travelData.forEach(travelDatum => {
                 travelDatum.activities.forEach(activity => {
                     if (activity.startDate && activity.travelStatus !== 'Idea') {
@@ -120,6 +97,22 @@ export default function Home() {
             setUnitOfDistance(distanceUnit);
         };
 
+        const fetchData = async () => {
+            try {
+                const response = await fetch("/api/notion");
+                const data: NotionData = await response.json();
+                if (!data) throw Error('Notion data not available');
+                setNotionData(data);
+                setupData(data);
+
+                setDisplayData(applyFiltersToMap(true, data));
+            } catch (error) {
+                console.error("Error fetching data from Notion:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchData();
     }, []);
 
@@ -133,6 +126,7 @@ export default function Home() {
 
     }, [displayData]);
 
+    // start functions to filter the map
     const updateFilterConfig = useCallback((filter: FilterOptionsPrep): FilterOptions => {
         return {
             participant: filter.participant || selectedParticipant!,
@@ -152,13 +146,11 @@ export default function Home() {
     ]);
 
     const updateUIAndFilter = useCallback((filterUpdates: FilterOptionsPrep) => {
-        const filteredData = applyFiltersToMap(false, notionData!, updateFilterConfig(filterUpdates)); //NDA
-        const count = countActivities(filteredData!); //NDA
+        const filteredData = applyFiltersToMap(false, notionData!, updateFilterConfig(filterUpdates)); // NDA
+        const count = countActivities(filteredData!); // NDA
         displayInfo(count);
         setDisplayData(filteredData);
     }, [displayInfo, notionData, updateFilterConfig]);
-
-
 
 
     const onParticipantChange = useCallback((value: string) => {
@@ -171,6 +163,7 @@ export default function Home() {
         setSelectedYears(yearArray);
         updateUIAndFilter({ years: yearArray })
 
+        // show warning if no years are selected
         if (!yearArray.length) {
             setYearWarningClass('block');
         } else {
@@ -181,14 +174,17 @@ export default function Home() {
     const onActivitySelectChange = (fn: CheckboxChangeEvent) => {
         const _selectedActivities = [...selectedActivities];
 
-        if (fn.checked)
+        if (fn.checked) {
             _selectedActivities.push(fn.value);
-        else
+        }
+        else {
             _selectedActivities.splice(_selectedActivities.indexOf(fn.value), 1);
+        }
 
         setSelectedActivities(_selectedActivities);
         updateUIAndFilter({ activityTypes: _selectedActivities });
 
+        // show warning if no activities are selected
         if (!_selectedActivities.length) {
             setActivityWarningClass('block');
         } else {
@@ -232,27 +228,23 @@ export default function Home() {
             const filteredData = applyMilestoneFilters(notionData, unitOfDistance);
             setDisplayData(filteredData);
         } else {
-            const filteredData = applyFiltersToMap(false, notionData, updateFilterConfig({}));
+            const filteredData = applyFiltersToMap(false, notionData!, updateFilterConfig({}));
             setDisplayData(filteredData);
         }
     };
+    // end functions to filter the map
+
+    // helper functions
+    const onMenuClick = () => setSidebarVisible(true);
 
     const onMarkerClick: OnMarkerClick = (_event, activities, locationName) => {
         setDetailsTitle(`${locationName}`);
-        setDetailsTitleClass('text-slate-300 text-lg');
         setActiveTab(SECTIONS.DETAILS_SECTION);
         setDetailsContent(activities);
     };
 
     const map = useRef(new Map()).current;
 
-
-
-    if (loading) {
-        return (
-            <EmptyHomePage />
-        );
-    }
 
     function onRender(id, phase, actualDuration, baseDuration, startTime, commitTime) {
         // Aggregate or log render timings...
@@ -263,14 +255,16 @@ export default function Home() {
             map.set(id, 1);
         }
 
-        console.table([id, phase, actualDuration, baseDuration, startTime, commitTime]);
-        console.log(map.entries());
+        // console.table([id, phase, actualDuration, baseDuration, startTime, commitTime]);
+        // console.log(map.entries());
     }
 
     const onLoadProfilePic = () => {
-        setLoaded(true);
+        setPortraitLoaded(true);
         setProfileVisibilityClass('');
     };
+
+    // end helper functions
 
 
     const renderPicRadio = (value: string, src: string, alt: string) => (
@@ -314,7 +308,7 @@ export default function Home() {
                 <Profiler id="ImageradioButtons" onRender={onRender}>
                     {/* <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} /> */}
                     <>
-                        {!loaded && (
+                        {!portraitLoaded && (
                             <div className="flex flex-row justify-center gap-6.5">
                                 {[...Array(3)].map((_, index) => (
                                     <Skeleton key={index} shape="circle" size="5rem" className="" ></Skeleton>
@@ -446,9 +440,6 @@ export default function Home() {
                     options={[{ label: '🏆 Milestones', value: true }]}
                     className="transition-all duration-300"
                     pt={{
-                        // root: {
-                        //   className: 'flex flex-nowrap'
-                        // },
                         button: {
                             className: '!py-2 !rounded-md'
                         },
@@ -462,15 +453,21 @@ export default function Home() {
         </div>
     );
 
-
+    if (loading) {
+        return (
+            <EmptyHomePage />
+        );
+    }
 
     return (
         <Profiler id="MainProfile" onRender={onRender}>
-            <Toast ref={toast} pt={{
-                root: {
-                    className: `${isMobile ? '!w-[calc(100vw-10%)]' : ''}`
-                }
-            }} position={isMobile ? "bottom-left" : "top-right"} />
+            <Toast
+                ref={toast}
+                position={isMobile ? "bottom-left" : "top-right"}
+                pt={{
+                    root: { className: `${isMobile ? '!w-[calc(100vw-10%)]' : ''}` }
+                }}
+            />
             <div className="w-full h-screen relative md:static">
                 <Profiler id="NavBar" onRender={onRender}>
                     <nav className="w-full flex h-16 absolute md:static">
@@ -501,7 +498,7 @@ export default function Home() {
                     <div className="hidden md:block md:w-1/4 2xl:w-128">
                         {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
 
-                        <div className="">
+                        <div>
                             <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
                                 pt={{
                                     accordiontab: {
@@ -512,14 +509,18 @@ export default function Home() {
                                             className: 'custom-border-bottom dark:!bg-[#121212]'
                                         }
                                     }
-                                }}>
+                                }}
+                            >
                                 <AccordionTab header="Filters"
                                     pt={{
                                         content: {
                                             className: `p-0 h-[calc(100vh-11.25rem)] border-y-0 overflow-y-scroll transition-all duration-1000 vanishing-shadow`
+                                        },
+                                        headerTitle: {
+                                            className: 'text-zinc-100 font-medium'
                                         }
-                                    }}>
-
+                                    }}
+                                >
                                     {!isMobile && <FilterSection />}
                                 </AccordionTab>
                                 <AccordionTab header={detailsTitle}
@@ -528,9 +529,10 @@ export default function Home() {
                                             className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll`
                                         },
                                         headerTitle: {
-                                            className: `${detailsTitleClass}`
+                                            className: `text-zinc-100 font-medium`
                                         }
-                                    }}>
+                                    }}
+                                >
                                     <Profiler id="DetailsList" onRender={onRender}>
                                         <DetailsList
                                             activities={detailsContent}
@@ -543,7 +545,11 @@ export default function Home() {
                     </div>
                     <div className="w-full md:w-3/4 2xl:flex-1">
                         <APIProvider apiKey={apiKey}>
-                            <CustomMap displayData={displayData} onMarkerClick={onMarkerClick} isMilestoneMode={viewMilestonesBool} />
+                            <CustomMap
+                                displayData={displayData}
+                                onMarkerClick={onMarkerClick}
+                                isMilestoneMode={viewMilestonesBool}
+                            />
                         </APIProvider>
                     </div>
                 </div>

@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo, useContext } from 'react';
-
 import Image from 'next/image';
 
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { useIntersectionObserver } from 'primereact/hooks';
 
-// import { humanReadableDate } from '@/lib/maphelper';
-import { getThumbnailFromCache, saveThumbnailToCache } from '@/lib/browsercachehelper';
-
-import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
-import { DetailslistProps } from '@/lib/types/frontend';
-import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from '@/hooks/useIsMobile';
 import { getGrade } from '@/lib/maphelper';
+import { getThumbnailFromCache, saveThumbnailToCache } from '@/lib/browsercachehelper';
 
+import { BIKING, HIKING, TRAVEL } from '@/lib/constants';
+import { DetailslistProps } from '@/lib/types/frontend';
+import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 
 
 export default function DetailsList({ activities, milestoneMode = false }: DetailslistProps) {
@@ -80,7 +77,6 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                         const cachedThumbnail = getThumbnailFromCache(googlePhotosLink);
 
                         if (cachedThumbnail) {
-                            // Use cached thumbnail
                             newThumbnails[googlePhotosLink] = cachedThumbnail;
                         } else {
                             const thumbnailUrl = await getActivityThumbnail(googlePhotosLink, activity);
@@ -88,10 +84,8 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                             saveThumbnailToCache(googlePhotosLink, thumbnailUrl);
                         }
                     }
-
                 })
             );
-
             setThumbnails((prev) => ({ ...prev, ...newThumbnails }));
         };
 
@@ -129,9 +123,11 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
         const firstNames = doneByArray.map(fullName => fullName.split(" ")[0]);
         return firstNames.join(", ");
     };
+
     const getPlaces = (places: string[]): string => {
         return places.join(", ")
     };
+
     const getDuration = (startDateString: string, endDateString: string): string => {
         const startDate = new Date(startDateString);
         const endDate = new Date(endDateString);
@@ -143,11 +139,9 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
     const getHighlightColor = (is_A_Miletone: boolean | undefined) => {
         if (milestoneMode && is_A_Miletone) return 'dark:bg-emerald-900';
         return 'dark:bg-zinc-800/50';
-
     };
 
     if (!sortedActivities.length) return (<EmptyDetailsPanel />);
-
 
     return (
         <div className={`${detailsInnerShadows} ${panelHtClsMobile} md:!h-full overflow-x-hidden`}>
@@ -156,11 +150,8 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                 const { googlePhotosLink } = activity;
                 const thumbnailSrc = thumbnails[googlePhotosLink] || getDefaultThumbnail(activity);
                 return (
-
-                    // <div key={index} className="flex bg-white shadow-lg rounded-lg overflow-hidden mb-6">
                     <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
                         <div className='p-5 mb-5 w-[calc(85vw)] m-auto md:w-full bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
-
                             <div className='flex gap-4'>
                                 <div className='w-1/3 drop-shadow-xl aspect-square relative h-full'>
                                     <Image
@@ -169,17 +160,13 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                         fill={true}
                                         src={thumbnailSrc}
                                         onLoadingComplete={(e) => {
-                                            e.style.opacity = 1;
+                                            e.style.opacity = '1';
                                         }}
                                         style={{ opacity: thumbnailSrc ? 1 : 0 }}
                                     />
                                 </div>
-                                {/* <img className='w-1/3 object-cover object-center aspect-square rounded-lg h-full' alt="Card" src={thumbnails[activity.googlePhotosLink] || getDefaultThumbnail(activity)} /> */}
                                 <div className='w-2/3 grid content-center'>
                                     <div className='text-md font-medium mb-2 self-center text-slate-300'>
-                                        {/* {activity.type === TRAVEL && (
-                                            activity.activityName
-                                        )} */}
                                         {!milestoneMode && (
                                             activity.activityName
                                         )}
@@ -189,8 +176,6 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                     </div>
                                 </div>
                             </div>
-
-
                             <div className="mt-4">
                                 {activity.type === TRAVEL && (
                                     <>
@@ -253,7 +238,6 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                     </>
                                 )}
                             </div>
-
                             <div className='flex mt-4 gap-2'>
                                 {isAdmin && (
                                     <Button

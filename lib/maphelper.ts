@@ -11,10 +11,6 @@ import { FilterOptions, OperatorNoSpaces } from "./types/frontend";
 
 let currentYear = new Date().getFullYear();
 
-export const getCurrentYear = (): number => {
-  return currentYear;
-};
-
 const defaultFilters: FilterOptions = {
   participant: "both",
   years: [currentYear],
@@ -56,6 +52,10 @@ const operatorTranslation: Record<
   "<": (x: number, y: number) => x < y,
 };
 
+export const getCurrentYear = (): number => {
+  return currentYear;
+};
+
 export const getActivityImgSrc = (
   activityData: OutdoorActivity | TravelActivity
 ) => {
@@ -70,13 +70,10 @@ export const getActivityImgSrc = (
 
 export const humanReadableDate = (dateString: string): string => {
   const date = new Date(dateString);
-
-  // Get the day, month, and year
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "short" });
   const year = date.getFullYear();
 
-  // Add ordinal suffix to the day
   const ordinalSuffix = (n: number) => {
     const lastDigit = n % 10;
     const lastTwoDigits = n % 100;
@@ -89,7 +86,6 @@ export const humanReadableDate = (dateString: string): string => {
 
   const dayWithSuffix = ordinalSuffix(day);
 
-  // Return formatted date
   return `${dayWithSuffix} ${month}, ${year}`;
 };
 
@@ -126,9 +122,9 @@ export const applyFiltersToMap = (
   if (!notionData) return null;
   let filteredData: FilteredNotionData;
 
-  console.log("asds", filter);
-  console.log("start filter", notionData);
-
+  // console.log("asds", filter);
+  // console.log("start filter", notionData);
+  // define the 5 filter functions
   const yearFilter = (allData: NotionData): FilteredNotionData => {
     const filterYears = filter.years;
 
@@ -139,19 +135,11 @@ export const applyFiltersToMap = (
           return filterYears.includes(new Date(activity.date).getFullYear());
         }
       );
-
       return {
         ...outdoorLocation,
         activities: filteredActivities,
       };
     });
-
-    // if a location has zero activities for the filter years, remove the location from the results.
-
-    outdoorsData = outdoorsData.filter(
-      (outdoorLocation) => outdoorLocation.activities.length > 0
-    );
-    // console.log("modified", outdoorsData);
 
     let travelData = allData.travelData.map((travelLocation) => {
       const filteredTrips = travelLocation.activities.filter((activity) => {
@@ -166,10 +154,14 @@ export const applyFiltersToMap = (
       };
     });
 
+    // if a location has zero activities for the filter years, remove the location from the results.
+    outdoorsData = outdoorsData.filter(
+      (outdoorLocation) => outdoorLocation.activities.length > 0
+    );
     travelData = travelData.filter(
       (travelLocation) => travelLocation.activities.length > 0
     );
-
+    // console.log("modified", outdoorsData);
     // console.log("modified", travelData);
 
     return { outdoorsData, travelData };
@@ -202,6 +194,7 @@ export const applyFiltersToMap = (
       );
       return filteredData;
     };
+
     const outdoorsData = filterByDoneBy(allData.outdoorsData);
     const travelData = filterByDoneBy(allData.travelData);
 
@@ -231,6 +224,7 @@ export const applyFiltersToMap = (
     return { outdoorsData, travelData };
   };
 
+  // meant only for hiking and biking
   const distanceFilter = (allData: FilteredNotionData): FilteredNotionData => {
     if (filter.distance.operator === ">" && filter.distance.value === 0)
       return allData;
@@ -260,6 +254,7 @@ export const applyFiltersToMap = (
     return { outdoorsData, travelData: allData.travelData };
   };
 
+  // meant only for hiking and biking
   const elevationFilter = (allData: FilteredNotionData): FilteredNotionData => {
     if (filter.elevation.operator === ">" && filter.elevation.value === 0)
       return allData;
@@ -288,7 +283,9 @@ export const applyFiltersToMap = (
 
     return { outdoorsData, travelData: allData.travelData };
   };
+  // end define the 5 filter functions
 
+  // apply 5 filters
   filteredData = yearFilter(notionData);
   // recursive function that runs the initial load filter again with the previous year if current year data is empty
   if (
@@ -314,7 +311,6 @@ export const applyFiltersToMap = (
     filteredData = elevationFilter(filteredData);
     // console.log("elevationFilter", filteredData);
   }
-
   // console.log("asds", filteredData);
   return filteredData;
   //   return notionData;
@@ -329,7 +325,7 @@ export const applyMilestoneFilters = (
   // the milestones also remain the same no matter who the user is.
 
   if (milestoneData) {
-    console.log("no recompute");
+    // console.log("no recompute");
     return { outdoorsData: milestoneData, travelData: [] };
   }
 

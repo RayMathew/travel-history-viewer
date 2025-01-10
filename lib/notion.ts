@@ -18,26 +18,23 @@ import {
 
 let notionClient: Client | null = null;
 
-function getNotionClient(): Client {
+const getNotionClient = (): Client => {
   if (!notionClient) {
     notionClient = new Client({ auth: process.env.NOTION_API_KEY });
   }
   return notionClient;
-}
+};
 
 export const fetchOutdoorsDBData = async (
   distanceUnit: string,
   isAdminUser: boolean
 ): Promise<OutdoorsData[]> => {
-  //   const outdoorsData = [];
   const groupedData = new Map();
   //   console.time("outdoors data");
-
   try {
     const dbData = await getNotionClient().databases.query({
       database_id: process.env.NOTION_OUTDOORSDB_KEY!,
     });
-
     //   console.log(dbData);
 
     dbData.results.forEach((page) => {
@@ -66,7 +63,6 @@ export const fetchOutdoorsDBData = async (
         googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       }
       // const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
-
       const coordinateKey = `${lat},${lng}`;
 
       const activity = removeNullValues({
@@ -97,14 +93,13 @@ export const fetchOutdoorsDBData = async (
     console.log("error", error);
   }
 
-  // convert map to array
+  // convert map dataset to array
   return [...groupedData.values()];
 };
 
 export const fetchTravelDBData = async (
   isAdminUser: boolean
 ): Promise<TravelData[]> => {
-  //   const travelData = [];
   const groupedData = new Map();
 
   try {
@@ -141,7 +136,6 @@ export const fetchTravelDBData = async (
         googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
         journalLink = url;
       }
-      // const googlePhotosLink = properties[TRAVEL_PROPERTIES.PHOTOS].url;
 
       const type = TRAVEL;
 
@@ -175,7 +169,7 @@ export const fetchTravelDBData = async (
         }
       });
 
-      //If a trip doesn't have a coordinate, it is still a plan. Add it separately.
+      //If a trip doesn't have a coordinate, it is only a plan. Add it separately.
       if (coordinatesArray.length === 0) {
         const coordinateKey = `(no coordinates)`;
         if (groupedData.has(coordinateKey)) {

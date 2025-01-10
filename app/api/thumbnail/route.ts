@@ -9,11 +9,16 @@ export const GET = auth(async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
 
   const googlePhotosLink = req.nextUrl.searchParams.get("glink");
+  if (!googlePhotosLink) {
+    return NextResponse.json({ error: "missing glink" }, { status: 400 });
+  }
+
   try {
     const data = await ogs({
       url: googlePhotosLink,
     });
     const { result } = data;
+
     return NextResponse.json(
       {
         thumbnailLink: result?.ogImage[0]?.url,
