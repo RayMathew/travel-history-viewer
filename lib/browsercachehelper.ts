@@ -3,11 +3,11 @@ export const getThumbnailFromCache = (thumbnailLink: string) => {
   return getWithExpiry(thumbnailLink);
 };
 
-// Default TTL: 24 hours (86400000 ms)
+// Default TTL set to 7 days (604800000 ms)
 export const saveThumbnailToCache = (
   thumbnailLink: string,
   thumbnailUrl: string,
-  ttl = 86400000
+  ttl = 604800000 // 1 week
 ) => {
   if (!thumbnailLink || !thumbnailUrl) return;
   saveWithExpiry(thumbnailLink, thumbnailUrl, ttl);
@@ -19,7 +19,7 @@ export const getWithExpiry = (key: string) => {
 
   const data = JSON.parse(dataString);
 
-  //if data has expired, delete it
+  // if data has expired, delete it
   if (Date.now() > data.expiry) {
     localStorage.removeItem(key);
     return null;
