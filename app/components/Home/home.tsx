@@ -154,6 +154,7 @@ export default function Home() {
 
 
     const onParticipantChange = useCallback((value: string) => {
+        if (value === selectedParticipant) return;
         setSelectedParticipant(value);
 
         updateUIAndFilter({ participant: value })
@@ -193,12 +194,14 @@ export default function Home() {
     };
 
     const onDistanceOperatorChange = (operator: Operator) => {
+        if (!operator) return;
         setDistanceOperator(operator);
 
         updateUIAndFilter({ distance: { operator: operator.trim(), value: distanceThreshold } });
     };
 
     const onElevationOperatorChange = (operator: Operator) => {
+        if (!operator) return;
         setElevationOperator(operator);
 
         updateUIAndFilter({ elevation: { operator: operator.trim(), value: elevationThreshold } });
