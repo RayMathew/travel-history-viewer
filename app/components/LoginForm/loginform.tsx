@@ -1,11 +1,13 @@
 'use client';
 
-import { Button } from 'primereact/button';
 import { useActionState } from 'react';
-import { authenticate } from '../../../lib/actions';
 import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { Button } from 'primereact/button';
+import { authenticate } from '../../../lib/actions';
+import 'primeicons/primeicons.css';
 
-export default function LoginForm() {
+export default function LoginForm({ onClick }) {
     const router = useRouter();
     const [errorMessage, formAction, isPending] = useActionState(
         async (prevState, formData) => {
@@ -23,14 +25,13 @@ export default function LoginForm() {
         <div className="max-w-lg w-full">
             <div
                 style={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                className="bg-gray-800 rounded-lg shadow-xl overflow-hidden"
+                className="dark:bg-zinc-900 rounded-2xl overflow-hidden dark:border-neutral-800"
             >
                 <div className="p-8 pt-0">
                     <div className='flex justify-center my-6'>
                         <div style={{
                             width: '90px',
                             height: '90px',
-                            overflow: 'hidden',
                             borderRadius: '90px'
                         }}>
                             <img
@@ -46,7 +47,7 @@ export default function LoginForm() {
                             />
                         </div>
                     </div>
-                    <h2 className="text-center text-3xl font-extrabold text-white">
+                    <h2 className="text-center text-3xl text-zinc-100">
                         Memoir Map
                     </h2>
                     {/* <p className="mt-4 text-center text-gray-400">But first, prove you&apos;re my wife.</p> */}
@@ -87,7 +88,7 @@ export default function LoginForm() {
 
                         <div>
                             <Button
-                                className="group relative w-full flex justify-center py-3 px-4 cursor-pointer text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 transition duration-200 border border-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-1"
+                                className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-100 dark:hover:bg-zinc-300 dark:text-zinc-900 shadow-[0_1px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_1px_20px_rgba(0,0,0,0.15)] font-semibold text-sm"
                                 type="submit"
                                 aria-disabled={isPending}
                                 loading={isPending}
@@ -102,14 +103,11 @@ export default function LoginForm() {
                         </div>
                     </form>
                     <div className="flex items-center justify-between uppercase gap-4 mt-6">
-                        <span className="block w-full h-px bg-slate-400"></span>
-                        <span className='text-slate-400'>OR</span>
-                        <span className="block w-full h-px bg-slate-400"></span>
+                        <span className="block w-full h-px bg-zinc-400"></span>
+                        <span className='dark:text-zinc-400'>OR</span>
+                        <span className="block w-full h-px bg-zinc-400"></span>
                     </div>
-                </div>
-
-                <div className="px-8 py-4 bg-gray-700 text-center">
-                    <form action={formAction}>
+                    <form action={formAction} className='mt-5'>
                         <input
                             placeholder="Username"
                             className="hidden"
@@ -119,7 +117,7 @@ export default function LoginForm() {
                             name="username"
                         />
                         <Button
-                            className="font-medium text-blue-500 hover:text-blue-400"
+                            className="font-medium inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-100 border dark:border-zinc-800 dark:hover:border-zinc-700 shadow-sm hover:shadow-md text-sm"
                             type="submit"
                             aria-disabled={isPending}
                             loading={isPending}
@@ -132,6 +130,30 @@ export default function LoginForm() {
                             Login as Guest
                         </Button>
                     </form>
+                </div>
+
+                <div className="px-8 py-6 text-center  dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 dark:bg-zinc-900 dark:text-zinc-100 ">
+                    <div className='flex justify-center gap-x-9'>
+                        <a href='https://github.com/RayMathew/travel-history-viewer' target='_blank'>
+                            <Image
+                                src="/github.svg"
+                                alt="Link to GitHub project"
+                                width={35}
+                                height={35}
+                                className={``}
+                            />
+                        </a>
+                        <a href='https://medium.com/towardsdev/building-an-api-with-go-postgresql-google-cloud-and-cockroachdb-78d78938c5db' target='_blank'>
+                            <Image
+                                src="/medium.svg"
+                                alt="Link to medium article"
+                                width={35}
+                                height={35}
+                                className={``}
+                            />
+                        </a>
+                        <i className=" pi pi-question-circle text-slate-300 !leading-9 !text-xs !font-thin cursor-pointer" onClick={onClick} />
+                    </div>
                 </div>
             </div>
         </div>);

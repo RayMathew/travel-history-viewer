@@ -1,32 +1,29 @@
-import React, { useEffect, useState, useRef, useCallback, Profiler } from "react";
-import {
-    APIProvider,
-} from "@vis.gl/react-google-maps";
+import React, { useEffect, useState, useRef, useCallback, Profiler, useContext } from "react";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import Image from "next/image";
 import debounce from 'lodash.debounce';
-import CustomMap from "../CustomMap/custommap";
-import Navbar from "../Navbar/navbar";
-import ImageWithCheckBox from "../ImageWithCheckBox/imagewithcheckbox";
-import ThresholdFilter from "../ThresholdFilter/thresholdfilter";
-const DetailsList = React.lazy(() => import("../DetailsList/detailslist"));
-import EmptyHomePage from "../PlaceHolderScreens/emptyhomepage";
 import 'primeicons/primeicons.css';
-// import Tailwind from 'primereact/passthrough/tailwind';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Sidebar } from 'primereact/sidebar';
 import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
-import useIsMobile from "@/hooks/useIsMobile";
 
+import Navbar from "../Navbar/navbar";
+import CustomMap from "../CustomMap/custommap";
+import ImageWithCheckBox from "../ImageWithCheckBox/imagewithcheckbox";
+import ThresholdFilter from "../ThresholdFilter/thresholdfilter";
+const DetailsList = React.lazy(() => import("../DetailsList/detailslist"));
+import EmptyHomePage from "../PlaceHolderScreens/emptyhomepage";
+
+import { UserContext } from "@/app/providers/UserProvider/userprovider";
+import useIsMobile from "@/hooks/useIsMobile";
 import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYear } from "@/lib/maphelper";
 import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA } from "@/lib/constants";
 import { FilterOptions, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
 
-import { UserContext } from "@/app/providers/UserProvider/userprovider";
-import { useContext } from "react";
 
 export default function Home() {
     const { unitOfDistance, setUnitOfDistance } = useContext(UserContext);
@@ -34,11 +31,9 @@ export default function Home() {
     const [notionData, setNotionData] = useState<NotionData | null>(null);
     const [displayData, setDisplayData] = useState<FilteredNotionData | null>(null);
     const [loading, setLoading] = useState(true);
-
     const [sidebarVisible, setSidebarVisible] = useState(false);
 
     const [selectedParticipant, setSelectedParticipant] = useState<string>('both');
-
     const [selectedYears, setSelectedYears] = useState<number[]>([]);
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
     const [yearWarningClass, setYearWarningClass] = useState<string>('hidden');
@@ -46,16 +41,15 @@ export default function Home() {
     const [activityWarningClass, setActivityWarningClass] = useState<string>('hidden');
     const [distanceThreshold, setDistanceThreshold] = useState<number>(0);
     const [elevationThreshold, setElevationThreshold] = useState<number>(0);
-
     const operatorOptions: Operator[] = [' < ', ' > '];
     const [distanceOperator, setDistanceOperator] = useState<Operator>(operatorOptions[1]);
     const [elevationOperator, setElevationOperator] = useState<Operator>(operatorOptions[1]);
 
     const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
 
+    const [activeTab, setActiveTab] = useState(SECTIONS.FILTER_SECTION);
     const [detailsTitle, setDetailsTitle] = useState('Details');
     const [detailsTitleClass, setDetailsTitleClass] = useState('');
-    const [activeTab, setActiveTab] = useState(SECTIONS.FILTER_SECTION);
     const [detailsContent, setDetailsContent] = useState<TravelActivity[] | OutdoorActivity[] | null>(null);
 
     const toast = useRef(null);
@@ -472,9 +466,6 @@ export default function Home() {
 
     return (
         <Profiler id="MainProfile" onRender={onRender}>
-            {/* <AuthProvider>
-                <UserProvider>
-                    <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}> */}
             <Toast ref={toast} pt={{
                 root: {
                     className: `${isMobile ? '!w-[calc(100vw-10%)]' : ''}`
@@ -557,9 +548,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            {/* </PrimeReactProvider>
-                </UserProvider>
-            </AuthProvider> */}
         </Profiler>
     );
 }
