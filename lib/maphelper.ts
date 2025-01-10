@@ -401,7 +401,10 @@ export const applyMilestoneFilters = (
           activityData.milestones.distance = true;
         }
 
-        if (activityData.distance === milestones[HIKING].longestInCurrentYear) {
+        if (
+          activityData.distance === milestones[HIKING].longestInCurrentYear &&
+          new Date(activityData.date).getFullYear() === currentYear
+        ) {
           labels.push(
             `${milestoneLabels[HIKING].longestInCurrentYear} ${currentYear}`
           );
@@ -428,7 +431,10 @@ export const applyMilestoneFilters = (
           activityData.milestones.distance = true;
         }
 
-        if (activityData.distance === milestones[BIKING].longestInCurrentYear) {
+        if (
+          activityData.distance === milestones[BIKING].longestInCurrentYear &&
+          new Date(activityData.date).getFullYear() === currentYear
+        ) {
           labels.push(
             `${milestoneLabels[BIKING].longestInCurrentYear} ${currentYear}`
           );
