@@ -6,6 +6,7 @@ import {
   FilteredNotionData,
   Coordinates,
 } from "./shared";
+import { TooltipOptions } from "primereact/tooltip/tooltipoptions";
 
 // Note: NDA - Notion Data Assumption. I'm going to write NDA in all the places where I assume I haven't made a mistake while creating Notion data.
 
@@ -68,6 +69,14 @@ export interface ThresholdFilterProps {
 export interface DetailslistProps {
   activities: OutdoorActivity[] | TravelActivity[] | null;
   milestoneMode: boolean;
+}
+
+export interface ExternalLinkButtonProps {
+  ariaLabel: string;
+  link?: string;
+  imgSrc: string;
+  tooltipPosition?: TooltipOptions["position"];
+  tooltipFallback: string;
 }
 
 export interface YearOption {

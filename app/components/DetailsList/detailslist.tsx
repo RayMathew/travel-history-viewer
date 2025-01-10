@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo, useContext } from 'react';
 import Image from 'next/image';
 
-import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { useIntersectionObserver } from 'primereact/hooks';
 
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
+import ExternalLinkButton from './ExternalLinkButton';
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from '@/hooks/useIsMobile';
 import { getGrade } from '@/lib/maphelper';
@@ -148,7 +148,10 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
             <div ref={detailsPanelTopRef}></div>
             {sortedActivities.map((activity) => {
                 const { googlePhotosLink } = activity;
-                const thumbnailSrc = thumbnails[googlePhotosLink] || getDefaultThumbnail(activity);
+                const thumbnailSrc = useMemo(
+                    () => thumbnails[googlePhotosLink] || getDefaultThumbnail(activity),
+                    [googlePhotosLink, thumbnails]
+                );
                 return (
                     <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
                         <div className='p-5 mb-5 w-[calc(85vw)] m-auto md:w-full bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
@@ -167,12 +170,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 </div>
                                 <div className='w-2/3 grid content-center'>
                                     <div className='text-md font-medium mb-2 self-center text-slate-300'>
-                                        {!milestoneMode && (
-                                            activity.activityName
-                                        )}
-                                        {milestoneMode && (
-                                            activity.locationName
-                                        )}
+                                        {milestoneMode ? activity.locationName : activity.activityName}
                                     </div>
                                 </div>
                             </div>
@@ -240,70 +238,37 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                             </div>
                             <div className='flex mt-4 gap-2'>
                                 {isAdmin && (
-                                    <Button
-                                        rounded
-                                        text
-                                        raised
-                                        aria-label='Google Photos'
-                                        onClick={e => {
-                                            window.open(activity.googlePhotosLink, "_blank")
-                                        }}
-                                        disabled={!activity.googlePhotosLink}
-                                        tooltip={activity.googlePhotosLink ? '' : "No album available"}
-                                        tooltipOptions={{ showOnDisabled: true, showDelay: 400 }}
-                                        className='aspect-square drop-shadow-2xl'
-                                    >
-                                        <img className='w-6' src="/photoalbum.png" />
-                                    </Button>
+                                    <ExternalLinkButton
+                                        ariaLabel='Google Photos'
+                                        link={activity.googlePhotosLink}
+                                        tooltipFallback="No album available"
+                                        imgSrc='/photoalbum.png'
+                                    />
                                 )}
-                                <Button
-                                    rounded
-                                    text
-                                    raised
-                                    aria-label='Instagram'
-                                    onClick={e => {
-                                        window.open(activity.instagramLink, "_blank")
-                                    }}
-                                    className='aspect-square drop-shadow-2xl'
-                                    tooltip={activity.instagramLink ? '' : "No post available"}
-                                    tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
-                                    disabled={!activity.instagramLink}
-                                >
-                                    <img className='w-6' src="/instagram.png" />
-                                </Button>
+                                <ExternalLinkButton
+                                    ariaLabel='Instagram'
+                                    link={activity.instagramLink}
+                                    tooltipPosition='top'
+                                    tooltipFallback="No post available"
+                                    imgSrc='/instagram.png'
+                                />
                                 {isAdmin && activity.type === TRAVEL && (
-                                    <Button
-                                        rounded
-                                        text
-                                        raised
-                                        aria-label='Journal'
-                                        onClick={e => {
-                                            window.open(activity.journalLink, "_blank")
-                                        }}
-                                        className='aspect-square drop-shadow-2xl'
-                                        tooltip={activity.journalLink ? '' : "No journal entry available"}
-                                        tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
-                                        disabled={!activity.journalLink}
-                                    >
-                                        <img className='w-6' src="/journal.png" />
-                                    </Button>
+                                    <ExternalLinkButton
+                                        ariaLabel='Journal'
+                                        link={activity.journalLink}
+                                        tooltipPosition='top'
+                                        tooltipFallback="No journal entry available"
+                                        imgSrc='/journal.png'
+                                    />
                                 )}
                                 {(activity.type === HIKING || activity.type === BIKING) && (
-                                    <Button
-                                        rounded
-                                        text
-                                        raised
-                                        aria-label='AllTrails'
-                                        onClick={e => {
-                                            window.open(activity.allTrailsLink, "_blank")
-                                        }}
-                                        className='aspect-square dark:from-zinc-400 dark:to-zinc-900'
-                                        tooltip={activity.allTrailsLink ? '' : "No AllTrails link available"}
-                                        tooltipOptions={{ showOnDisabled: true, position: 'top', showDelay: 400 }}
-                                        disabled={!activity.allTrailsLink}
-                                    >
-                                        <img className='w-6' src="/alltrails.png" />
-                                    </Button>
+                                    <ExternalLinkButton
+                                        ariaLabel='AllTrails'
+                                        link={activity.allTrailsLink}
+                                        tooltipPosition='top'
+                                        tooltipFallback="No AllTrails link available"
+                                        imgSrc='/alltrails.png'
+                                    />
                                 )}
                             </div>
                         </div>
