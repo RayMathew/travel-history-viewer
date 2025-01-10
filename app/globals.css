@@ -284,6 +284,6 @@ div[role="dialog"].info-window-animation {
   background-color: rgba(17, 24, 39, 1) !important;
 }
 
-.stuff {
-  transition: all 0.3s ease-out;
+div[role="dialog"] button[title="Close"] {
+  display: none !important;
 }
