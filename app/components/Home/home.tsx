@@ -360,13 +360,12 @@ export default function Home() {
                                 checked={selectedActivities.includes(HIKING)}
                                 disabled={viewMilestonesBool}
                                 imgSrc="/walkplain.png"
-                                title="Hike"
+                                label="Hike"
                                 inputId="activity1"
                                 size={24}
                                 margin={'mx-1'}
                             />
                         </Profiler>
-                        <label htmlFor="activity1" className="">Hike</label>
                     </div>
                     <div className="flex align-items-center">
                         <ImageWithCheckBox
@@ -375,12 +374,11 @@ export default function Home() {
                             checked={selectedActivities.includes(BIKING)}
                             disabled={viewMilestonesBool}
                             imgSrc="/bicycleplain.png"
-                            title="Bike"
+                            label="Bike"
                             inputId="activity2"
                             size={24}
                             margin={'mx-1.5'}
                         />
-                        <label htmlFor="activity2" className="">Bike</label>
                     </div>
                     <div className="flex align-items-center">
                         <ImageWithCheckBox
@@ -389,12 +387,11 @@ export default function Home() {
                             checked={selectedActivities.includes(TRAVEL)}
                             disabled={viewMilestonesBool}
                             imgSrc="/airplaneplain.png"
-                            title="Travel"
+                            label="Travel"
                             inputId="activity3"
                             size={22}
                             margin={'mx-2'}
                         />
-                        <label htmlFor="activity3" className="">Travel</label>
                     </div>
                 </div>
                 <div className={`${activityWarningClass} mt-2 px-4 py-2 rounded text-sm leading-5 transition-all duration-300 dark:bg-orange-400/10 dark:text-orange-300`}>

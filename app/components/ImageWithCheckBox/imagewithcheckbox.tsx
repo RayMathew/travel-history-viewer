@@ -10,6 +10,7 @@ export default function ImageWithCheckBox(
         checked,
         disabled,
         imgSrc,
+        label,
         inputId,
         size,
         margin
@@ -32,6 +33,7 @@ export default function ImageWithCheckBox(
                 style={{ height: size }}
                 className={`${margin} brightness-50`}
             />
+            <label htmlFor={inputId}>{label}</label>
         </>
     );
 }

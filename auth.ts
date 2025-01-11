@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import { User, UserSchema } from "./lib/types/backend";
 import { isOfTypeWithErrors, ValidationError } from "./lib/validationProcessor";
 
-function getUser(username: string): User | undefined {
+const getUser = (username: string): User | undefined => {
   const user1 = {
     username: process.env.USERNAME1 ?? "",
     password: process.env.PASSWORD1 ?? "",
@@ -39,7 +39,7 @@ function getUser(username: string): User | undefined {
 
   const user = allowedUsers.filter((user) => user.username === username);
   return user[0];
-}
+};
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,

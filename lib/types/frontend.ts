@@ -21,7 +21,7 @@ export interface ImageWithCheckBoxProps {
   checked: boolean;
   disabled: boolean;
   imgSrc: string;
-  title: string;
+  label: string;
   inputId: string;
   size: number;
   margin: string;

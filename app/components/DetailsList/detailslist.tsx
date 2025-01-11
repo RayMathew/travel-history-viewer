@@ -5,7 +5,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { useIntersectionObserver } from 'primereact/hooks';
 
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
-import ExternalLinkButton from './ExternalLinkButton';
+import ExternalLinkButton from './externallinkbutton';
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from '@/hooks/useIsMobile';
 import { getGrade } from '@/lib/maphelper';

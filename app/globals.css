@@ -284,6 +284,12 @@ div[role="dialog"].info-window-animation {
   background-color: rgba(17, 24, 39, 1) !important;
 }
 
+/* add padding to info window header */
+div[role="dialog"] .gm-style-iw-ch {
+  padding-bottom: 12px;
+}
+
+/* hide the info window close button */
 div[role="dialog"] button[title="Close"] {
   display: none !important;
 }
