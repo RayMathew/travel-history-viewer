@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from 'primereact/button';
 import 'primeicons/primeicons.css';
 import { authenticate } from '../../../lib/actions';
+import { LoginButtonPT } from '@/lib/primereactPtClasses';
 
 export default function LoginForm({ onClick }: { onClick: () => void }) {
     const router = useRouter();
@@ -92,11 +93,7 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                                 type="submit"
                                 aria-disabled={isPending}
                                 loading={isPending}
-                                pt={{
-                                    loadingIcon: {
-                                        className: 'mr-1'
-                                    }
-                                }}
+                                pt={LoginButtonPT}
                             >
                                 Sign In
                             </Button>
@@ -121,11 +118,7 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                             type="submit"
                             aria-disabled={isPending}
                             loading={isPending}
-                            pt={{
-                                loadingIcon: {
-                                    className: 'mr-1'
-                                }
-                            }}
+                            pt={LoginButtonPT}
                         >
                             Login as Guest
                         </Button>

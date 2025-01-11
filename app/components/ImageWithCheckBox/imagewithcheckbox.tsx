@@ -16,7 +16,7 @@ export default function ImageWithCheckBox(
         margin
     }: ImageWithCheckBoxProps) {
     return (
-        <>
+        <div className="flex align-items-center">
             <Checkbox
                 inputId={inputId}
                 value={value}
@@ -34,6 +34,6 @@ export default function ImageWithCheckBox(
                 className={`${margin} brightness-50`}
             />
             <label htmlFor={inputId}>{label}</label>
-        </>
+        </div>
     );
 }

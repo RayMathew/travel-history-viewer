@@ -2,6 +2,7 @@ import React from "react";
 import { SelectButton } from "primereact/selectbutton";
 import { InputNumber } from "primereact/inputnumber";
 import { ThresholdFilterProps } from "@/lib/types/frontend";
+import { OperatorSelectButtonPT, ThresholdInputPT } from "@/lib/primereactPtClasses";
 
 export default function ThresholdFilter({
     name,
@@ -25,14 +26,7 @@ export default function ThresholdFilter({
                     options={operatorOptions}
                     disabled={disabled}
                     className="transition-all duration-300"
-                    pt={{
-                        root: {
-                            className: 'flex flex-nowrap'
-                        },
-                        button: {
-                            className: '!py-2'
-                        }
-                    }}
+                    pt={OperatorSelectButtonPT}
                 />
             </div>
             <div>
@@ -49,19 +43,7 @@ export default function ThresholdFilter({
                     step={step}
                     disabled={disabled}
                     className="transition-all duration-300"
-                    pt={{
-                        input: {
-                            root: {
-                                className: '!py-2 w-full rounded-none rounded-l-md dark:focus:shadow-none'
-                            },
-                        },
-                        incrementButton: {
-                            className: 'border border-l-0 border-b-0 rounded-r-md dark:bg-gray-900 dark:border-blue-900/40 dark:hover:bg-gray-800/80'
-                        },
-                        decrementButton: {
-                            className: 'border border-l-0 border-t-0 rounded-r-md dark:bg-gray-900 dark:border-blue-900/40 dark:hover:bg-gray-800/80'
-                        }
-                    }}
+                    pt={ThresholdInputPT}
                 />
             </div>
         </div>

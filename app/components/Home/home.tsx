@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef, useCallback, Profiler, useContext } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import Image from "next/image";
 import debounce from 'lodash.debounce';
 import 'primeicons/primeicons.css';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { Sidebar } from 'primereact/sidebar';
-import { MultiSelect } from 'primereact/multiselect';
+import { MultiSelect as YearSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Skeleton } from 'primereact/skeleton';
 import { CheckboxChangeEvent } from "primereact/checkbox";
@@ -24,6 +24,7 @@ import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYe
 import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA, apiKey } from "@/lib/constants";
 import { FilterOptions, FilterOptionsPrep, OnMarkerClick, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
+import { AccordionPT, DetailsAccordionTabPT, FiltersAccordionTabPT, SelectButtonPT, SidebarPT } from "@/lib/primereactPtClasses";
 
 
 export default function Home() {
@@ -246,27 +247,10 @@ export default function Home() {
         setDetailsContent(activities);
     };
 
-    const map = useRef(new Map()).current;
-
-
-    function onRender(id, phase, actualDuration, baseDuration, startTime, commitTime) {
-        // Aggregate or log render timings...
-
-        if (map.get(id)) {
-            map.set(id, (map.get(id) + 1));
-        } else {
-            map.set(id, 1);
-        }
-
-        // console.table([id, phase, actualDuration, baseDuration, startTime, commitTime]);
-        // console.log(map.entries());
-    }
-
     const onLoadProfilePic = () => {
         setPortraitLoaded(true);
         setProfileVisibilityClass('');
     };
-
     // end helper functions
 
 
@@ -308,30 +292,25 @@ export default function Home() {
                 Who Was There?
             </div>
             <div className="pb-5">
-                <Profiler id="ImageradioButtons" onRender={onRender}>
-                    {/* <ImageRadioButtons onChange={onParticipantChange} disabled={viewMilestonesBool} /> */}
-                    <>
-                        {!portraitLoaded && (
-                            <div className="flex flex-row justify-center gap-6.5">
-                                {[...Array(3)].map((_, index) => (
-                                    <Skeleton key={index} shape="circle" size="5rem" className="" ></Skeleton>
-                                ))}
-                            </div>
-                        )}
-                        <div className={`flex flex-row justify-center gap-6.5 ${profileVisibilityClass}`}>
-                            {renderPicRadio(RAY, "/ray.jpg", "Me")}
-                            {renderPicRadio(NAMRATA, "/namrata.jpg", "Wife")}
-                            {renderPicRadio("both", "/raynam.jpg", "Both")}
-                        </div>
-                    </>
-                </Profiler>
+                {!portraitLoaded && (
+                    <div className="flex flex-row justify-center gap-6.5">
+                        {[...Array(3)].map((_, index) => (
+                            <Skeleton key={index} shape="circle" size="5rem" className="" ></Skeleton>
+                        ))}
+                    </div>
+                )}
+                <div className={`flex flex-row justify-center gap-6.5 ${profileVisibilityClass}`}>
+                    {renderPicRadio(RAY, "/ray.jpg", "Me")}
+                    {renderPicRadio(NAMRATA, "/namrata.jpg", "Wife")}
+                    {renderPicRadio("both", "/raynam.jpg", "Both")}
+                </div>
             </div>
             <div className="text-md text-[#e2e8ffbf] pb-2">
                 Years
             </div>
             <div className="flex flex-row pb-7">
                 <div className="flex w-full flex-col">
-                    <MultiSelect
+                    <YearSelect
                         value={selectedYears}
                         onChange={(e) => onYearSelectChange(e.value)}
                         options={yearOptions}
@@ -352,47 +331,39 @@ export default function Home() {
             </div>
             <div className="pb-7">
                 <div className="card flex flex-wrap justify-content-center gap-5">
-                    <div className="flex align-items-center">
-                        <Profiler id="ImageWithCheckBox1" onRender={onRender}>
-                            <ImageWithCheckBox
-                                value={HIKING}
-                                onChange={onActivitySelectChange}
-                                checked={selectedActivities.includes(HIKING)}
-                                disabled={viewMilestonesBool}
-                                imgSrc="/walkplain.png"
-                                label="Hike"
-                                inputId="activity1"
-                                size={24}
-                                margin={'mx-1'}
-                            />
-                        </Profiler>
-                    </div>
-                    <div className="flex align-items-center">
-                        <ImageWithCheckBox
-                            value={BIKING}
-                            onChange={onActivitySelectChange}
-                            checked={selectedActivities.includes(BIKING)}
-                            disabled={viewMilestonesBool}
-                            imgSrc="/bicycleplain.png"
-                            label="Bike"
-                            inputId="activity2"
-                            size={24}
-                            margin={'mx-1.5'}
-                        />
-                    </div>
-                    <div className="flex align-items-center">
-                        <ImageWithCheckBox
-                            value={TRAVEL}
-                            onChange={onActivitySelectChange}
-                            checked={selectedActivities.includes(TRAVEL)}
-                            disabled={viewMilestonesBool}
-                            imgSrc="/airplaneplain.png"
-                            label="Travel"
-                            inputId="activity3"
-                            size={22}
-                            margin={'mx-2'}
-                        />
-                    </div>
+                    <ImageWithCheckBox
+                        value={HIKING}
+                        onChange={onActivitySelectChange}
+                        checked={selectedActivities.includes(HIKING)}
+                        disabled={viewMilestonesBool}
+                        imgSrc="/walkplain.png"
+                        label="Hike"
+                        inputId="activity1"
+                        size={24}
+                        margin={'mx-1'}
+                    />
+                    <ImageWithCheckBox
+                        value={BIKING}
+                        onChange={onActivitySelectChange}
+                        checked={selectedActivities.includes(BIKING)}
+                        disabled={viewMilestonesBool}
+                        imgSrc="/bicycleplain.png"
+                        label="Bike"
+                        inputId="activity2"
+                        size={24}
+                        margin={'mx-1.5'}
+                    />
+                    <ImageWithCheckBox
+                        value={TRAVEL}
+                        onChange={onActivitySelectChange}
+                        checked={selectedActivities.includes(TRAVEL)}
+                        disabled={viewMilestonesBool}
+                        imgSrc="/airplaneplain.png"
+                        label="Travel"
+                        inputId="activity3"
+                        size={22}
+                        margin={'mx-2'}
+                    />
                 </div>
                 <div className={`${activityWarningClass} mt-2 px-4 py-2 rounded text-sm leading-5 transition-all duration-300 dark:bg-orange-400/10 dark:text-orange-300`}>
                     <i className="pi pi-exclamation-circle leading-4 pr-2"></i>
@@ -403,19 +374,17 @@ export default function Home() {
                 Distance
             </div>
             <div className="flex flex-row pb-7">
-                <Profiler id="ThresholdFilter1" onRender={onRender}>
-                    <ThresholdFilter
-                        name="Distance"
-                        operator={distanceOperator}
-                        onOperatorChange={onDistanceOperatorChange}
-                        operatorOptions={operatorOptions}
-                        disabled={viewMilestonesBool}
-                        threshold={distanceThreshold}
-                        onThresholdChange={onDistanceThresholdChange}
-                        placeholder={unitOfDistance}
-                        step={1}
-                    />
-                </Profiler>
+                <ThresholdFilter
+                    name="Distance"
+                    operator={distanceOperator}
+                    onOperatorChange={onDistanceOperatorChange}
+                    operatorOptions={operatorOptions}
+                    disabled={viewMilestonesBool}
+                    threshold={distanceThreshold}
+                    onThresholdChange={onDistanceThresholdChange}
+                    placeholder={unitOfDistance}
+                    step={1}
+                />
             </div>
             <div className="text-md text-[#e2e8ffbf] pb-2">
                 Elevation Gain
@@ -439,14 +408,7 @@ export default function Home() {
                     onChange={(e) => onToggleMilestonesMode(e.value)}
                     options={[{ label: '🏆 Milestones', value: true }]}
                     className="transition-all duration-300"
-                    pt={{
-                        button: {
-                            className: '!py-2 !rounded-md'
-                        },
-                        label: {
-                            className: 'font-normal'
-                        }
-                    }}
+                    pt={SelectButtonPT}
                 />
             </div>
             <div className="h-8"></div>
@@ -460,7 +422,7 @@ export default function Home() {
     }
 
     return (
-        <Profiler id="MainProfile" onRender={onRender}>
+        <>
             <Toast
                 ref={toast}
                 position={isMobile ? "bottom-left" : "top-right"}
@@ -469,11 +431,9 @@ export default function Home() {
                 }}
             />
             <div className="w-full h-screen relative md:static">
-                <Profiler id="NavBar" onRender={onRender}>
-                    <nav className="w-full flex h-16 absolute md:static">
-                        <Navbar onMenuClick={onMenuClick} />
-                    </nav>
-                </Profiler>
+                <nav className="w-full flex h-16 absolute md:static">
+                    <Navbar onMenuClick={onMenuClick} />
+                </nav>
                 <div className="flex w-full h-full md:h-[calc(100vh-4rem)] absolute top-0 md:static">
                     {isMobile && (
                         <Sidebar
@@ -486,59 +446,23 @@ export default function Home() {
                                 </div>
                             )}
                             className="w-5/6 md:hidden"
-                            pt={{
-                                root: {
-                                    className: 'dark:!bg-[#121212]'
-                                }
-                            }}
+                            pt={SidebarPT}
                         >
                             <FilterSection />
                         </Sidebar>
                     )}
                     <div className="hidden md:block md:w-1/4 2xl:w-128">
                         {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
-
                         <div>
-                            <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}
-                                pt={{
-                                    accordiontab: {
-                                        headerAction: {
-                                            className: 'custom-border-top hover:!border-[#e2e8ff1a] dark:!bg-[#121212] dark:hover:!bg-[#121212] dark:hover:text-white\/80 dark:focus:shadow-none'
-                                        },
-                                        content: {
-                                            className: 'custom-border-bottom dark:!bg-[#121212]'
-                                        }
-                                    }
-                                }}
-                            >
-                                <AccordionTab header="Filters"
-                                    pt={{
-                                        content: {
-                                            className: `p-0 h-[calc(100vh-11.25rem)] border-y-0 overflow-y-scroll transition-all duration-1000 vanishing-shadow`
-                                        },
-                                        headerTitle: {
-                                            className: 'text-zinc-100 font-medium'
-                                        }
-                                    }}
-                                >
+                            <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)} pt={AccordionPT}>
+                                <AccordionTab header="Filters" pt={FiltersAccordionTabPT}>
                                     {!isMobile && <FilterSection />}
                                 </AccordionTab>
-                                <AccordionTab header={detailsTitle}
-                                    pt={{
-                                        content: {
-                                            className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll`
-                                        },
-                                        headerTitle: {
-                                            className: `text-zinc-100 font-medium`
-                                        }
-                                    }}
-                                >
-                                    <Profiler id="DetailsList" onRender={onRender}>
-                                        <DetailsList
-                                            activities={detailsContent}
-                                            milestoneMode={viewMilestonesBool}
-                                        />
-                                    </Profiler>
+                                <AccordionTab header={detailsTitle} pt={DetailsAccordionTabPT}>
+                                    <DetailsList
+                                        activities={detailsContent}
+                                        milestoneMode={viewMilestonesBool}
+                                    />
                                 </AccordionTab>
                             </Accordion>
                         </div>
@@ -554,6 +478,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-        </Profiler>
+        </>
     );
 }
