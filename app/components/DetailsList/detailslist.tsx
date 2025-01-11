@@ -5,7 +5,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { useIntersectionObserver } from 'primereact/hooks';
 
 import EmptyDetailsPanel from '../PlaceHolderScreens/emptydetailspanel';
-import ExternalLinkButton from './externallinkbutton';
+import ExtLinkButton from './extlinkbutton';
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import useIsMobile from '@/hooks/useIsMobile';
 import { getGrade } from '@/lib/maphelper';
@@ -238,14 +238,14 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                             </div>
                             <div className='flex mt-4 gap-2'>
                                 {isAdmin && (
-                                    <ExternalLinkButton
+                                    <ExtLinkButton
                                         ariaLabel='Google Photos'
                                         link={activity.googlePhotosLink}
                                         tooltipFallback="No album available"
                                         imgSrc='/photoalbum.png'
                                     />
                                 )}
-                                <ExternalLinkButton
+                                <ExtLinkButton
                                     ariaLabel='Instagram'
                                     link={activity.instagramLink}
                                     tooltipPosition='top'
@@ -253,7 +253,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                     imgSrc='/instagram.png'
                                 />
                                 {isAdmin && activity.type === TRAVEL && (
-                                    <ExternalLinkButton
+                                    <ExtLinkButton
                                         ariaLabel='Journal'
                                         link={activity.journalLink}
                                         tooltipPosition='top'
@@ -262,7 +262,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                     />
                                 )}
                                 {(activity.type === HIKING || activity.type === BIKING) && (
-                                    <ExternalLinkButton
+                                    <ExtLinkButton
                                         ariaLabel='AllTrails'
                                         link={activity.allTrailsLink}
                                         tooltipPosition='top'

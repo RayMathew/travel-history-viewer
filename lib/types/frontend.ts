@@ -71,7 +71,7 @@ export interface DetailslistProps {
   milestoneMode: boolean;
 }
 
-export interface ExternalLinkButtonProps {
+export interface ExtLinkButtonProps {
   ariaLabel: string;
   link?: string;
   imgSrc: string;

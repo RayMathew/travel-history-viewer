@@ -1,13 +1,13 @@
-import { ExternalLinkButtonProps } from '@/lib/types/frontend';
+import { ExtLinkButtonProps } from '@/lib/types/frontend';
 import { Button } from 'primereact/button';
 
-export default function ExternalLinkButton({
+export default function ExtLinkButton({
     ariaLabel,
     link,
     imgSrc,
     tooltipPosition,
     tooltipFallback
-}: ExternalLinkButtonProps) {
+}: ExtLinkButtonProps) {
 
     return (
         <Button
