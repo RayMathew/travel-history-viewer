@@ -17,7 +17,7 @@ import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 
 
 export default function DetailsList({ activities, milestoneMode = false }: DetailslistProps) {
-    const [detailsInnerShadows, setDetailsInnerShadows] = useState('custom-bottom-inner-shadow');
+    const [detailsInnerShadows, setDetailsInnerShadows] = useState('');
     const [panelHtClsMobile, setPanelHtClsMobile] = useState('');
     const { unitOfDistance, userName } = useContext(UserContext);
 
@@ -105,7 +105,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
 
     // handle shadow based on scroll position
     useEffect(() => {
-        if (isMobile && sortedActivities.length === 1) {
+        if (sortedActivities.length === 1 || isMobile) {
             setDetailsInnerShadows('');
         }
         else if (detailsPanelTopVisible) {

@@ -24,7 +24,7 @@ import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYe
 import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA, apiKey } from "@/lib/constants";
 import { FilterOptions, FilterOptionsPrep, OnMarkerClick, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
-import { AccordionPT, DetailsAccordionTabPT, FiltersAccordionTabPT, SelectButtonPT, SidebarPT } from "@/lib/primereactPtClasses";
+import { AccordionPT, DetailsAccordionTabPT, FiltersAccordionTabPT, SelectButtonPT, SidebarPT, YearSelectPT } from "@/lib/primereactPtClasses";
 
 
 export default function Home() {
@@ -259,7 +259,7 @@ export default function Home() {
             style={{
                 display: 'inline-block',
                 borderRadius: '50%',
-                border: selectedParticipant === value ? '4px solid #5FA5F9' : '4px solid transparent',
+                border: selectedParticipant === value ? '3px solid rgb(228 228 231 / 1)' : '3px solid transparent',
                 overflow: 'hidden',
                 cursor: 'pointer',
                 marginBottom: '0.5rem'
@@ -287,28 +287,28 @@ export default function Home() {
     );
 
     const FilterSection = () => (
-        <div className="w-full">
-            <div className="text-md text-[#e2e8ffbf] pb-2">
+        <div className="p-5 mb-5 w-full rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white">
+            <div className="text-sm text-[#e2e8ffbf] pb-4">
                 Who Was There?
             </div>
             <div className="pb-5">
                 {!portraitLoaded && (
-                    <div className="flex flex-row justify-center gap-6.5">
+                    <div className="flex flex-row justify-around gap-6.5">
                         {[...Array(3)].map((_, index) => (
                             <Skeleton key={index} shape="circle" size="5rem" className="" ></Skeleton>
                         ))}
                     </div>
                 )}
-                <div className={`flex flex-row justify-center gap-6.5 ${profileVisibilityClass}`}>
+                <div className={`flex flex-row justify-around gap-6.5 ${profileVisibilityClass}`}>
                     {renderPicRadio(RAY, "/ray.jpg", "Me")}
                     {renderPicRadio(NAMRATA, "/namrata.jpg", "Wife")}
                     {renderPicRadio("both", "/raynam.jpg", "Both")}
                 </div>
             </div>
-            <div className="text-md text-[#e2e8ffbf] pb-2">
+            <div className="text-sm text-[#e2e8ffbf] pb-2">
                 Years
             </div>
-            <div className="flex flex-row pb-7">
+            <div className="flex flex-row pb-9">
                 <div className="flex w-full flex-col">
                     <YearSelect
                         value={selectedYears}
@@ -318,7 +318,8 @@ export default function Home() {
                         optionLabel="name"
                         display="chip"
                         placeholder="Select Years"
-                        className="!w-full transition-all duration-300"
+                        className="!w-full transition-all duration-300 dark:border-zinc-800/50"
+                        pt={YearSelectPT}
                     />
                     <div className={`${yearWarningClass} mt-2 px-4 py-2 rounded text-sm leading-5 transition-all duration-300 dark:bg-orange-400/10 dark:text-orange-300`}>
                         <i className="pi pi-exclamation-circle leading-4 pr-2"></i>
@@ -326,11 +327,11 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className="text-md text-[#e2e8ffbf] pb-2">
+            <div className="text-sm text-[#e2e8ffbf] pb-2">
                 Activity Type
             </div>
-            <div className="pb-7">
-                <div className="card flex flex-wrap justify-content-center gap-5">
+            <div className="pb-9">
+                <div className="card flex flex-wrap justify-content-center gap-2.5">
                     <ImageWithCheckBox
                         value={HIKING}
                         onChange={onActivitySelectChange}
@@ -340,7 +341,7 @@ export default function Home() {
                         label="Hike"
                         inputId="activity1"
                         size={24}
-                        margin={'mx-1'}
+                        margin={'mx-0.5'}
                     />
                     <ImageWithCheckBox
                         value={BIKING}
@@ -351,7 +352,7 @@ export default function Home() {
                         label="Bike"
                         inputId="activity2"
                         size={24}
-                        margin={'mx-1.5'}
+                        margin={'mx-0.5'}
                     />
                     <ImageWithCheckBox
                         value={TRAVEL}
@@ -362,7 +363,7 @@ export default function Home() {
                         label="Travel"
                         inputId="activity3"
                         size={22}
-                        margin={'mx-2'}
+                        margin={'mx-1'}
                     />
                 </div>
                 <div className={`${activityWarningClass} mt-2 px-4 py-2 rounded text-sm leading-5 transition-all duration-300 dark:bg-orange-400/10 dark:text-orange-300`}>
@@ -370,10 +371,10 @@ export default function Home() {
                     <span>Select at least one activity</span>
                 </div>
             </div>
-            <div className="text-md text-[#e2e8ffbf] pb-2">
+            <div className="text-sm text-[#e2e8ffbf] pb-2">
                 Distance
             </div>
-            <div className="flex flex-row pb-7">
+            <div className="flex flex-row pb-9">
                 <ThresholdFilter
                     name="Distance"
                     operator={distanceOperator}
@@ -386,7 +387,7 @@ export default function Home() {
                     step={1}
                 />
             </div>
-            <div className="text-md text-[#e2e8ffbf] pb-2">
+            <div className="text-sm text-[#e2e8ffbf] pb-2">
                 Elevation Gain
             </div>
             <div className="flex flex-row pb-7">

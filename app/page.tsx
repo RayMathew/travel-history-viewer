@@ -10,7 +10,7 @@ export default function App() {
   return (
     <AuthProvider>
       <UserProvider>
-        <PrimeReactProvider value={{ unstyled: true, pt: Tailwind }}>
+        <PrimeReactProvider value={{ pt: Tailwind }}>
           < Home />
         </PrimeReactProvider>
       </UserProvider>

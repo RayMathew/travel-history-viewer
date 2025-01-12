@@ -33,7 +33,7 @@ export default function ImageWithCheckBox(
                 style={{ height: size }}
                 className={`${margin} brightness-50`}
             />
-            <label htmlFor={inputId}>{label}</label>
+            <label className="text-sm leading-6" htmlFor={inputId}>{label}</label>
         </div>
     );
 }

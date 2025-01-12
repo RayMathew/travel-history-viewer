@@ -260,6 +260,8 @@ div[role="dialog"] {
   opacity: 0;
   /* Styles for the parent element */
   background-color: #121212 !important;
+  padding: 0 !important;
+
 }
 
 div[role="dialog"].info-window-animation {
@@ -292,4 +294,89 @@ div[role="dialog"] .gm-style-iw-ch {
 /* hide the info window close button */
 div[role="dialog"] button[title="Close"] {
   display: none !important;
+}
+
+/* Modifying primereact classes, since passthrough pt property didn't work */
+
+.custom-headeraction:focus {
+ box-shadow: none !important;
+}
+.p-button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border: 0;
+  background-color: rgb(39 39 42/1) !important;
+}
+
+.p-button:hover {
+  background-color: rgb(63 63 70/1) !important; 
+}
+
+.p-inputnumber-input {
+  line-height: 1rem;
+  padding-bottom: 0.65rem;
+  padding-top: 0.65rem;
+  background-color: rgb(39 39 42/1) !important;
+  border-color: transparent !important;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+.p-inputnumber-input:focus {
+  border-color: rgb(82 82 91 / 1) !important;
+  box-shadow: none !important;
+}
+
+.p-inputnumber-input:focus:hover {
+  border-color: rgb(82 82 91 / 1) !important;
+  box-shadow: none !important;
+}
+
+.p-inputnumber-input:hover {
+  border-color: rgb(63 63 70 / 1) !important;
+}
+
+.p-multiselect {
+  background-color: rgb(39 39 42/1) !important;
+}
+
+.p-multiselect-header {
+  background-color: rgb(39 39 42 / 1);
+}
+
+.p-button.p-highlight {
+  background-color: rgb(228 228 231 / 1) !important;
+  color: rgb(24 24 27/1);
+  border: 0;
+}
+
+div.p-button.p-highlight:hover {
+  background-color: rgb(228 228 231/ 1) !important;
+}
+
+.p-checkbox.p-highlight .p-checkbox-box {
+  background-color: rgb(228 228 231 / 1);
+  border-color: transparent;
+}
+
+.filters-accordion-content {
+  padding: 1.5rem;
+  padding-top: 1rem;
+}
+
+.p-inputnumber-button {
+  background-color: rgb(39 39 42/1);
+}
+
+.p-inputnumber-button:hover {
+  background-color: rgb(63 63 70/1);
+}
+
+.milestonetoggle {
+  border-top-left-radius: 0.375rem !important;
+  border-bottom-left-radius: 0.375rem !important;
+}
+
+.p-skeleton::after {
+  background-color: rgb(63 63 70 / 1) !important;
 }
