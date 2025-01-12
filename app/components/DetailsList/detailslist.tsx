@@ -148,10 +148,7 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
             <div ref={detailsPanelTopRef}></div>
             {sortedActivities.map((activity) => {
                 const { googlePhotosLink } = activity;
-                const thumbnailSrc = useMemo(
-                    () => thumbnails[googlePhotosLink] || getDefaultThumbnail(activity),
-                    [googlePhotosLink, thumbnails]
-                );
+                const thumbnailSrc = thumbnails[googlePhotosLink] || getDefaultThumbnail(activity);
                 return (
                     <div key={`${thumbnailSrc}-${activity.date || activity.startDate}`}>
                         <div className='p-5 mb-5 w-[calc(85vw)] m-auto md:w-full bg-white text-gray-700 shadow-md rounded-md dark:bg-zinc-900 border dark:border-zinc-800 dark:text-white'>
