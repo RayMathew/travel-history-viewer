@@ -30,8 +30,6 @@ export default function DetailsList({ activities, milestoneMode = false, travelL
     const detailsPanelBottomRef = useRef(null);
     const detailsPanelBottomVisible = useIntersectionObserver(detailsPanelBottomRef);
 
-    // <a href="https://www.flaticon.com/free-icons/instagram-logo" title="instagram logo icons">Instagram logo icons created by Freepik - Flaticon</a>
-
     const sortedActivities = useMemo(() => {
         return activities?.sort((a, b) => new Date(b.startDate || b.date) - new Date(a.startDate || a.date)) || [];
     }, [activities]);

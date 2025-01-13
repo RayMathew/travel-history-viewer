@@ -24,7 +24,7 @@ import { countActivities, applyFiltersToMap, applyMilestoneFilters, getCurrentYe
 import { BIKING, HIKING, TRAVEL, SECTIONS, RAY, NAMRATA, apiKey } from "@/lib/constants";
 import { FilterOptions, FilterOptionsPrep, OnMarkerClick, Operator, YearOption } from "@/lib/types/frontend";
 import { FilteredNotionData, NotionData, OutdoorActivity, TravelActivity } from "@/lib/types/shared";
-import { AccordionPT, DetailsAccordionTabPT, FiltersAccordionTabPT, SelectButtonPT, SidebarPT, YearSelectPT } from "@/lib/primereactPtClasses";
+import { AccordionPT, FiltersAccordionTabPT, SelectButtonPT, SidebarPT, YearSelectPT } from "@/lib/primereactPtClasses";
 
 
 export default function Home() {
@@ -453,7 +453,6 @@ export default function Home() {
                         </Sidebar>
                     )}
                     <div className="hidden md:block md:w-1/4 2xl:w-128">
-                        {/* <a href="https://www.flaticon.com/free-icons/travel" title="travel icons">Travel icons created by Freepik - Flaticon</a> */}
                         <div>
                             <Accordion activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)} pt={AccordionPT}>
                                 <AccordionTab header="Filters" pt={FiltersAccordionTabPT}>

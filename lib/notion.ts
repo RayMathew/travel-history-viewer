@@ -30,12 +30,10 @@ export const fetchOutdoorsDBData = async (
   isAdminUser: boolean
 ): Promise<OutdoorsData[]> => {
   const groupedData = new Map();
-  //   console.time("outdoors data");
   try {
     const dbData = await getNotionClient().databases.query({
       database_id: process.env.NOTION_OUTDOORSDB_KEY!,
     });
-    //   console.log(dbData);
 
     dbData.results.forEach((page) => {
       const { properties } = page;
@@ -62,7 +60,6 @@ export const fetchOutdoorsDBData = async (
       if (isAdminUser) {
         googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       }
-      // const googlePhotosLink = properties[OUTDOOR_PROPERTIES.PHOTOS].url;
       const coordinateKey = `${lat},${lng}`;
 
       const activity = removeNullValues({

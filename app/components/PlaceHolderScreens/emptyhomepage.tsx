@@ -45,7 +45,4 @@ export default function EmptyHomePage() {
         </div>
     </>
     );
-    // return (
-
-    // );
 }

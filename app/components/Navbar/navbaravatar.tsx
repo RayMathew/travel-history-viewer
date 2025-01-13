@@ -7,7 +7,6 @@ import { logout } from "@/lib/actions";
 import { UserContext } from "@/app/providers/UserProvider/userprovider";
 import { useContext } from "react";
 import { useRouter } from 'next/navigation';
-// import anime from 'animejs';
 
 
 export default function NavbarAvatar() {

@@ -26,7 +26,6 @@ const MarkerWithInfoWindow = ({
     onClose
 }: MarkerWithInfoWindowProps) => {
     const [markerRef, marker] = useAdvancedMarkerRef();
-    // const [animateClass, setAnimateClass] = useState("");
 
     const mobileOrDesktopClick = (event: google.maps.MapMouseEvent) => {
         if (isMobile) {
@@ -112,7 +111,6 @@ export default function CustomMap({ displayData, onMarkerClick, isMilestoneMode 
     const map = useMap();
     const isMobile = useIsMobile();
     const [openMarkerId, setOpenMarkerId] = useState<string | null>(null);
-    // console.log('rerender map', displayData)
 
     useEffect(() => {
         if (!map || !displayData) return;

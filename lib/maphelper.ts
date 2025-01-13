@@ -122,8 +122,6 @@ export const applyFiltersToMap = (
   if (!notionData) return null;
   let filteredData: FilteredNotionData;
 
-  // console.log("asds", filter);
-  // console.log("start filter", notionData);
   // define the 5 filter functions
   const yearFilter = (allData: NotionData): FilteredNotionData => {
     const filterYears = filter.years;
@@ -161,8 +159,6 @@ export const applyFiltersToMap = (
     travelData = travelData.filter(
       (travelLocation) => travelLocation.activities.length > 0
     );
-    // console.log("modified", outdoorsData);
-    // console.log("modified", travelData);
 
     return { outdoorsData, travelData };
   };
@@ -303,17 +299,11 @@ export const applyFiltersToMap = (
     });
   } else {
     filteredData = participantFilter(filteredData);
-    // console.log("asds", filteredData);
     filteredData = activityFilter(filteredData);
-    // console.log("activityFilter", filteredData);
     filteredData = distanceFilter(filteredData);
-    // console.log("distanceFilter", filteredData);
     filteredData = elevationFilter(filteredData);
-    // console.log("elevationFilter", filteredData);
   }
-  // console.log("asds", filteredData);
   return filteredData;
-  //   return notionData;
 };
 
 export const applyMilestoneFilters = (
@@ -325,7 +315,6 @@ export const applyMilestoneFilters = (
   // the milestones also remain the same no matter who the user is.
 
   if (milestoneData) {
-    // console.log("no recompute");
     return { outdoorsData: milestoneData, travelData: [] };
   }
 
