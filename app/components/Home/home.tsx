@@ -459,7 +459,14 @@ export default function Home() {
                                 <AccordionTab header="Filters" pt={FiltersAccordionTabPT}>
                                     {!isMobile && <FilterSection />}
                                 </AccordionTab>
-                                <AccordionTab header={detailsTitle} pt={DetailsAccordionTabPT}>
+                                <AccordionTab header="Details" pt={{
+                                    content: {
+                                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll`,
+                                    },
+                                    headerTitle: {
+                                        className: `text-zinc-100 font-medium`,
+                                    },
+                                }}>
                                     <DetailsList
                                         activities={detailsContent}
                                         milestoneMode={viewMilestonesBool}
