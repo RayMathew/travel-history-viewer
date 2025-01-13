@@ -24,7 +24,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick: () => void }) {
                     alt="Memoir Map Logo"
                     priority={false}
                 />
-                <div className="font-semibold self-center hidden md:block md:translate-x-0">Memoir Map</div>
+                <div className="font-semibold text-lg self-center hidden md:block md:translate-x-0">Memoir Map</div>
             </div>
             <div className="p-4 flex w-1/2 justify-end">
                 <NavbarAvatar />

@@ -92,10 +92,14 @@ const MarkerWithInfoWindow = ({
                 />
             </AdvancedMarker>
             {isOpen && (
-                <InfoWindow anchor={marker} headerContent={<h2 className="ml-4">{locationName}</h2>}
-                    onClose={onClose} className="dark:!bg-[#121212] text-base w-[calc(100vw)]">
+                <InfoWindow
+                    anchor={marker}
+                    onClose={onClose}
+                    className="dark:!bg-[#121212] text-base w-[calc(100vw)]"
+                >
                     <DetailsList
                         activities={activities}
+                        travelLocation={locationName}
                         milestoneMode={isMilestoneMode}
                     />
                 </InfoWindow>

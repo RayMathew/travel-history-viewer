@@ -16,7 +16,7 @@ import { DetailslistProps } from '@/lib/types/frontend';
 import { OutdoorActivity, TravelActivity } from '@/lib/types/shared';
 
 
-export default function DetailsList({ activities, milestoneMode = false }: DetailslistProps) {
+export default function DetailsList({ activities, milestoneMode = false, travelLocation }: DetailslistProps) {
     const [detailsInnerShadows, setDetailsInnerShadows] = useState('');
     const [panelHtClsMobile, setPanelHtClsMobile] = useState('');
     const { unitOfDistance, userName } = useContext(UserContext);
@@ -159,37 +159,51 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                         alt="Activity image thumbnail"
                                         fill={true}
                                         src={thumbnailSrc}
-                                        onLoadingComplete={(e) => {
-                                            e.style.opacity = '1';
+                                        onLoad={(e) => {
+                                            e.currentTarget.style.opacity = '1';
                                         }}
                                         style={{ opacity: thumbnailSrc ? 1 : 0 }}
                                     />
                                 </div>
                                 <div className='w-2/3 grid content-center'>
-                                    <div className='text-md font-medium mb-2 self-center text-slate-300'>
-                                        {milestoneMode ? activity.locationName : activity.activityName}
-                                    </div>
+                                    {activity.type === TRAVEL && (
+                                        <div className='text-md font-medium mb-2 self-center text-slate-300'>
+                                            {activity.activityName}
+                                        </div>
+                                    )}
+                                    {(activity.type === HIKING || activity.type === BIKING) &&
+                                        (
+                                            <>
+                                                <div className='text-md font-medium mb-2 self-center text-slate-300'>
+                                                    {activity.locationName}
+                                                </div>
+                                                <div className='text-sm font-light mb-2 self-center text-slate-300'>
+                                                    {activity.activityName}
+                                                </div>
+                                            </>
+                                        )
+                                    }
                                 </div>
                             </div>
                             <div className="mt-4">
                                 {activity.type === TRAVEL && (
                                     <>
                                         <div className='flex gap-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
-                                                <div className='text-sm font-extralight'>Places</div>
-                                                <div className='font-medium'>{getPlaces(activity.places)}</div>
+                                            <div className='w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='font-medium text-slate-300'>{travelLocation}</div>
+                                                <div className='text-sm font-extralight text-slate-300'>Location</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
-                                                <div className='text-sm font-extralight'>People</div>
-                                                <div className='font-medium'>{activity.people}</div>
+                                            <div className='w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white flex flex-col'>
+                                                <div className='font-medium text-slate-300'>{activity.people}</div>
+                                                <div className='text-sm font-extralight text-slate-300'>People</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
-                                                <div className='text-sm font-extralight'>Duration</div>
-                                                <div className='font-medium'>{getDuration(activity.startDate, activity.endDate)}</div>
+                                            <div className='w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:bg-zinc-800/50 dark:text-white'>
+                                                <div className='font-medium text-slate-300'>{getDuration(activity.startDate, activity.endDate)}</div>
+                                                <div className='text-sm font-extralight text-slate-300'>Duration</div>
                                             </div>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 rounded-md dark:bg-zinc-900 dark:text-white'>
+                                            <div className='w-1/2 py-4 px-3 rounded-md dark:bg-zinc-900 dark:text-white'>
 
                                             </div>
                                         </div>
@@ -198,23 +212,24 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                 {(activity.type === HIKING || activity.type === BIKING) && (
                                     <>
                                         <div className='flex gap-4'>
-                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.elevation)}`}>
-                                                <div className='text-sm font-extralight'>Elevation Gain</div>
-                                                <div className='font-medium'>{`${activity.elevation} ft`}</div>
+                                            <div className={`w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.elevation)}`}>
+                                                <div className='font-medium text-slate-300'>{`${activity.elevation} ft`}</div>
+                                                <div className='text-sm font-extralight text-slate-300'>Elevation Gain</div>
                                             </div>
-                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white flex flex-col ${getHighlightColor(activity.milestones?.distance)}`}>
-                                                <div className='text-sm font-extralight'>Distance</div>
-                                                <div className='font-medium'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
+                                            <div className={`w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:text-white flex flex-col ${getHighlightColor(activity.milestones?.distance)}`}>
+                                                <div className='font-medium text-slate-300'>{`${activity.distance}`} {`${unitOfDistance}`}</div>
+                                                <div className='text-sm font-extralight text-slate-300'>Distance</div>
                                             </div>
                                         </div>
                                         <div className='flex gap-4 mt-4'>
-                                            <div className='w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white dark:bg-zinc-800/50'>
-                                                <div className='text-sm font-extralight'>Done By</div>
-                                                <div className='font-medium'>{getDoneBy(activity.doneBy)}</div>
+                                            <div className='w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:text-white dark:bg-zinc-800/50'>
+                                                <div className='font-medium text-slate-300'>{getDoneBy(activity.doneBy)}</div>
+                                                <div className='text-sm font-extralight text-slate-300'>Done By</div>
                                             </div>
-                                            <div className={`w-1/2 py-4 px-3 text-gray-700 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.grade)}`}>
+                                            <div className={`w-1/2 py-4 px-3 drop-shadow-xl rounded-md dark:text-white ${getHighlightColor(activity.milestones?.grade)}`}>
+                                                <div className='font-medium text-slate-300'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                                 <div className='flex flex-row justify-between'>
-                                                    <div className='text-sm font-extralight'>Grade</div>
+                                                    <div className='text-sm font-extralight text-slate-300'>Grade</div>
                                                     <i className="hiking-grade-tooltip pi pi-question-circle text-slate-300 !leading-5 !text-xs !font-thin"
                                                     ></i>
                                                     <Tooltip target=".hiking-grade-tooltip" className='w-96'>
@@ -227,7 +242,6 @@ export default function DetailsList({ activities, milestoneMode = false }: Detai
                                                         E.g., a 10% grade means there is a 10-meter elevation gain for every 100 meters traveled horizontally.
                                                     </Tooltip>
                                                 </div>
-                                                <div className='font-medium'>{getGrade(activity.elevation, activity.distance, unitOfDistance)}%</div>
                                             </div>
                                         </div>
                                     </>

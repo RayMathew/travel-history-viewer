@@ -69,6 +69,7 @@ export interface ThresholdFilterProps {
 export interface DetailslistProps {
   activities: OutdoorActivity[] | TravelActivity[] | null;
   milestoneMode: boolean;
+  travelLocation?: string; // this is needed only for travel activities, since one travel activity has multiple locations on the map.
 }
 
 export interface ExtLinkButtonProps {

@@ -36,7 +36,7 @@ export const FiltersAccordionTabPT = {
     className: `filters-accordion-content h-[calc(100vh-11.25rem)] border-y-0 overflow-y-scroll transition-all duration-1000 vanishing-shadow`,
   },
   headerTitle: {
-    className: "text-zinc-100 font-medium",
+    className: "text-zinc-100 font-normal",
   },
 };
 

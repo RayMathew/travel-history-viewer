@@ -50,7 +50,7 @@ export default function Home() {
     const isMobile = useIsMobile();
     const [viewMilestonesBool, setViewMilestonesBool] = useState(false);
     const [activeTab, setActiveTab] = useState<number | number[]>(SECTIONS.FILTER_SECTION);
-    const [detailsTitle, setDetailsTitle] = useState('Details');
+    const [travelLocation, setTravelLocation] = useState('');
     const [detailsContent, setDetailsContent] = useState<TravelActivity[] | OutdoorActivity[] | null>(null);
     const [portraitLoaded, setPortraitLoaded] = useState(false);
     const [profileVisibilityClass, setProfileVisibilityClass] = useState('h-0 invisible');
@@ -242,7 +242,7 @@ export default function Home() {
     const onMenuClick = () => setSidebarVisible(true);
 
     const onMarkerClick: OnMarkerClick = (_event, activities, locationName) => {
-        setDetailsTitle(`${locationName}`);
+        setTravelLocation(locationName);
         setActiveTab(SECTIONS.DETAILS_SECTION);
         setDetailsContent(activities);
     };
@@ -469,6 +469,7 @@ export default function Home() {
                                 }}>
                                     <DetailsList
                                         activities={detailsContent}
+                                        travelLocation={travelLocation}
                                         milestoneMode={viewMilestonesBool}
                                     />
                                 </AccordionTab>

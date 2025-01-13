@@ -465,7 +465,7 @@ export const applyMilestoneFilters = (
         if (!namePrefix.includes(currentYear.toString())) {
           namePrefix += ` (${humanReadableDate(data.date)})`;
         }
-        data.locationName = namePrefix;
+        data.activityName = namePrefix;
 
         outdoorLocationClone.activities.push(data);
       }
