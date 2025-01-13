@@ -28,6 +28,14 @@ const MarkerWithInfoWindow = ({
     const [markerRef, marker] = useAdvancedMarkerRef();
     // const [animateClass, setAnimateClass] = useState("");
 
+    const mobileOrDesktopClick = (event: google.maps.MapMouseEvent) => {
+        if (isMobile) {
+            handleMobileMarkerClick();
+        } else {
+            onMarkerClick(event, activities, locationName)
+        }
+    };
+
     const handleMobileMarkerClick = useCallback(
         () => {
             if (isOpen) {
@@ -72,13 +80,7 @@ const MarkerWithInfoWindow = ({
         <>
             <AdvancedMarker
                 ref={markerRef}
-                onClick={(event) => {
-                    if (isMobile) {
-                        handleMobileMarkerClick();
-                    } else {
-                        onMarkerClick(event, activities, locationName)
-                    }
-                }}
+                onClick={mobileOrDesktopClick}
                 position={position}
                 title={locationName}
             >
