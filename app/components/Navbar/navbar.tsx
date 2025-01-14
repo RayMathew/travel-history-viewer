@@ -8,7 +8,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick: () => void }) {
         <>
             <div className="flex w-1/2 justify-between md:justify-start">
                 <Button
-                    className="md:hidden"
+                    className="md:hidden sidebar-button"
                     icon="pi pi-bars"
                     rounded
                     text

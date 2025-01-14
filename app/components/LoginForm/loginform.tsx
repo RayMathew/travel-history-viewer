@@ -34,7 +34,8 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                             style={{
                                 width: '90px',
                                 height: '90px',
-                                borderRadius: '90px'
+                                borderRadius: '90px',
+                                overflow: 'hidden'
                             }}
                         >
                             <img
