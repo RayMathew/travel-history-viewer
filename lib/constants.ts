@@ -1,13 +1,45 @@
+export const APPDESC =
+  "A map of all the hikes, bike rides, and travels done by my wife and me.";
+export const GITHUBID = "RayMathew";
+export const TWITTERID = "@RayMathew_";
+export const openGraphImages = [
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/200x200.png",
+    width: 200,
+    height: 200,
+  },
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/600x315.png",
+    width: 600,
+    height: 314,
+  },
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/640x335.png",
+    width: 640,
+    height: 315,
+  },
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/1280x640.png",
+    width: 1280,
+    height: 640,
+  },
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/1490x1490.png",
+    width: 1490,
+    height: 1490,
+  },
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/2560x1280.png",
+    width: 2560,
+    height: 1280,
+  },
+];
 export const RAY = "Ray Mathew";
 export const NAMRATA = "Namrata Date";
 export const HIKING = "Hiking";
 export const BIKING = "Biking";
 export const TRAVEL = "Travel";
 export const APPNAME = "Memoir Map";
-export const APPDESC =
-  "A map of all the hikes, bike rides, and travels done by my wife and me.";
-export const GITHUBID = "RayMathew";
-export const TWITTERID = "@RayMathew_";
 
 export const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
 

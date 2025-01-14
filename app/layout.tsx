@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { APPNAME, APPDESC, RAY, GITHUBID } from "@/lib/constants";
+import { APPNAME, APPDESC, RAY, GITHUBID, openGraphImages } from "@/lib/constants";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: APPDESC,
     url: "https://travel-history-viewer.vercel.app",
     siteName: APPNAME,
-    // images: [],
+    images: openGraphImages,
     type: "website"
   },
   robots: {
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     siteId: '@RayMathew_',
     creator: '@RayMathew_',
     creatorId: '@RayMathew_',
-    // images: ['https://nextjs.org/og.png'], // Must be an absolute URL
+    images: openGraphImages,
   },
   verification: {
     google: 'b4h28dUyRR2JuWGRoDJgfvVB_RGJ9fj8AqssqNr6S90',
@@ -65,13 +65,6 @@ export const metadata: Metadata = {
   appleWebApp: { // uncomment this after you first test how it works without the config
     title: APPNAME,
     statusBarStyle: 'black-translucent',
-    // startupImage: [
-    //   '/assets/startup/apple-touch-startup-image-768x1004.png',
-    //   {
-    //     url: '/assets/startup/apple-touch-startup-image-1536x2008.png',
-    //     media: '(device-width: 768px) and (device-height: 1024px)',
-    //   },
-    // ],
   },
 };
 
