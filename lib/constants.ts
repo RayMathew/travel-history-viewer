@@ -4,6 +4,16 @@ export const GITHUBID = "RayMathew";
 export const TWITTERID = "@RayMathew_";
 export const openGraphImages = [
   {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/640x335.png",
+    width: 640,
+    height: 335,
+  },
+  {
+    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/1280x640.png",
+    width: 1280,
+    height: 640,
+  },
+  {
     url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/200x200.png",
     width: 200,
     height: 200,
@@ -12,16 +22,6 @@ export const openGraphImages = [
     url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/600x315.png",
     width: 600,
     height: 314,
-  },
-  {
-    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/640x335.png",
-    width: 640,
-    height: 315,
-  },
-  {
-    url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/1280x640.png",
-    width: 1280,
-    height: 640,
   },
   {
     url: "https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/1490x1490.png",
