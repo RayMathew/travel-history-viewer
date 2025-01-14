@@ -460,7 +460,7 @@ export default function Home() {
                                 </AccordionTab>
                                 <AccordionTab header="Details" pt={{
                                     content: {
-                                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-y-scroll`,
+                                        className: `p-0 h-[calc(100vh-11.25rem)] overflow-hidden`,
                                     },
                                     headerTitle: {
                                         className: `text-zinc-100 font-medium`,
