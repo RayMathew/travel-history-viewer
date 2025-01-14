@@ -33,7 +33,7 @@ export const GET = auth(async function GET(req: NextRequest) {
       status: 200,
       headers: {
         ETag: generatedETag,
-        "Cache-Control": "private, max-age=60, must-revalidate",
+        "Cache-Control": "private, max-age=21600, must-revalidate",
       },
     });
   } catch (error) {
