@@ -90,7 +90,7 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                         </div>
                         <div>
                             <Button
-                                className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-100 dark:hover:bg-zinc-300 dark:text-zinc-900 shadow-[0_1px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_1px_20px_rgba(0,0,0,0.15)] font-semibold text-sm"
+                                className="sign-in group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-100 dark:hover:bg-zinc-300 dark:text-zinc-900 shadow-[0_1px_15px_rgba(0,0,0,0.1)] hover:shadow-[0_1px_20px_rgba(0,0,0,0.15)] font-semibold text-sm"
                                 type="submit"
                                 aria-disabled={isPending}
                                 loading={isPending}
@@ -115,7 +115,7 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                             name="username"
                         />
                         <Button
-                            className="font-medium inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-100 border dark:border-zinc-800 dark:hover:border-zinc-700 shadow-sm hover:shadow-md text-sm"
+                            className="sign-in-guest font-medium inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-100 border dark:border-zinc-800 dark:hover:border-zinc-700 shadow-sm hover:shadow-md text-sm"
                             type="submit"
                             aria-disabled={isPending}
                             loading={isPending}

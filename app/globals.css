@@ -316,6 +316,14 @@ div[role="dialog"] button[title="Close"] {
   background-color: transparent !important;
 }
 
+.p-button.sign-in {
+  background-color: rgb(244 244 245 / 1) !important;
+}
+
+.p-button.sign-in-guest {
+  background-color: rgb(24 24 27 / 1) !important;
+}
+
 .p-inputnumber-input {
   line-height: 1rem;
   padding-bottom: 0.65rem;
