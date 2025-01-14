@@ -60,7 +60,7 @@ export default function Home() {
 
     // toast function
     const displayInfo = useCallback((info: number | null, customInfo?: string | undefined) => {
-        toast.current?.show({ severity: 'info', life: 800, detail: customInfo || `${info} activities` });
+        toast.current?.show({ severity: 'info', life: isMobile ? 800 : 1400, detail: customInfo || `${info} activities` });
     }, [toast]);
 
     // first api call
