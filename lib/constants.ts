@@ -1,5 +1,5 @@
 export const APPDESC =
-  "A map of all the hikes, bike rides, and travels done by my wife and me.";
+  "An interactive map of all the hikes, bike rides, and travels that my wife and I have done.";
 export const GITHUBID = "RayMathew";
 export const TWITTERID = "@RayMathew_";
 export const openGraphImages = [

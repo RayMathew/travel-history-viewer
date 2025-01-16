@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<img width="100" alt="Screenshot" src="https://cdn.jsdelivr.net/gh/RayMathew/travel-history-viewer@main/imagehosting/200x200.png" align="right" style="margin-left:20px">
 
-## Getting Started
+<br>
 
-First, run the development server:
+# Memoir Map (travel-history-viewer)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+A web app showcasing all the places my wife and I have hiked, biked and traveled to over the years. Built with Next.js, Notion API, Google Maps API, and TailwindCSS. Deployed on Vercel.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Links
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Live app](https://travel-history-viewer.vercel.app) (login as a Guest)
+- [How I built it] Medium link
+- [Discussions](https://github.com/RayMathew/travel-history-viewer/discussions)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
 
-## Learn More
+- **Interactive Map**: Visual representation of our activities using Google Maps, with filters like distance hiked / biked,  elevation gained and year(s).
+- **Notion Integration**: The data comes from 2 Notion databases (templates linked below), fetched in the backend using Notion API, and sent as an aggregrated result to the UI.
+- **Caching**: The web app makes aggressive use of 3 types of caching (browser local storage, Etag, and cache-control) to reduce network load and server cost, given that the data is updated only a couple dozen times a year.
+- **External Links**: Each activity card has links to other platforms - Google Photos, AllTrails, a Notion journal entry and Instagram.
 
-To learn more about Next.js, take a look at the following resources:
+- **Security**: The web app uses Auth.js for authentication and session validation. Since there are only 3 users (my wife, me and 'Guest'), the username and password are stored as encrypted environment variables, as opposed to in a database.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notion Templates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+I'm an avid user of Notion. I had already created two databases for recording our travels and outdoor activities before the idea of this app came to  mind. I added a few properties like 'Coordinates' to make them work with Google Maps.
 
-## Deploy on Vercel
+Why **two**? I felt that travelling and sight-seeing are higher value and rarer experiences than activities like a half-day hike, and so, they deserved their own DB. Also, the latter activities have unique stats that we wanted to track. E.g.: steepest hike, cumulative distance biked in a year, etc.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Feel free to use the templates outside of this project as well:
+- [Travel DB Template](https://raymathew.notion.site/Travel-Database-Template-17b8f10128468039b99cec9ada58cdd9?pvs=4)
+- [Outdoors DB Template](https://raymathew.notion.site/Outdoors-Template-17b8f101284680fa8a9cc4d8d5be5707?pvs=4)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech stack
+
+|                     |               |
+|---------------------|---------------|
+| Language            | TypeScript    |
+| Framework           | [Next.js v15.1.4](https://nextjs.org/docs) |
+| Data                | [Notion API (client v2.2)](https://developers.notion.com)    |
+|Security|[Auth.js (a.k.a next-auth.js v5 beta)](https://authjs.dev/)|
+| Styling Framework   | [Tailwind CSS v3.4.1](https://tailwindcss.com/)  |
+| UI Components   | [PrimeReact v10.8.4](https://primereact.org/)  |
+| Hosting Platform    | [Vercel](https://vercel.com/)        |
+
+## Running locally
+
+An easy setup - install with package.json and add a few environment variables.
+
+    git clone https://github.com/RayMathew/travel-history-viewer.git
+    cd travel-history-viewer
+    npm install 
+
+Create a `.env.local` file in the root directory with the following keys:
+
+- `NOTION_API_KEY`.
+  - Get it from [here](https://www.notion.so/profile/integrations). You'll need a Notion account. If you don't already have one, consider using my referral (https://affiliate.notion.so/ray-notion-referral). It reduces my subscription cost.
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`.
+  - Get it from [here](https://cloud.google.com/). 
+  - You'll need to create a project, enable Google Maps API, and allow the website 'http://localhost:3000" while creating the API key.
+  - If you want to run it on your computer and test it from your phone add `http://<your computer IP>:3000`, or IP Addresses -> CIDR format, for multiple devices and rotating IPs.
+- `NOTION_OUTDOORSDB_KEY`, `NOTION_TRAVELDB_KEY`.
+  - Go to the Notion DB page -> Click on context menu of the table (the 6 dots when you over hover over the top of the table) -> Open as page -> Share (top right of page) -> Copy link.
+  - Get the DB key from the link, which is in the format `https://www.notion.so/<notion_username>/<name_of_db>-<YOUR_DB_KEY>?v=...&pvs=4`
+- `AUTH_SECRET`.
+  - This is needed by Auth.js. You can generate your own, or use [this](https://generate-secret.vercel.app/32).
+- `USERNAME1`.
+  - The primary user. Use email or random characters.
+- `PASSWORD1`
+  - Use a bcrypt generator like [this one](https://bcrypt-generator.com/).
+  - Create how many ever more username - password combos you want. But you'll need to modify the code, since I accounted for only 2 primary users of the app. All other users are 'Guests' and don't require a password.
+
+Finally, run `npm run dev`.
+
+## Roadmap
+
+1. Add a 'Stats' screen that gives details like "lifetime distance hiked", "highest peak summited", bar charts of bike rides per year, etc.
+2. Add a screen to show planned trips. The Notion DB already has this data.
+3. Add a fuzzy search feature to find an activity by name instead of sifting through all the data with filters.
+
+## License
+
+This project is licensed under the terms of the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html).
