@@ -25,9 +25,9 @@ A web app showcasing all the places my wife and I have hiked, biked and traveled
 
 I'm an avid user of Notion. I had already created two databases for recording our travels and outdoor activities before the idea of this app came to  mind. I added a few properties like 'Coordinates' to make them work with Google Maps.
 
-Why **two**? I felt that travelling and sight-seeing are higher value and rarer experiences than activities like a half-day hike, and so, they deserved their own DB. Also, the latter activities have unique stats that we wanted to track. E.g.: steepest hike, cumulative distance biked in a year, etc.
+Why **two**? I felt that travelling and sight-seeing are higher value and rarer experiences than activities like a half-day hike, and so, they deserved their own database. Also, the latter activities have unique stats that we wanted to track. E.g.: steepest hike, cumulative distance biked in a year, etc.
 
-Feel free to use the templates outside of this project as well:
+Feel free to reuse the templates for your own purposes as well:
 - [Travel DB Template](https://raymathew.notion.site/Travel-Database-Template-17b8f10128468039b99cec9ada58cdd9?pvs=4)
 - [Outdoors DB Template](https://raymathew.notion.site/Outdoors-Template-17b8f101284680fa8a9cc4d8d5be5707?pvs=4)
 
@@ -54,13 +54,13 @@ An easy setup - install with package.json and add a few environment variables.
 Create a `.env.local` file in the root directory with the following keys:
 
 - `NOTION_API_KEY`.
-  - Get it from [here](https://www.notion.so/profile/integrations). You'll need a Notion account. If you don't already have one, consider using my referral (https://affiliate.notion.so/ray-notion-referral). It reduces my subscription cost.
+  - Get it from [here](https://www.notion.so/profile/integrations). You'll need a Notion account. Most of its features needed for personal use are free. If you don't already have an account, consider using my referral (https://affiliate.notion.so/ray-notion-referral). It reduces my subscription cost.
 - `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`.
   - Get it from [here](https://cloud.google.com/). 
   - You'll need to create a project, enable Google Maps API, and allow the website 'http://localhost:3000" while creating the API key.
-  - If you want to run it on your computer and test it from your phone add `http://<your computer IP>:3000`, or IP Addresses -> CIDR format, for multiple devices and rotating IPs.
+  - If you want to run it on your computer and test it from your phone add Websites -> `http://<your computer IP>:3000`, or IP Addresses -> CIDR format, for multiple devices and rotating IPs.
 - `NOTION_OUTDOORSDB_KEY`, `NOTION_TRAVELDB_KEY`.
-  - Go to the Notion DB page -> Click on context menu of the table (the 6 dots when you over hover over the top of the table) -> Open as page -> Share (top right of page) -> Copy link.
+  - Assuming you have imported the two Notion templates into your account, go to one of them -> Click on context menu of the table (the 6 dots when you over hover over the top of the table) -> Open as page -> Share (top right of page) -> Copy link.
   - Get the DB key from the link, which is in the format `https://www.notion.so/<notion_username>/<name_of_db>-<YOUR_DB_KEY>?v=...&pvs=4`
 - `AUTH_SECRET`.
   - This is needed by Auth.js. You can generate your own, or use [this](https://generate-secret.vercel.app/32).
@@ -68,15 +68,15 @@ Create a `.env.local` file in the root directory with the following keys:
   - The primary user. Use email or random characters.
 - `PASSWORD1`
   - Use a bcrypt generator like [this one](https://bcrypt-generator.com/).
-  - Create how many ever more username - password combos you want. But you'll need to modify the code, since I accounted for only 2 primary users of the app. All other users are 'Guests' and don't require a password.
+  - I have accounted for 2 primary users (my wife and me). All other users are 'Guests' and don't require a password. If you want more than 2 primary users you'll need to modify the code in _root -> auth.ts_.
 
 Finally, run `npm run dev`.
 
 ## Roadmap
 
 1. Add a 'Stats' screen that gives details like "lifetime distance hiked", "highest peak summited", bar charts of bike rides per year, etc.
-2. Add a screen to show planned trips. The Notion DB already has this data.
-3. Add a fuzzy search feature to find an activity by name instead of sifting through all the data with filters.
+2. Add a screen to show planned trips. The Travel DB already has this data.
+3. Add a fuzzy search feature to find an activity by name or year instead of sifting through all the data with filters.
 
 ## License
 
