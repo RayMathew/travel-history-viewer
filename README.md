@@ -77,6 +77,7 @@ Finally, run `npm run dev`.
 1. Add a 'Stats' screen that gives details like "lifetime distance hiked", "highest peak summited", bar charts of bike rides per year, etc.
 2. Add a screen to show planned trips. The Travel DB already has this data.
 3. Add a fuzzy search feature to find an activity by name or year instead of sifting through all the data with filters.
+4. Add other activities. e.g.: multiple day treks, snowshoeing.
 
 ## License
 

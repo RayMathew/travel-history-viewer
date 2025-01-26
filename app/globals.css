@@ -121,8 +121,13 @@ body {
   }
 }
 
+/* fix the navbar menu arrow */
 .overlaycontrol::before {
-  margin-left: 12.8rem !important;
+  margin-left: 0.8rem !important;
+}
+
+.overlaycontrol::after {
+  display: none;
 }
 
 .custom-border-bottom {
