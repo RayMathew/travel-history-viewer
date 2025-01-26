@@ -19,7 +19,7 @@ A web app showcasing all the places my wife and I have hiked, biked and traveled
 - **Caching**: The web app makes aggressive use of 3 types of caching (browser local storage, Etag, and cache-control) to reduce network load and server cost, given that the data is updated only a couple dozen times a year.
 - **External Links**: Each activity card has links to other platforms - Google Photos, AllTrails, a Notion journal entry and Instagram.
 
-- **Security**: The web app uses Auth.js for authentication and session validation. Since there are only 3 users (my wife, me and 'Guest'), the username and password are stored as encrypted environment variables, as opposed to in a database.
+- **Security**: The web app uses Authjs.dev for authentication and session validation. Since there are only 3 users (my wife, me and 'Guest'), the username and password are stored as encrypted environment variables, as opposed to in a database.
 
 ## Notion Templates
 

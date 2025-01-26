@@ -115,7 +115,7 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                             name="username"
                         />
                         <Button
-                            className="sign-in-guest font-medium inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-100 border dark:border-zinc-800 dark:hover:border-zinc-700 shadow-sm hover:shadow-md text-sm"
+                            className="sign-in-guest text-sm font-medium inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 px-4 py-2 w-full relative transition-all duration-300 h-12 dark:text-zinc-100 border dark:border-zinc-800 dark:hover:border-zinc-700 shadow-sm hover:shadow-md"
                             type="submit"
                             aria-disabled={isPending}
                             loading={isPending}
@@ -146,7 +146,9 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                                 className={``}
                             />
                         </a>
-                        <i className=" pi pi-question-circle text-slate-300 !leading-9 !text-xs !font-thin cursor-pointer" onClick={onClick} />
+                        <p className='text-sm cursor-pointer leading-9 w-9 overflow-visible whitespace-nowrap' onClick={onClick}>
+                            What's this?
+                        </p>
                     </div>
                 </div>
             </div>
