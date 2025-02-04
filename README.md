@@ -9,7 +9,7 @@ A web app showcasing all the places my wife and I have hiked, biked and traveled
 ### Links
 
 - [Live app](https://travel-history-viewer.vercel.app) (login as a Guest)
-- [How I built it] Medium link
+- [How I built it](https://levelup.gitconnected.com/building-an-adventure-dashboard-with-next-js-notion-and-google-maps-4d672e82a513)
 - [Discussions](https://github.com/RayMathew/travel-history-viewer/discussions)
 
 ## Features
@@ -17,7 +17,7 @@ A web app showcasing all the places my wife and I have hiked, biked and traveled
 - **Interactive Map**: Visual representation of our activities using Google Maps, with filters like distance hiked / biked,  elevation gained and year(s).
 - **Notion Integration**: The data comes from 2 Notion databases (templates linked below), fetched in the backend using Notion API, and sent as an aggregrated result to the UI.
 - **Caching**: The web app makes aggressive use of 3 types of caching (browser local storage, Etag, and cache-control) to reduce network load and server cost, given that the data is updated only a couple dozen times a year.
-- **External Links**: Each activity card has links to other platforms - Google Photos, AllTrails, a Notion journal entry and Instagram.
+- **External Links**: Each activity card has links to other platforms - Google Photos, AllTrails, Notion blogposts and Instagram.
 
 - **Security**: The web app uses Authjs.dev for authentication and session validation. Since there are only 3 users (my wife, me and 'Guest'), the username and password are stored as encrypted environment variables, as opposed to in a database.
 
@@ -38,7 +38,7 @@ Feel free to reuse the templates for your own purposes as well:
 | Language            | TypeScript    |
 | Framework           | [Next.js v15.1.4](https://nextjs.org/docs) |
 | Data                | [Notion API (client v2.2)](https://developers.notion.com)    |
-|Security|[Auth.js (a.k.a next-auth.js v5 beta)](https://authjs.dev/)|
+| Security|[Auth.js (a.k.a next-auth.js v5 beta)](https://authjs.dev/)|
 | Styling Framework   | [Tailwind CSS v3.4.1](https://tailwindcss.com/)  |
 | UI Components   | [PrimeReact v10.8.4](https://primereact.org/)  |
 | Hosting Platform    | [Vercel](https://vercel.com/)        |
@@ -67,16 +67,16 @@ Create a `.env.local` file in the root directory with the following keys:
 - `USERNAME1`.
   - The primary user. Use email or random characters.
 - `PASSWORD1`
-  - Use a bcrypt generator like [this one](https://bcrypt-generator.com/).
+  - Encrypt it using a bcrypt generator like [this one](https://bcrypt-generator.com/).
   - I have accounted for 2 primary users (my wife and me). All other users are 'Guests' and don't require a password. If you want more than 2 primary users you'll need to modify the code in _root -> auth.ts_.
 
 Finally, run `npm run dev`.
 
-## Roadmap
+## Future
 
-1. Add a 'Stats' screen that gives details like "lifetime distance hiked", "highest peak summited", bar charts of bike rides per year, etc.
+1. Add a dedicated 'Stats' screen that gives details like "lifetime distance hiked", "highest peak summited", bar charts of bike rides per year, etc.
 2. Add a screen to show planned trips. The Travel DB already has this data.
-3. Add a fuzzy search feature to find an activity by name or year instead of sifting through all the data with filters.
+3. Add a fuzzy search feature to find an activity by name or year instead of browsing through the data with filters.
 4. Add other activities. e.g.: multiple day treks, snowshoeing.
 
 ## License
