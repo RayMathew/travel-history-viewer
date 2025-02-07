@@ -257,7 +257,7 @@ export default function DetailsList({ activities, milestoneMode = false, travelL
                                 <ExtLinkButton
                                     ariaLabel='Instagram'
                                     link={activity.instagramLink}
-                                    tooltipPosition='top'
+                                    tooltipPosition={`${isAdmin ? 'top' : 'right'}`}
                                     tooltipFallback="No post available"
                                     imgSrc='/instagram.png'
                                 />
