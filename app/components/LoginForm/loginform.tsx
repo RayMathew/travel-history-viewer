@@ -137,7 +137,7 @@ export default function LoginForm({ onClick }: { onClick: () => void }) {
                                 className={``}
                             />
                         </a>
-                        <a href='https://medium.com/towardsdev/building-an-api-with-go-postgresql-google-cloud-and-cockroachdb-78d78938c5db' target='_blank'>
+                        <a href='https://levelup.gitconnected.com/building-an-adventure-dashboard-with-next-js-notion-and-google-maps-4d672e82a513' target='_blank'>
                             <Image
                                 src="/medium.svg"
                                 alt="Link to medium article"
